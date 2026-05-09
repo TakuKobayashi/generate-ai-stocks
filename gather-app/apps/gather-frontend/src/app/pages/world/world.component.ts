@@ -6,12 +6,11 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
 import { environment } from '@env/environment';
-import { LiveKitService } from '../../services/livekit.service';
+import { LiveKitService, type RemoveLiveKitListener } from '../../services/livekit.service';
 import { PartyKitService, type RemotePlayer } from '../../services/partykit.service';
 import { PROXIMITY } from '@gather/shared';
-import { DisconnectReason, type RemoteTrack, type RemoteParticipant } from 'livekit-client';
+import { type RemoteTrack, type RemoteParticipant } from 'livekit-client';
 
 interface Config {
   displayName: string;
@@ -87,7 +86,7 @@ export class WorldComponent implements OnInit, AfterViewChecked, OnDestroy {
   private lastNearbyId: string | null = null;
   private lastSentPos    = { x: -1, y: -1 };
 
-  private subs = new Subscription();
+  private removeLiveKitListeners: RemoveLiveKitListener[] = [];
 
   private readonly SPEED = 3.2;
   private readonly GRID  = 48;
@@ -96,38 +95,32 @@ export class WorldComponent implements OnInit, AfterViewChecked, OnDestroy {
   // ライフサイクル
   // ============================================================
   ngOnInit(): void {
-    // LiveKit イベントを subscribe
-    this.subs.add(
-      this.liveKit.participantConnected$.subscribe(p => {
+    // LiveKitService に callback を登録する。
+    // 戻り値は登録解除用の関数なので、ngOnDestroy() でまとめて呼ぶ。
+    this.removeLiveKitListeners = [
+      this.liveKit.onParticipantConnected(p => {
         this.onParticipantConnected(p);
-      })
-    );
-    this.subs.add(
-      this.liveKit.participantDisconnected$.subscribe(p => {
+      }),
+      this.liveKit.onParticipantDisconnected(p => {
         this.participants = this.participants.filter(x => x.identity !== p.identity);
         this.cdr.markForCheck();
-      })
-    );
-    this.subs.add(
-      this.liveKit.trackSubscribed$.subscribe(({ track, participant }) => {
+      }),
+      this.liveKit.onTrackSubscribed(({ track, participant }) => {
         this.onTrackSubscribed(track, participant);
-      })
-    );
-    this.subs.add(
-      this.liveKit.trackUnsubscribed$.subscribe(track => track.detach())
-    );
-    this.subs.add(
-      this.liveKit.disconnected$.subscribe((_reason: DisconnectReason | undefined) => {
+      }),
+      this.liveKit.onTrackUnsubscribed(track => track.detach()),
+      this.liveKit.onDisconnected(() => {
         this.chatConnected = false;
         this.participants  = [];
         this.proxConnected = false;
         this.cdr.markForCheck();
-      })
-    );
+      }),
+    ];
   }
 
   ngOnDestroy(): void {
-    this.subs.unsubscribe();
+    this.removeLiveKitListeners.forEach(remove => remove());
+    this.removeLiveKitListeners = [];
     cancelAnimationFrame(this.raf);
     window.removeEventListener('keydown', this.onKey);
     window.removeEventListener('keyup',   this.onKey);

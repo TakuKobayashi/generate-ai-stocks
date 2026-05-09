@@ -1,6 +1,5 @@
 // apps/gather-frontend/src/app/services/partykit.service.ts
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
 import PartySocket from 'partysocket';
 import type {
   ClientMessage,
@@ -11,6 +10,9 @@ import type {
 export interface RemotePlayer extends PlayerState {
   color: string;
 }
+
+type PlayersUpdatedHandler = () => void;
+export type RemovePartyKitListener = () => void;
 
 const PLAYER_COLORS = [
   '#e74c3c', '#e67e22', '#f1c40f', '#2ecc71',
@@ -26,17 +28,21 @@ const PLAYER_COLORS = [
 //   constructor(private partyKit: PartyKitService) {}
 //
 //   this.partyKit.connect(host, roomId, identity, displayName, x, y);
-//   this.partyKit.playersUpdated$.subscribe(() => { ... });
+//   const remove = this.partyKit.onPlayersUpdated(() => { ... });
 //   const players = this.partyKit.getPlayers();
 // ============================================================
 @Injectable({ providedIn: 'root' })
 export class PartyKitService {
 
-  readonly playersUpdated$ = new Subject<void>();
-
   private socket:   PartySocket | null = null;
   private players:  Map<string, RemotePlayer> = new Map();
   private colorIdx = 0;
+  private readonly playersUpdatedListeners = new Set<PlayersUpdatedHandler>();
+
+  onPlayersUpdated(handler: PlayersUpdatedHandler): RemovePartyKitListener {
+    this.playersUpdatedListeners.add(handler);
+    return () => this.playersUpdatedListeners.delete(handler);
+  }
 
   connect(
     host:        string,
@@ -94,11 +100,11 @@ export class PartyKitService {
       case 'room_state':
         this.players.clear();
         msg.players.forEach(p => this.upsertPlayer(p));
-        this.playersUpdated$.next();
+        this.emitPlayersUpdated();
         break;
       case 'player_joined':
         this.upsertPlayer(msg.player);
-        this.playersUpdated$.next();
+        this.emitPlayersUpdated();
         break;
       case 'player_moved': {
         const p = this.players.get(msg.identity);
@@ -107,7 +113,7 @@ export class PartyKitService {
       }
       case 'player_left':
         this.players.delete(msg.identity);
-        this.playersUpdated$.next();
+        this.emitPlayersUpdated();
         break;
     }
   }
@@ -117,5 +123,15 @@ export class PartyKitService {
     const color = existing?.color
       ?? PLAYER_COLORS[this.colorIdx++ % PLAYER_COLORS.length];
     this.players.set(state.identity, { ...state, color });
+  }
+
+  private emitPlayersUpdated(): void {
+    for (const handler of this.playersUpdatedListeners) {
+      try {
+        handler();
+      } catch (err) {
+        console.error('PartyKit playersUpdated handler failed', err);
+      }
+    }
   }
 }
