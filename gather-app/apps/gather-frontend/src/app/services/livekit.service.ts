@@ -6,6 +6,7 @@ import {
   RoomEvent,
   Track,
   VideoPresets,
+  DisconnectReason,
   type RemoteTrack,
   type RemoteParticipant,
 } from 'livekit-client';
@@ -43,7 +44,7 @@ export class LiveKitService {
   readonly participantDisconnected$ = new Subject<RemoteParticipant>();
   readonly trackSubscribed$         = new Subject<TrackSubscribedEvent>();
   readonly trackUnsubscribed$       = new Subject<RemoteTrack>();
-  readonly disconnected$            = new Subject<string | undefined>();
+  readonly disconnected$            = new Subject<DisconnectReason | undefined>();
 
   private room: Room | null = null;
 

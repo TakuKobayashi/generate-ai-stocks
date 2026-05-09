@@ -1,6 +1,6 @@
 // apps/gather-frontend/src/app/pages/world/world.component.ts
 import {
-  Component, OnInit, OnDestroy,
+  Component, OnInit, OnDestroy, AfterViewChecked,
   ChangeDetectionStrategy, ChangeDetectorRef,
   ElementRef, ViewChild, inject,
 } from '@angular/core';
@@ -11,7 +11,7 @@ import { environment } from '@env/environment';
 import { LiveKitService } from '../../services/livekit.service';
 import { PartyKitService, type RemotePlayer } from '../../services/partykit.service';
 import { PROXIMITY } from '@gather/shared';
-import type { RemoteTrack, RemoteParticipant } from 'livekit-client';
+import { DisconnectReason, type RemoteTrack, type RemoteParticipant } from 'livekit-client';
 
 interface Config {
   displayName: string;
@@ -44,7 +44,7 @@ interface ChatParticipant {
   styleUrl: './world.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WorldComponent implements OnInit, OnDestroy {
+export class WorldComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   // inject() API (Angular 14+) でサービスを取得
   private liveKit  = inject(LiveKitService);
@@ -75,6 +75,7 @@ export class WorldComponent implements OnInit, OnDestroy {
   };
 
   // --- 内部状態 ---
+  private worldInitialized = false;  // initWorld() の二重呼び出しを防ぐフラグ
   private canvas!: HTMLCanvasElement;
   private ctx!:    CanvasRenderingContext2D;
   private raf  = 0;
@@ -116,7 +117,7 @@ export class WorldComponent implements OnInit, OnDestroy {
       this.liveKit.trackUnsubscribed$.subscribe(track => track.detach())
     );
     this.subs.add(
-      this.liveKit.disconnected$.subscribe(() => {
+      this.liveKit.disconnected$.subscribe((_reason: DisconnectReason | undefined) => {
         this.chatConnected = false;
         this.participants  = [];
         this.proxConnected = false;
@@ -143,8 +144,16 @@ export class WorldComponent implements OnInit, OnDestroy {
     this.myPlayer.name = this.cfg.displayName;
     this.started = true;
     this.cdr.markForCheck();
-    // canvas は *ngIf で生成されるため次フレームで取得
-    requestAnimationFrame(() => this.initWorld());
+    // initWorld() は ngAfterViewChecked で canvas が DOM に現れてから呼ぶ
+  }
+
+  // @if (started) で canvas が DOM に追加された後に呼ばれる
+  // canvasRef が使えるようになったタイミングで一度だけ initWorld() を実行する
+  ngAfterViewChecked(): void {
+    if (this.started && !this.worldInitialized && this.canvasRef?.nativeElement) {
+      this.worldInitialized = true;
+      this.initWorld();
+    }
   }
 
   // ============================================================
