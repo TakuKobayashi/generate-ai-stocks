@@ -1,7 +1,46 @@
+# 依存パッケージ
 node_modules/
+
+# ビルド成果物
 dist/
-.wrangler/
+.next/
+out/
+
+# Turbo
 .turbo/
-*.local
-.env
+
+# Cloudflare Workers (wrangler)
+.wrangler/
 .dev.vars
+
+# PartyKit
+.partykit/
+
+# Vite
+*.local
+
+# 環境変数
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# エディタ
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ログ
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# pnpm
+.pnpm-store/
