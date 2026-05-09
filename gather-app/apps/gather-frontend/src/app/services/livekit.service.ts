@@ -1,8 +1,6 @@
-// apps/frontend/src/app/services/livekit.service.ts
-// LiveKit SDK のラッパーサービス
-// 接続・切断・トラック操作を担当する
-
-import angular from "angular";
+// apps/gather-frontend/src/app/services/livekit.service.ts
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import {
   Room,
   RoomEvent,
@@ -10,30 +8,51 @@ import {
   VideoPresets,
   type RemoteTrack,
   type RemoteParticipant,
-  type TrackPublication,
-} from "livekit-client";
+} from 'livekit-client';
 
-export interface LiveKitEventMap {
-  "lk:participantConnected":    (p: RemoteParticipant) => void;
-  "lk:participantDisconnected": (p: RemoteParticipant) => void;
-  "lk:trackSubscribed":         (track: RemoteTrack, participant: RemoteParticipant) => void;
-  "lk:trackUnsubscribed":       (track: RemoteTrack) => void;
-  "lk:disconnected":            (reason?: string) => void;
+// ============================================================
+// イベントの型定義
+// ============================================================
+export interface TrackSubscribedEvent {
+  track:       RemoteTrack;
+  participant: RemoteParticipant;
 }
 
+// ============================================================
+// LiveKitService
+//
+// @Injectable({ providedIn: 'root' }) により、
+// アプリ全体でシングルトンとして使用可能。
+// pages/ 以下の任意の component から constructor DI で受け取れる。
+//
+// 使い方:
+//   constructor(private liveKit: LiveKitService) {}
+//
+//   // 接続
+//   await this.liveKit.connect(serverUrl, token);
+//
+//   // イベント購読
+//   this.liveKit.participantConnected$.subscribe(p => { ... });
+// ============================================================
+@Injectable({ providedIn: 'root' })
 export class LiveKitService {
-  static $inject = ["$rootScope", "$timeout"];
+
+  // RxJS Subject でイベントをストリームとして公開
+  // コンポーネントは subscribe() で受け取り、OnDestroy で unsubscribe する
+  readonly participantConnected$    = new Subject<RemoteParticipant>();
+  readonly participantDisconnected$ = new Subject<RemoteParticipant>();
+  readonly trackSubscribed$         = new Subject<TrackSubscribedEvent>();
+  readonly trackUnsubscribed$       = new Subject<RemoteTrack>();
+  readonly disconnected$            = new Subject<string | undefined>();
 
   private room: Room | null = null;
 
-  constructor(
-    private $rootScope: angular.IRootScopeService,
-    private $timeout:   angular.ITimeoutService,
-  ) {}
-
   // ------------------------------------------------------------------
   // connect
-  // serverUrl を変えるだけで Cloud / セルフホスト を切り替え可能
+  // serverUrl を切り替えるだけで Cloud / セルフホスト を変更できる:
+  //   Cloud:      wss://your-app.livekit.cloud
+  //   Oracle:     wss://your.oracle.ip:7880
+  //   ローカル:   ws://localhost:7880
   // ------------------------------------------------------------------
   async connect(serverUrl: string, token: string): Promise<Room> {
     await this.disconnect();
@@ -46,20 +65,14 @@ export class LiveKitService {
       },
     });
 
-    // AngularJS の digest サイクル外で発火するイベントを
-    // $timeout でラップして安全にブロードキャストする
-    const broadcast = <T>(event: string, payload?: T) => {
-      this.$timeout(() => this.$rootScope.$broadcast(event, payload));
-    };
-
     this.room
-      .on(RoomEvent.ParticipantConnected,    (p)            => broadcast("lk:participantConnected",    p))
-      .on(RoomEvent.ParticipantDisconnected, (p)            => broadcast("lk:participantDisconnected", p))
-      .on(RoomEvent.TrackSubscribed,         (track, _, p)  => broadcast("lk:trackSubscribed",  { track, participant: p }))
-      .on(RoomEvent.TrackUnsubscribed,       (track)        => broadcast("lk:trackUnsubscribed", { track }))
-      .on(RoomEvent.Disconnected,            (reason)       => {
+      .on(RoomEvent.ParticipantConnected,    (p)           => this.participantConnected$.next(p))
+      .on(RoomEvent.ParticipantDisconnected, (p)           => this.participantDisconnected$.next(p))
+      .on(RoomEvent.TrackSubscribed,         (track, _, p) => this.trackSubscribed$.next({ track, participant: p }))
+      .on(RoomEvent.TrackUnsubscribed,       (track)       => this.trackUnsubscribed$.next(track))
+      .on(RoomEvent.Disconnected,            (reason)      => {
         this.room = null;
-        broadcast("lk:disconnected", reason);
+        this.disconnected$.next(reason);
       });
 
     await this.room.connect(serverUrl, token);
@@ -74,23 +87,21 @@ export class LiveKitService {
     }
   }
 
-  getRoom(): Room | null { return this.room; }
+  getRoom(): Room | null {
+    return this.room;
+  }
 
   getLocalVideoTrack() {
     if (!this.room) return null;
     const pub = this.room.localParticipant.getTrackPublication(Track.Source.Camera);
-    return (pub && pub.track) ? pub.track : null;
+    return pub?.track ?? null;
   }
 
-  async setMicEnabled(enabled: boolean) {
-    if (this.room) await this.room.localParticipant.setMicrophoneEnabled(enabled);
+  async setMicEnabled(enabled: boolean): Promise<void> {
+    await this.room?.localParticipant.setMicrophoneEnabled(enabled);
   }
 
-  async setCamEnabled(enabled: boolean) {
-    if (this.room) await this.room.localParticipant.setCameraEnabled(enabled);
+  async setCamEnabled(enabled: boolean): Promise<void> {
+    await this.room?.localParticipant.setCameraEnabled(enabled);
   }
 }
-
-angular
-  .module("gatherApp")
-  .service("LiveKitService", LiveKitService);

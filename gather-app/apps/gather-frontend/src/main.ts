@@ -1,9 +1,7 @@
-// apps/frontend/src/main.ts
-// AngularJS アプリのエントリーポイント
-// Vite が ES module として読み込む
+// apps/gather-frontend/src/main.ts
+import { bootstrapApplication } from '@angular/platform-browser';
+import { appConfig } from './app/app.config';
+import { AppComponent } from './app/app.component';
 
-import "angular";
-import "./app/app.module";
-import "./app/services/livekit.service";
-import "./app/services/partykit.service";
-import "./app/controllers/world.controller";
+bootstrapApplication(AppComponent, appConfig)
+  .catch(err => console.error(err));
