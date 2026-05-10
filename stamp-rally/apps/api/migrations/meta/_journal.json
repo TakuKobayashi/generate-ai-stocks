@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1778417458426,
+      "tag": "0000_peaceful_stingray",
+      "breakpoints": true
+    }
+  ]
+}

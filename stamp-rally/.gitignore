@@ -6,5 +6,6 @@ dist/
 *.local
 .env
 .env.local
+.dev.vars
 .DS_Store
 *.tsbuildinfo

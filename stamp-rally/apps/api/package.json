@@ -7,13 +7,15 @@
     "build": "tsc",
     "deploy": "wrangler deploy",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "wrangler d1 migrations apply stamp-rally-db --remote",
-    "db:migrate:local": "wrangler d1 migrations apply stamp-rally-db --local"
+    "db:migrate:local": "wrangler d1 migrations apply stamp-rally-db --local",
+    "db:migrate": "wrangler d1 migrations apply stamp-rally-db --remote"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.4.1",
     "hono": "^4.6.0",
     "drizzle-orm": "^0.36.0",
-    "nanoid": "^5.0.7"
+    "nanoid": "^5.0.7",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241022.0",
