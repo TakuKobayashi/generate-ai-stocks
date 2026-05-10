@@ -6,13 +6,21 @@ import Link from 'next/link';
 import { adminStorage } from '@/lib/storage';
 import styles from './layout.module.css';
 
+// 認証不要なページ
+const PUBLIC_PATHS = ['/admin/login', '/admin/register'];
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
 
   useEffect(() => {
-    if (pathname === '/admin/login' || pathname === '/admin/register') return;
+    setMounted(true);
+
+    // 認証不要ページはスキップ
+    if (PUBLIC_PATHS.includes(pathname)) return;
+
     const u = adminStorage.getUser();
     if (!u) {
       router.replace('/admin/login');
@@ -21,8 +29,36 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     setUser(u);
   }, [pathname, router]);
 
-  const isAuthPage = pathname === '/admin/login' || pathname === '/admin/register';
-  if (isAuthPage) return <>{children}</>;
+  const handleLogout = () => {
+    adminStorage.clear();
+    setUser(null);
+    router.replace('/admin/login');
+  };
+
+  // 認証不要ページはレイアウトなしで表示
+  if (PUBLIC_PATHS.includes(pathname)) {
+    return <>{children}</>;
+  }
+
+  // マウント前はサーバー・クライアントで同じ何もない状態を返す（hydration mismatch 防止）
+  if (!mounted) {
+    return (
+      <div className={styles.layout}>
+        <aside className={styles.sidebar}>
+          <div className={styles.sidebarLogo}>
+            <span className={styles.logoIcon}>◈</span>
+            <div>
+              <div className={styles.logoTitle}>STAMP RALLY</div>
+              <div className={styles.logoSub}>管理者ダッシュボード</div>
+            </div>
+          </div>
+          <nav className={styles.nav} />
+          <div className={styles.sidebarBottom} />
+        </aside>
+        <main className={styles.main} />
+      </div>
+    );
+  }
 
   return (
     <div className={styles.layout}>
@@ -45,19 +81,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {user && (
             <div className={styles.userInfo}>
               <div className={styles.userAvatar}>{user.name[0]}</div>
-              <div>
+              <div className={styles.userText}>
                 <div className={styles.userName}>{user.name}</div>
                 <div className={styles.userEmail}>{user.email}</div>
               </div>
             </div>
           )}
-          <button
-            className={`btn btn-ghost btn-sm ${styles.logoutBtn}`}
-            onClick={() => {
-              adminStorage.clear();
-              router.replace('/admin/login');
-            }}
-          >
+          <button className={`btn btn-ghost btn-sm ${styles.logoutBtn}`} onClick={handleLogout}>
             ログアウト
           </button>
         </div>

@@ -19,12 +19,17 @@ interface PendingPin {
 // Leaflet は SSR 非対応のため dynamic import
 export default function CreateRallyMap({ onPinAdded, existingLocations }: Props) {
   const mapRef = useRef<HTMLDivElement>(null);
+  const searchBoxRef = useRef<HTMLFormElement>(null);
   const leafletMapRef = useRef<L.Map | null>(null);
+  const userAdjustedMapRef = useRef(false);
   const markersRef = useRef<L.Marker[]>([]);
   const pendingMarkerRef = useRef<L.Marker | null>(null);
   const [pendingPin, setPendingPin] = useState<PendingPin | null>(null);
   const [editName, setEditName] = useState('');
   const [geocoding, setGeocoding] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searching, setSearching] = useState(false);
+  const [searchError, setSearchError] = useState('');
 
   useEffect(() => {
     if (typeof window === 'undefined' || !mapRef.current || leafletMapRef.current) return;
@@ -49,10 +54,34 @@ export default function CreateRallyMap({ onPinAdded, existingLocations }: Props)
         maxZoom: 19,
       }).addTo(map);
 
+      if (searchBoxRef.current) {
+        L.DomEvent.disableClickPropagation(searchBoxRef.current);
+        L.DomEvent.disableScrollPropagation(searchBoxRef.current);
+      }
+
       leafletMapRef.current = map;
+
+      if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            if (userAdjustedMapRef.current) return;
+            map.setView(
+              [position.coords.latitude, position.coords.longitude],
+              16
+            );
+          },
+          () => undefined,
+          { enableHighAccuracy: true, maximumAge: 60000, timeout: 8000 }
+        );
+      }
+
+      map.on('dragstart zoomstart', () => {
+        userAdjustedMapRef.current = true;
+      });
 
       // クリックでピン留め
       map.on('click', async (e: L.LeafletMouseEvent) => {
+        userAdjustedMapRef.current = true;
         const { lat, lng } = e.latlng;
 
         // 既存の仮ピンを削除
@@ -163,9 +192,74 @@ export default function CreateRallyMap({ onPinAdded, existingLocations }: Props)
     setEditName('');
   };
 
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const query = searchQuery.trim();
+    if (!query || !leafletMapRef.current) return;
+
+    setSearching(true);
+    setSearchError('');
+    userAdjustedMapRef.current = true;
+
+    try {
+      const params = new URLSearchParams({
+        q: query,
+        format: 'json',
+        limit: '1',
+        addressdetails: '1',
+        'accept-language': 'ja',
+      });
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?${params.toString()}`);
+      if (!res.ok) throw new Error('Search failed');
+
+      const data: Array<{ lat: string; lon: string }> = await res.json();
+      const result = data[0];
+      if (!result) {
+        setSearchError('場所が見つかりませんでした');
+        return;
+      }
+
+      leafletMapRef.current.setView(
+        [Number(result.lat), Number(result.lon)],
+        16
+      );
+    } catch {
+      setSearchError('検索に失敗しました');
+    } finally {
+      setSearching(false);
+    }
+  };
+
   return (
     <div className={styles.wrapper}>
       <div ref={mapRef} className={styles.map} />
+
+      <form
+        ref={searchBoxRef}
+        className={styles.searchBox}
+        onSubmit={handleSearch}
+        onClick={e => e.stopPropagation()}
+        onMouseDown={e => e.stopPropagation()}
+      >
+        <div className={styles.searchRow}>
+          <input
+            type="search"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            placeholder="場所名・住所で検索"
+            aria-label="場所名・住所で検索"
+          />
+          <button
+            type="submit"
+            className="btn btn-primary btn-sm"
+            disabled={searching || !searchQuery.trim()}
+          >
+            {searching ? <span className="spinner" style={{ width: 14, height: 14 }} /> : '検索'}
+          </button>
+        </div>
+        {searchError && <div className={styles.searchError}>{searchError}</div>}
+      </form>
 
       {/* ピン追加パネル */}
       {pendingPin && (

@@ -127,10 +127,18 @@
   flex-shrink: 0;
 }
 
+.userText {
+  min-width: 0;
+  flex: 1;
+}
+
 .userName {
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--fg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .userEmail {
@@ -139,7 +147,6 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 150px;
 }
 
 .logoutBtn {

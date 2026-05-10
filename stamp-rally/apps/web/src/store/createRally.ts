@@ -2,30 +2,39 @@ import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import type { CreateRallyForm, CreateRallyLocation } from '@/types';
 
-const defaultForm: CreateRallyForm = {
-  name: '',
-  description: '',
-  startAt: '',
-  endAt: '',
-  maxParticipants: '',
-  locations: [],
-  selectedPin: null,
-};
+export function toDateTimeLocalValue(date: Date): string {
+  const pad = (value: number) => String(value).padStart(2, '0');
+  return [
+    date.getFullYear(),
+    pad(date.getMonth() + 1),
+    pad(date.getDate()),
+  ].join('-') + `T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
 
-// LocalStorage に永続化されるフォーム状態
+export function createDefaultCreateRallyForm(): CreateRallyForm {
+  return {
+    name: '',
+    description: '',
+    startAt: toDateTimeLocalValue(new Date()),
+    endAt: '',
+    maxParticipants: '',
+    locations: [],
+    selectedPin: null,
+  };
+}
+
+const defaultForm: CreateRallyForm = createDefaultCreateRallyForm();
+
 export const createRallyAtom = atomWithStorage<CreateRallyForm>(
   'stamp_rally_create_form',
   defaultForm
 );
 
-// 選択中のピン (地図でクリックした場所)
 export const selectedPinAtom = atom<CreateRallyLocation | null>(null);
 
-// ローカルIDカウンター
 let _counter = 0;
 export function genLocalId(): string {
   return `local_${++_counter}_${Date.now()}`;
 }
 
-// フォームリセット
 export const defaultCreateRallyForm = defaultForm;

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { userApi } from '@/lib/api';
 import { userStorage } from '@/lib/storage';
 import type { Participation } from '@/types';
@@ -9,18 +10,35 @@ import { getParticipationStatus } from '@/types';
 import styles from './page.module.css';
 
 export default function UserHomePage() {
+  const router = useRouter();
+  const [mounted, setMounted] = useState(false);
   const [participations, setParticipations] = useState<Participation[]>([]);
   const [loading, setLoading] = useState(true);
-  const user = userStorage.getUser();
+  // SSR時は null で統一し、クライアントマウント後にセット
+  const [user, setUser] = useState<{ name?: string; email?: string; isGuest: boolean } | null>(null);
 
   useEffect(() => {
+    setMounted(true);
+    const u = userStorage.getUser();
+    setUser(u);
+
     const token = userStorage.getToken();
-    if (!token) { setLoading(false); return; }
+    if (!token) {
+      setLoading(false);
+      return;
+    }
     userApi
       .getMyParticipations(token)
       .then(d => setParticipations(d.participations))
       .finally(() => setLoading(false));
   }, []);
+
+  const handleLogout = () => {
+    userStorage.clear();
+    setUser(null);
+    setParticipations([]);
+    router.refresh();
+  };
 
   return (
     <div className={`${styles.page} map-bg-pattern`}>
@@ -31,10 +49,17 @@ export default function UserHomePage() {
             <span className={styles.logoIcon}>◈</span>
             <span className={styles.logoText}>STAMP RALLY</span>
           </div>
+
+          {/* mounted 前は何も表示しない（SSR/CSR で一致させる） */}
           <div className={styles.headerActions}>
-            {user ? (
-              <div className={styles.userBadge}>
-                {user.isGuest ? '👤 ゲスト' : `👤 ${user.name}`}
+            {!mounted ? null : user ? (
+              <div className={styles.userArea}>
+                <div className={styles.userBadge}>
+                  {user.isGuest ? '👤 ゲスト' : `👤 ${user.name ?? 'ユーザー'}`}
+                </div>
+                <button className="btn btn-ghost btn-sm" onClick={handleLogout}>
+                  ログアウト
+                </button>
               </div>
             ) : (
               <div className={styles.authLinks}>
@@ -60,7 +85,8 @@ export default function UserHomePage() {
             参加中のスタンプラリー
           </h2>
 
-          {!user ? (
+          {/* mounted 前は空表示で hydration を合わせる */}
+          {!mounted ? null : !user ? (
             <div className={styles.noAuth}>
               <p>ログインするとスタンプラリーの参加履歴が表示されます</p>
               <div className={styles.authButtons}>
@@ -98,11 +124,11 @@ function ParticipationCard({ participation }: { participation: Participation }) 
   const status = getParticipationStatus(rally, participation);
 
   const statusConfig = {
-    active: { label: '参加中', cls: 'badge-active' },
-    completed: { label: 'コンプリート！', cls: 'badge-completed' },
-    not_started: { label: '開始前', cls: 'badge-soon' },
-    ended: { label: '終了', cls: 'badge-ended' },
-    inactive: { label: '無効', cls: 'badge-inactive' },
+    active:      { label: '参加中',         cls: 'badge-active' },
+    completed:   { label: 'コンプリート！',  cls: 'badge-completed' },
+    not_started: { label: '開始前',          cls: 'badge-soon' },
+    ended:       { label: '終了',            cls: 'badge-ended' },
+    inactive:    { label: '無効',            cls: 'badge-inactive' },
   }[status];
 
   const progress = participation.totalCount > 0
@@ -116,7 +142,8 @@ function ParticipationCard({ participation }: { participation: Participation }) 
           <div className={styles.rallyCardName}>{rally.name}</div>
           {rally.endAt && (
             <div className={styles.rallyCardDate}>
-              {new Date(rally.startAt).toLocaleDateString('ja-JP')} 〜 {new Date(rally.endAt).toLocaleDateString('ja-JP')}
+              {new Date(rally.startAt).toLocaleDateString('ja-JP')} 〜{' '}
+              {new Date(rally.endAt).toLocaleDateString('ja-JP')}
             </div>
           )}
         </div>

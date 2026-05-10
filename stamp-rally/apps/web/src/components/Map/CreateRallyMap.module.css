@@ -9,6 +9,46 @@
   height: 100%;
 }
 
+.searchBox {
+  position: absolute;
+  top: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(420px, calc(100% - 6rem));
+  background: rgba(12,14,20,0.9);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 0.625rem;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(4px);
+  z-index: 700;
+}
+
+.searchRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.searchRow input {
+  min-width: 0;
+  font-size: 0.875rem;
+}
+
+.searchError {
+  margin-top: 0.45rem;
+  color: #ff8f8f;
+  font-size: 0.75rem;
+}
+
+@media (max-width: 520px) {
+  .searchBox {
+    top: 4.25rem;
+    width: calc(100% - 1.5rem);
+  }
+}
+
 /* ==============================
    Pin panel (appears on click)
    ============================== */
@@ -72,7 +112,7 @@
    ============================== */
 .hint {
   position: absolute;
-  top: 0.75rem;
+  top: 4.5rem;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(12,14,20,0.82);

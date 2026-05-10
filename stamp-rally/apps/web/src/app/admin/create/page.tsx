@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
-import { createRallyAtom, defaultCreateRallyForm, genLocalId } from '@/store/createRally';
+import { createDefaultCreateRallyForm, createRallyAtom, genLocalId } from '@/store/createRally';
 import { adminRallyApi } from '@/lib/api';
 import { adminStorage } from '@/lib/storage';
 import CreateRallyMap from '@/components/Map/CreateRallyMap';
@@ -16,6 +16,11 @@ export default function AdminCreatePage() {
   const [form, setForm] = useAtom(createRallyAtom);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (form.startAt) return;
+    setForm(prev => ({ ...prev, startAt: createDefaultCreateRallyForm().startAt }));
+  }, [form.startAt, setForm]);
 
   const handlePinAdded = (pin: Omit<CreateRallyLocation, 'id'>) => {
     setForm(prev => ({
@@ -68,7 +73,7 @@ export default function AdminCreatePage() {
         },
         token
       );
-      setForm(defaultCreateRallyForm);
+      setForm(createDefaultCreateRallyForm());
       router.push(`/admin/${res.rally.id}`);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'エラーが発生しました');
@@ -184,7 +189,7 @@ export default function AdminCreatePage() {
                 className="btn btn-ghost"
                 onClick={() => {
                   if (confirm('入力内容をリセットしますか？')) {
-                    setForm(defaultCreateRallyForm);
+                    setForm(createDefaultCreateRallyForm());
                   }
                 }}
               >

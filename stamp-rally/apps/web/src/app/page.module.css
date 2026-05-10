@@ -21,6 +21,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-height: 56px; /* マウント前後で高さが変わらないよう固定 */
 }
 
 .logo {
@@ -46,7 +47,14 @@
 .headerActions {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  min-width: 120px; /* マウント前後でレイアウトシフトを防ぐ */
+  justify-content: flex-end;
+}
+
+.userArea {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
 }
 
 .userBadge {
@@ -103,7 +111,6 @@
 }
 
 .sectionTitle {
-  font-size: 1rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
