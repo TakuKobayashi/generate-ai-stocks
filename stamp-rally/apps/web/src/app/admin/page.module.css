@@ -1,0 +1,176 @@
+.headerRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ==============================
+   Empty state
+   ============================== */
+.empty {
+  text-align: center;
+  padding: 5rem 2rem;
+  color: var(--fg-2);
+}
+
+.emptyIcon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  color: var(--amber-dim);
+  filter: drop-shadow(0 0 20px rgba(212,168,71,0.3));
+}
+
+.empty h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--fg);
+}
+
+/* ==============================
+   Grid
+   ============================== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.25rem;
+}
+
+/* ==============================
+   Card
+   ============================== */
+.card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ==============================
+   Map thumbnail
+   ============================== */
+.mapThumb {
+  display: block;
+  height: 160px;
+  overflow: hidden;
+  position: relative;
+  background: var(--bg-3);
+}
+
+.mapImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.65) saturate(0.6) hue-rotate(185deg);
+  transition: filter 0.3s, transform 0.3s;
+}
+
+.mapThumb:hover .mapImg {
+  filter: brightness(0.75) saturate(0.7) hue-rotate(185deg);
+  transform: scale(1.04);
+}
+
+.mapOverlay {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 0.75rem;
+}
+
+.pinCount {
+  background: rgba(12,14,20,0.85);
+  color: var(--amber);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  border: 1px solid rgba(212,168,71,0.3);
+  backdrop-filter: blur(4px);
+}
+
+/* ==============================
+   Card content
+   ============================== */
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.rallyName {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--fg);
+  text-decoration: none;
+  line-height: 1.4;
+  transition: color 0.2s;
+}
+
+.rallyName:hover {
+  color: var(--amber);
+}
+
+/* ==============================
+   Stats
+   ============================== */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: var(--bg-3);
+  border-radius: var(--r-md);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.statValue {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--fg);
+  line-height: 1;
+}
+
+.statUnit {
+  font-size: 0.65rem;
+  color: var(--fg-3);
+  margin-top: 0.1rem;
+}
+
+.statLabel {
+  font-size: 0.7rem;
+  color: var(--fg-3);
+  margin-top: 0.2rem;
+  letter-spacing: 0.02em;
+}
+
+/* ==============================
+   Dates
+   ============================== */
+.dates {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.78rem;
+  color: var(--fg-3);
+  margin-bottom: 1rem;
+}
+
+/* ==============================
+   Card actions
+   ============================== */
+.cardActions {
+  display: flex;
+  gap: 0.5rem;
+}

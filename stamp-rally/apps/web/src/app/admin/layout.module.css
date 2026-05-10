@@ -1,0 +1,162 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ==============================
+   Sidebar
+   ============================== */
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--bg-2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebarLogo {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1.5rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.logoIcon {
+  font-size: 1.75rem;
+  color: var(--amber);
+  line-height: 1;
+}
+
+.logoTitle {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--fg);
+}
+
+.logoSub {
+  font-size: 0.7rem;
+  color: var(--fg-3);
+  letter-spacing: 0.04em;
+  margin-top: 0.1rem;
+}
+
+/* ==============================
+   Navigation
+   ============================== */
+.nav {
+  padding: 1rem 0.75rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.875rem;
+  border-radius: var(--r-md);
+  color: var(--fg-2);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.navItem:hover {
+  background: var(--bg-3);
+  color: var(--fg);
+}
+
+.navItemActive {
+  background: var(--amber-glow);
+  color: var(--amber);
+  border: 1px solid rgba(212,168,71,0.2);
+}
+
+.navItemActive:hover {
+  background: var(--amber-glow);
+  color: var(--amber);
+}
+
+.navIcon {
+  font-size: 1rem;
+  width: 20px;
+  text-align: center;
+}
+
+/* ==============================
+   Sidebar Bottom
+   ============================== */
+.sidebarBottom {
+  padding: 1rem 0.75rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+}
+
+.userAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--amber-glow);
+  border: 1.5px solid rgba(212,168,71,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: var(--amber);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.userName {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--fg);
+}
+
+.userEmail {
+  font-size: 0.75rem;
+  color: var(--fg-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+.logoutBtn {
+  width: 100%;
+}
+
+/* ==============================
+   Main content
+   ============================== */
+.main {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--bg);
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    display: none;
+  }
+}

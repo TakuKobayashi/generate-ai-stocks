@@ -1,0 +1,24 @@
+{
+  "name": "api",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "wrangler dev --port 8787",
+    "build": "tsc",
+    "deploy": "wrangler deploy",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "wrangler d1 migrations apply stamp-rally-db --remote",
+    "db:migrate:local": "wrangler d1 migrations apply stamp-rally-db --local"
+  },
+  "dependencies": {
+    "hono": "^4.6.0",
+    "drizzle-orm": "^0.36.0",
+    "nanoid": "^5.0.7"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241022.0",
+    "drizzle-kit": "^0.27.0",
+    "typescript": "^5.6.0",
+    "wrangler": "^3.80.0"
+  }
+}

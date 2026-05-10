@@ -1,0 +1,213 @@
+.pageHeader {
+  margin-bottom: 2rem;
+}
+
+.titleRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* ==============================
+   Grid layout
+   ============================== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.shareCard,
+.locationsCard {
+  grid-column: span 1;
+}
+
+/* ==============================
+   Stats
+   ============================== */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.statBox {
+  text-align: center;
+  padding: 1rem;
+  background: var(--bg-3);
+  border-radius: var(--r-md);
+}
+
+.statVal {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.statUnt {
+  font-size: 0.875rem;
+  font-weight: 400;
+  margin-left: 0.2rem;
+  color: var(--fg-2);
+}
+
+.statLbl {
+  font-size: 0.75rem;
+  color: var(--fg-3);
+  margin-top: 0.4rem;
+  letter-spacing: 0.04em;
+}
+
+/* ==============================
+   Info list
+   ============================== */
+.infoList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  gap: 1rem;
+}
+
+.infoRow:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.infoLabel {
+  font-size: 0.8rem;
+  color: var(--fg-3);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.infoValue {
+  font-size: 0.9rem;
+  color: var(--fg);
+  font-weight: 500;
+  text-align: right;
+}
+
+/* ==============================
+   Share
+   ============================== */
+.shareUrl {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 0.6rem 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+.urlText {
+  font-family: 'Courier New', monospace;
+  font-size: 0.78rem;
+  color: var(--amber);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.copyBtn {
+  flex-shrink: 0;
+}
+
+.qrWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qrBox {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1.25rem;
+  display: inline-flex;
+}
+
+/* ==============================
+   Location list
+   ============================== */
+.locationList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.locationItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  padding: 0.75rem;
+  background: var(--bg-3);
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+}
+
+.locationNum {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--amber-glow);
+  border: 1.5px solid rgba(212,168,71,0.4);
+  color: var(--amber);
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.locationInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.locationName {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--fg);
+}
+
+.locationAddr {
+  font-size: 0.8rem;
+  color: var(--fg-2);
+  margin-top: 0.15rem;
+}
+
+.locationCoords {
+  font-size: 0.72rem;
+  color: var(--fg-3);
+  font-family: monospace;
+  margin-top: 0.2rem;
+}
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; }
+  .shareCard, .locationsCard { grid-column: span 1; }
+  .statsGrid { grid-template-columns: repeat(3, 1fr); }
+}
