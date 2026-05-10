@@ -1,0 +1,29 @@
+{
+  "name": "worker-d1",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev --port 8787",
+    "build": "wrangler deploy --dry-run",
+    "deploy": "pnpm build:web && wrangler deploy",
+    "build:web": "cd ../web && pnpm build",
+    "migrate": "wrangler d1 migrations apply chat-d1-db",
+    "typecheck": "tsc --noEmit",
+    "generate": "drizzle-kit generate",
+    "studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@chat-app/shared": "workspace:*",
+    "@hono/zod-validator": "^0.4.3",
+    "@simplewebauthn/server": "^10.0.0",
+    "drizzle-orm": "^0.30.10",
+    "hono": "^4.4.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240725.0",
+    "drizzle-kit": "^0.21.4",
+    "typescript": "^5.4.5",
+    "wrangler": "^3.60.0"
+  }
+}

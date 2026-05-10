@@ -1,0 +1,127 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
+import { useAuth } from "@/lib/auth-context";
+import { api } from "@/lib/api";
+import type { Room } from "@chat-app/shared";
+import RoomModal from "./RoomModal";
+
+export default function AppShell({ children }: { children: React.ReactNode }) {
+  const { user, loading, logout } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.replace("/login");
+    }
+  }, [user, loading, router]);
+
+  useEffect(() => {
+    if (user) {
+      api.rooms.list().then((r) => setRooms(r.data)).catch(() => {});
+    }
+  }, [user]);
+
+  const refreshRooms = () => {
+    api.rooms.list().then((r) => setRooms(r.data)).catch(() => {});
+  };
+
+  if (loading) {
+    return (
+      <div className="loading-center">
+        <div className="spinner" />
+      </div>
+    );
+  }
+  if (!user) return null;
+
+  const initials = user.displayName
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  return (
+    <div className="app-shell">
+      <aside className="sidebar">
+        <div className="sidebar-header">
+          <div className="logo">
+            <div className="logo-dot" />
+            ChatApp
+          </div>
+        </div>
+
+        <div className="sidebar-section">
+          <div className="sidebar-section-title">ルーム</div>
+
+          {rooms.map((room) => {
+            const isActive = pathname === `/rooms/${room.id}`;
+            return (
+              <Link
+                key={room.id}
+                href={`/rooms/${room.id}`}
+                className={`room-item ${isActive ? "active" : ""}`}
+              >
+                <span className="room-item-icon">#</span>
+                <span className="room-item-name">{room.name}</span>
+              </Link>
+            );
+          })}
+
+          <button
+            className="room-item"
+            style={{ width: "100%", marginTop: 4, color: "var(--accent)" }}
+            onClick={() => setShowModal(true)}
+            type="button"
+          >
+            <span className="room-item-icon">+</span>
+            <span className="room-item-name">新しいルーム</span>
+          </button>
+        </div>
+
+        <div className="sidebar-footer">
+          <div className="user-info">
+            <div className="user-avatar">{initials}</div>
+            <div className="user-details">
+              <div className="user-name">{user.displayName}</div>
+              <div className="user-email">{user.email}</div>
+            </div>
+            <button
+              className="btn btn-ghost btn-sm"
+              onClick={async () => { await logout(); router.replace("/login"); }}
+              title="ログアウト"
+              type="button"
+            >
+              <LogoutIcon />
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <div className="main-content">{children}</div>
+
+      {showModal && (
+        <RoomModal
+          onClose={() => setShowModal(false)}
+          onCreated={() => { refreshRooms(); setShowModal(false); }}
+        />
+      )}
+    </div>
+  );
+}
+
+function LogoutIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <polyline points="16 17 21 12 16 7" />
+      <line x1="21" y1="12" x2="9" y2="12" />
+    </svg>
+  );
+}

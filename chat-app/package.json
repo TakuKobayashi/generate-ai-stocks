@@ -1,0 +1,27 @@
+{
+  "name": "chat-app",
+  "private": true,
+  "packageManager": "pnpm@9.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "pnpm --filter web dev",
+    "dev:angular": "pnpm --filter web-angular dev",
+    "dev:d1": "pnpm --filter worker-d1 dev",
+    "dev:kv": "pnpm --filter worker-kv dev",
+    "build:web": "pnpm --filter web build",
+    "build:angular": "pnpm --filter web-angular build",
+    "build:d1": "pnpm --filter worker-d1 build",
+    "build:kv": "pnpm --filter worker-kv build",
+    "deploy:d1": "pnpm build:web && cd apps/worker-d1 && wrangler deploy",
+    "deploy:kv": "pnpm build:web && cd apps/worker-kv && wrangler deploy",
+    "deploy:angular-d1": "pnpm build:angular && cd apps/web-angular && wrangler deploy",
+    "migrate:d1": "cd apps/worker-d1 && wrangler d1 migrations apply chat-d1-db",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}
