@@ -8,129 +8,36 @@ import { rooms } from "../db/schema";
 import { authMiddleware } from "../middleware/auth";
 import { generateId } from "../utils/crypto";
 
-type Variables = { userId: string; displayName: string; email: string };
+type V = { userId: string; displayName: string; email: string };
+const r = new Hono<{ Bindings: Env; Variables: V }>();
+r.use("*", authMiddleware);
 
-const roomsRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
-
-roomsRoute.use("*", authMiddleware);
-
-// List all rooms
-roomsRoute.get("/", async (c) => {
-  const db = getDB(c.env.DB);
-  const all = await db.select().from(rooms).all();
-  return c.json({ data: all });
+r.get("/", async (c) => c.json({ data: await getDB(c.env.DB).select().from(rooms).all() }));
+r.get("/:id", async (c) => {
+  const room = await getDB(c.env.DB).select().from(rooms).where(eq(rooms.id, c.req.param("id"))).get();
+  return room ? c.json({ data: room }) : c.json({ error: "Not found" }, 404);
 });
-
-// Get single room
-roomsRoute.get("/:id", async (c) => {
-  const db = getDB(c.env.DB);
-  const room = await db
-    .select()
-    .from(rooms)
-    .where(eq(rooms.id, c.req.param("id")))
-    .get();
-  if (!room) return c.json({ error: "Room not found" }, 404);
-  return c.json({ data: room });
+r.post("/", zValidator("json", z.object({ name: z.string().min(1).max(100), description: z.string().max(500).optional() })), async (c) => {
+  const { name, description } = c.req.valid("json");
+  const now = new Date().toISOString(); const id = generateId();
+  await getDB(c.env.DB).insert(rooms).values({ id, name, description: description ?? null, createdBy: c.get("userId"), createdAt: now, updatedAt: now });
+  return c.json({ data: await getDB(c.env.DB).select().from(rooms).where(eq(rooms.id, id)).get() }, 201);
 });
-
-// Create room
-roomsRoute.post(
-  "/",
-  zValidator(
-    "json",
-    z.object({
-      name: z.string().min(1).max(100),
-      description: z.string().max(500).optional(),
-    })
-  ),
-  async (c) => {
-    const { name, description } = c.req.valid("json");
-    const db = getDB(c.env.DB);
-    const now = new Date().toISOString();
-    const id = generateId();
-    const userId = c.get("userId");
-
-    await db.insert(rooms).values({
-      id,
-      name,
-      description: description ?? null,
-      createdBy: userId,
-      createdAt: now,
-      updatedAt: now,
-    });
-
-    const room = await db.select().from(rooms).where(eq(rooms.id, id)).get();
-    return c.json({ data: room }, 201);
-  }
-);
-
-// Update room
-roomsRoute.put(
-  "/:id",
-  zValidator(
-    "json",
-    z.object({
-      name: z.string().min(1).max(100).optional(),
-      description: z.string().max(500).optional(),
-    })
-  ),
-  async (c) => {
-    const db = getDB(c.env.DB);
-    const userId = c.get("userId");
-    const roomId = c.req.param("id");
-
-    const existing = await db
-      .select()
-      .from(rooms)
-      .where(eq(rooms.id, roomId))
-      .get();
-
-    if (!existing) return c.json({ error: "Room not found" }, 404);
-    if (existing.createdBy !== userId) {
-      return c.json({ error: "Forbidden" }, 403);
-    }
-
-    const body = c.req.valid("json");
-    const now = new Date().toISOString();
-
-    await db
-      .update(rooms)
-      .set({
-        ...(body.name ? { name: body.name } : {}),
-        ...(body.description !== undefined ? { description: body.description } : {}),
-        updatedAt: now,
-      })
-      .where(eq(rooms.id, roomId));
-
-    const updated = await db
-      .select()
-      .from(rooms)
-      .where(eq(rooms.id, roomId))
-      .get();
-
-    return c.json({ data: updated });
-  }
-);
-
-// Delete room
-roomsRoute.delete("/:id", async (c) => {
-  const db = getDB(c.env.DB);
-  const userId = c.get("userId");
-  const roomId = c.req.param("id");
-
-  const existing = await db
-    .select()
-    .from(rooms)
-    .where(eq(rooms.id, roomId))
-    .get();
-
-  if (!existing) return c.json({ error: "Room not found" }, 404);
-  if (existing.createdBy !== userId) {
-    return c.json({ error: "Forbidden" }, 403);
-  }
-
+r.put("/:id", zValidator("json", z.object({ name: z.string().min(1).max(100).optional(), description: z.string().max(500).optional() })), async (c) => {
+  const db = getDB(c.env.DB); const roomId = c.req.param("id");
+  const ex = await db.select().from(rooms).where(eq(rooms.id, roomId)).get();
+  if (!ex) return c.json({ error: "Not found" }, 404);
+  if (ex.createdBy !== c.get("userId")) return c.json({ error: "Forbidden" }, 403);
+  const body = c.req.valid("json");
+  await db.update(rooms).set({ ...(body.name ? { name: body.name } : {}), ...(body.description !== undefined ? { description: body.description } : {}), updatedAt: new Date().toISOString() }).where(eq(rooms.id, roomId));
+  return c.json({ data: await db.select().from(rooms).where(eq(rooms.id, roomId)).get() });
+});
+r.delete("/:id", async (c) => {
+  const db = getDB(c.env.DB); const roomId = c.req.param("id");
+  const ex = await db.select().from(rooms).where(eq(rooms.id, roomId)).get();
+  if (!ex) return c.json({ error: "Not found" }, 404);
+  if (ex.createdBy !== c.get("userId")) return c.json({ error: "Forbidden" }, 403);
   await db.delete(rooms).where(eq(rooms.id, roomId));
   return c.json({ success: true });
 });
-
-export default roomsRoute;
+export default r;

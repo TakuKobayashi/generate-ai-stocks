@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { startRegistration } from "@simplewebauthn/browser";
+import type { PublicKeyCredentialCreationOptionsJSON } from "@simplewebauthn/types";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 
@@ -30,8 +31,8 @@ export default function RegisterPage() {
       });
       login(token, newUser);
       router.replace("/rooms");
-    } catch (err: any) {
-      setError(err.message ?? "登録に失敗しました");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "登録に失敗しました");
     } finally {
       setLoading(false);
     }
@@ -50,11 +51,12 @@ export default function RegisterPage() {
         userId: user.id,
         displayName: user.displayName,
       });
-      const response = await startRegistration({ optionsJSON: options as any });
+      // @simplewebauthn/browser v10: options を直接渡す
+      const response = await startRegistration(options as PublicKeyCredentialCreationOptionsJSON);
       await api.auth.passkeyRegisterVerify({ challengeId, response });
       setSuccess("パスキーを登録しました！");
-    } catch (err: any) {
-      setError(err.message ?? "パスキー登録に失敗しました");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "パスキー登録に失敗しました");
     } finally {
       setPasskeyLoading(false);
     }
@@ -76,7 +78,9 @@ export default function RegisterPage() {
 
           <form onSubmit={handleRegister}>
             <div className="field">
-              <label className="label" htmlFor="displayName">表示名</label>
+              <label className="label" htmlFor="displayName">
+                表示名
+              </label>
               <input
                 id="displayName"
                 className="input"
@@ -89,7 +93,9 @@ export default function RegisterPage() {
               />
             </div>
             <div className="field">
-              <label className="label" htmlFor="email">メールアドレス</label>
+              <label className="label" htmlFor="email">
+                メールアドレス
+              </label>
               <input
                 id="email"
                 className="input"
@@ -102,7 +108,9 @@ export default function RegisterPage() {
               />
             </div>
             <div className="field">
-              <label className="label" htmlFor="password">パスワード（8文字以上）</label>
+              <label className="label" htmlFor="password">
+                パスワード（8文字以上）
+              </label>
               <input
                 id="password"
                 className="input"
@@ -155,7 +163,14 @@ export default function RegisterPage() {
 
 function PasskeyIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
       <circle cx="12" cy="8" r="4" />
       <path d="M20 21a8 8 0 1 0-16 0" />
       <path d="M16 11l1.5 1.5L20 10" />

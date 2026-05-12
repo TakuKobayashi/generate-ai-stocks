@@ -2,10 +2,7 @@
   "name": "chat-app",
   "private": true,
   "packageManager": "pnpm@9.0.0",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "workspaces": ["apps/*", "packages/*"],
   "scripts": {
     "dev:web": "pnpm --filter web dev",
     "dev:angular": "pnpm --filter web-angular dev",
@@ -21,7 +18,5 @@
     "migrate:d1": "cd apps/worker-d1 && wrangler d1 migrations apply chat-d1-db",
     "typecheck": "pnpm -r typecheck"
   },
-  "devDependencies": {
-    "typescript": "^5.4.5"
-  }
+  "devDependencies": { "typescript": "^5.4.5" }
 }

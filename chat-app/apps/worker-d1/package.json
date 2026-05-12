@@ -1,16 +1,10 @@
 {
-  "name": "worker-d1",
-  "version": "0.0.1",
-  "private": true,
+  "name": "worker-d1", "version": "0.0.1", "private": true,
   "scripts": {
     "dev": "wrangler dev --port 8787",
     "build": "wrangler deploy --dry-run",
-    "deploy": "pnpm build:web && wrangler deploy",
-    "build:web": "cd ../web && pnpm build",
-    "migrate": "wrangler d1 migrations apply chat-d1-db",
     "typecheck": "tsc --noEmit",
-    "generate": "drizzle-kit generate",
-    "studio": "drizzle-kit studio"
+    "generate": "drizzle-kit generate"
   },
   "dependencies": {
     "@chat-app/shared": "workspace:*",

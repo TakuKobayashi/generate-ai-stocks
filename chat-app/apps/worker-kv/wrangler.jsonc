@@ -1,81 +1,18 @@
 {
-  // ---------------------------------------------------------------
-  // Cloudflare Workers — KV バックエンド + Next.js フロントエンド
-  // ---------------------------------------------------------------
   "name": "chat-worker-kv",
   "main": "src/index.ts",
   "compatibility_date": "2024-07-25",
   "compatibility_flags": ["nodejs_compat"],
-
-  // Next.js の静的エクスポート (apps/web で `pnpm build` 後に out/ が生成される)
-  "assets": {
-    "directory": "../web/out",
-    "binding": "ASSETS"
-  },
-
-  // Cloudflare KV Namespaces
-  // `wrangler kv namespace create <NAME>` で作成後、各 id を更新してください
+  "assets": { "directory": "../web/out", "binding": "ASSETS" },
   "kv_namespaces": [
-    {
-      "binding": "USERS_KV",
-      "id": "your-users-kv-id-here",
-      "preview_id": "your-users-kv-preview-id"
-    },
-    {
-      "binding": "ROOMS_KV",
-      "id": "your-rooms-kv-id-here",
-      "preview_id": "your-rooms-kv-preview-id"
-    },
-    {
-      "binding": "MESSAGES_KV",
-      "id": "your-messages-kv-id-here",
-      "preview_id": "your-messages-kv-preview-id"
-    },
-    {
-      "binding": "SESSIONS_KV",
-      "id": "your-sessions-kv-id-here",
-      "preview_id": "your-sessions-kv-preview-id"
-    },
-    {
-      "binding": "CHALLENGES_KV",
-      "id": "your-challenges-kv-id-here",
-      "preview_id": "your-challenges-kv-preview-id"
-    }
+    { "binding": "USERS_KV", "id": "your-users-kv-id-here", "preview_id": "your-users-kv-preview-id" },
+    { "binding": "ROOMS_KV", "id": "your-rooms-kv-id-here", "preview_id": "your-rooms-kv-preview-id" },
+    { "binding": "MESSAGES_KV", "id": "your-messages-kv-id-here", "preview_id": "your-messages-kv-preview-id" },
+    { "binding": "SESSIONS_KV", "id": "your-sessions-kv-id-here", "preview_id": "your-sessions-kv-preview-id" },
+    { "binding": "CHALLENGES_KV", "id": "your-challenges-kv-id-here", "preview_id": "your-challenges-kv-preview-id" }
   ],
-
-  // Durable Objects — ルームごとの WebSocket セッション管理
-  "durable_objects": {
-    "bindings": [
-      {
-        "name": "CHAT_ROOM",
-        "class_name": "ChatRoom"
-      }
-    ]
-  },
-
-  // Durable Object クラスのマイグレーション
-  "migrations": [
-    {
-      "tag": "v1",
-      "new_classes": ["ChatRoom"]
-    }
-  ],
-
-  "vars": {
-    "RP_ID": "localhost",
-    "RP_NAME": "Chat App KV",
-    "RP_ORIGIN": "http://localhost:8788",
-    "ENVIRONMENT": "development"
-  },
-
-  "env": {
-    "production": {
-      "vars": {
-        "RP_ID": "yourdomain.com",
-        "RP_NAME": "ChatApp",
-        "RP_ORIGIN": "https://yourdomain.com",
-        "ENVIRONMENT": "production"
-      }
-    }
-  }
+  "durable_objects": { "bindings": [{ "name": "CHAT_ROOM", "class_name": "ChatRoom" }] },
+  "migrations": [{ "tag": "v1", "new_classes": ["ChatRoom"] }],
+  "vars": { "RP_ID": "localhost", "RP_NAME": "Chat App KV", "RP_ORIGIN": "http://localhost:8788", "ENVIRONMENT": "development" },
+  "env": { "production": { "vars": { "RP_ID": "yourdomain.com", "RP_NAME": "ChatApp", "RP_ORIGIN": "https://yourdomain.com", "ENVIRONMENT": "production" } } }
 }

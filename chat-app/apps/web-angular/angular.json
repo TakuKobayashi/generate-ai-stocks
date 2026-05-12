@@ -29,8 +29,7 @@
             ],
             "tsConfig": "tsconfig.json",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "src/favicon.ico"
             ],
             "styles": [
               "src/styles.css"
@@ -39,13 +38,6 @@
           },
           "configurations": {
             "production": {
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
-                }
-              ],
               "outputHashing": "all"
             },
             "development": {
@@ -70,5 +62,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "773a0fcb-1339-4a77-9c53-13d7bb791a13"
   }
 }

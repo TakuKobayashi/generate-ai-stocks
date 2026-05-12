@@ -1,64 +1,12 @@
 {
-  // ---------------------------------------------------------------
-  // Cloudflare Workers — D1 バックエンド + Next.js フロントエンド
-  // ---------------------------------------------------------------
   "name": "chat-worker-d1",
   "main": "src/index.ts",
   "compatibility_date": "2024-07-25",
   "compatibility_flags": ["nodejs_compat"],
-
-  // Next.js の静的エクスポート (apps/web で `pnpm build` 後に out/ が生成される)
-  "assets": {
-    "directory": "../web/out",
-    "binding": "ASSETS"
-  },
-
-  // Cloudflare D1 (SQLite)
-  // `wrangler d1 create chat-d1-db` で作成後、database_id を更新してください
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "chat-d1-db",
-      "database_id": "your-database-id-here",
-      "migrations_dir": "src/db/migrations"
-    }
-  ],
-
-  // Durable Objects — ルームごとの WebSocket セッション管理
-  "durable_objects": {
-    "bindings": [
-      {
-        "name": "CHAT_ROOM",
-        "class_name": "ChatRoom"
-      }
-    ]
-  },
-
-  // Durable Object クラスのマイグレーション
-  "migrations": [
-    {
-      "tag": "v1",
-      "new_classes": ["ChatRoom"]
-    }
-  ],
-
-  // 環境変数 (シークレットは `wrangler secret put JWT_SECRET` で設定)
-  "vars": {
-    "RP_ID": "localhost",
-    "RP_NAME": "Chat App D1",
-    "RP_ORIGIN": "http://localhost:8787",
-    "ENVIRONMENT": "development"
-  },
-
-  // 本番環境設定 (`wrangler deploy --env production`)
-  "env": {
-    "production": {
-      "vars": {
-        "RP_ID": "yourdomain.com",
-        "RP_NAME": "ChatApp",
-        "RP_ORIGIN": "https://yourdomain.com",
-        "ENVIRONMENT": "production"
-      }
-    }
-  }
+  "assets": { "directory": "../web/out", "binding": "ASSETS" },
+  "d1_databases": [{ "binding": "DB", "database_name": "chat-d1-db", "database_id": "your-database-id-here", "migrations_dir": "src/db/migrations" }],
+  "durable_objects": { "bindings": [{ "name": "CHAT_ROOM", "class_name": "ChatRoom" }] },
+  "migrations": [{ "tag": "v1", "new_classes": ["ChatRoom"] }],
+  "vars": { "RP_ID": "localhost", "RP_NAME": "Chat App D1", "RP_ORIGIN": "http://localhost:8787", "ENVIRONMENT": "development" },
+  "env": { "production": { "vars": { "RP_ID": "yourdomain.com", "RP_NAME": "ChatApp", "RP_ORIGIN": "https://yourdomain.com", "ENVIRONMENT": "production" } } }
 }
