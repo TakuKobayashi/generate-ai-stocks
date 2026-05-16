@@ -1,13 +1,10 @@
 import { Command } from 'commander';
+import { Cron } from 'croner';
 import chalk from 'chalk';
 import { processEmails } from '../services/reply.js';
 import { logger } from '../utils/logger.js';
 import { config } from '../config.js';
 import type { ServiceType } from '@email-reply/core';
-
-// node-cron は型情報が不安定なため require で読み込む
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const cron = require('node-cron') as typeof import('node-cron');
 
 export const watchCommand = new Command('watch')
   .description('cronで定期的にメールをチェックして自動返信する')
@@ -18,8 +15,14 @@ export const watchCommand = new Command('watch')
     if (!['gmail', 'yahoo', 'all'].includes(service)) {
       logger.error(`無効なサービス: ${service}`); process.exit(1);
     }
-    if (!cron.validate(opts.schedule)) {
-      logger.error(`無効なcronスケジュール: ${opts.schedule}`); process.exit(1);
+
+    // croner でスケジュールの構文チェック
+    try {
+      new Cron(opts.schedule, { paused: true });
+    } catch {
+      logger.error(`無効なcronスケジュール: "${opts.schedule}"`);
+      logger.info('例: "*/15 * * * *" (15分ごと)  "0 * * * *" (1時間ごと)');
+      process.exit(1);
     }
 
     console.log(chalk.bold('\n🔄 自動返信ウォッチモード\n'));
@@ -28,21 +31,35 @@ export const watchCommand = new Command('watch')
     console.log(`  AIプロバイダ : ${chalk.cyan(config.aiProvider)}`);
     console.log(chalk.gray('\nCtrl+C で停止\n'));
 
+    // 初回は即時実行
     logger.info('初回チェックを実行します...');
     await run(service as ServiceType);
 
     if (opts.once) { logger.info('--once により終了'); process.exit(0); }
 
-    const job = cron.schedule(opts.schedule, async () => {
+    // croner でジョブを登録して定期実行
+    const job = new Cron(opts.schedule, async () => {
       logger.info(`cronチェック [${new Date().toLocaleString('ja-JP')}]`);
       await run(service as ServiceType);
     });
 
-    process.on('SIGINT',  () => { job.stop(); console.log(''); logger.info('停止します'); process.exit(0); });
+    logger.info(`次回実行: ${job.nextRun()?.toLocaleString('ja-JP') ?? '-'}`);
+
+    process.on('SIGINT', () => {
+      job.stop();
+      console.log('');
+      logger.info('停止します');
+      process.exit(0);
+    });
     process.on('SIGTERM', () => { job.stop(); process.exit(0); });
   });
 
-async function run(service: ServiceType) {
-  try { await processEmails(service); }
-  catch (err) { logger.error(`エラー: ${err instanceof Error ? err.message : String(err)}`); }
+async function run(service: ServiceType): Promise<void> {
+  try {
+    await processEmails(service);
+  } catch (err) {
+    logger.error(`エラー: ${err instanceof Error ? err.message : String(err)}`);
+  }
 }
+
+

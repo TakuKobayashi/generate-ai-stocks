@@ -1,5 +1,4 @@
 import { google, gmail_v1 } from 'googleapis';
-import { OAuth2Client } from 'google-auth-library';
 import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
@@ -7,6 +6,9 @@ import type { EmailMessage } from '@email-reply/core';
 import { extractGmailBody, getGmailHeader, truncateBody } from '@email-reply/core';
 import { config } from '../config.js';
 import { logger } from '../utils/logger.js';
+
+// googleapis の OAuth2Client 型を alias で使う
+type OAuth2Client = InstanceType<typeof google.auth.OAuth2>;
 
 function createOAuth2Client(): OAuth2Client {
   if (!config.gmail.clientId || !config.gmail.clientSecret) {

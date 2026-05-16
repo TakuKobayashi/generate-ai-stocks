@@ -3,20 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "description": "メール自動返信ツール モノリポジトリ",
-  "workspaces": [
-    "packages/core",
-    "packages/cli",
-    "packages/server"
-  ],
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
-    "build:core": "npm run build -w packages/core",
-    "build:cli": "npm run build -w packages/cli",
-    "build:server": "npm run build -w packages/server",
-    "dev:cli": "npm run dev -w packages/cli",
-    "dev:server": "npm run dev -w packages/server",
-    "typecheck": "npm run typecheck --workspaces --if-present",
-    "deploy:server": "npm run deploy -w packages/server"
+    "build": "pnpm --filter @email-reply/core build && pnpm --filter @email-reply/cli build && pnpm --filter @email-reply/server build",
+    "build:core": "pnpm --filter @email-reply/core build",
+    "build:cli": "pnpm --filter @email-reply/core build && pnpm --filter @email-reply/cli build",
+    "build:server": "pnpm --filter @email-reply/core build && pnpm --filter @email-reply/server build",
+    "dev:cli": "pnpm --filter @email-reply/core build && pnpm --filter @email-reply/cli dev",
+    "dev:server": "pnpm --filter @email-reply/core build && pnpm --filter @email-reply/server dev",
+    "typecheck": "pnpm --filter @email-reply/core build && pnpm -r typecheck",
+    "deploy:server": "pnpm --filter @email-reply/server deploy"
   },
   "devDependencies": {
     "typescript": "^5.4.5"
