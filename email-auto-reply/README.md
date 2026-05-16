@@ -33,12 +33,11 @@ email-auto-reply/
 # pnpm がない場合はインストール
 npm install -g pnpm
 
-# 依存関係を一括インストール
+# ルートで依存関係を一括インストール（これだけでOK）
 pnpm install
-
-# core を先にビルド（cli / server が依存するため必須）
-pnpm build:core
 ```
+
+> core のビルドは不要です。CLI・Server ともに `tsx` / `wrangler` が TypeScript ソースを直接読み込みます。
 
 ---
 
@@ -126,12 +125,12 @@ CRON_SCHEDULE=*/15 * * * *
 ### 4. Gmail 認証（初回のみ）
 
 ```bash
-# ルートから実行
-pnpm dev:cli -- auth gmail
-
-# または packages/cli に移動して実行
+# packages/cli に移動して実行（推奨）
 cd packages/cli
-pnpm dev -- auth gmail
+pnpm dev auth gmail
+
+# ルートから実行する場合は -- のあとにコマンドを渡す
+pnpm dev:cli -- auth gmail
 ```
 
 ブラウザでURLを開いて認証し、表示された認証コードを貼り付けます。  
@@ -142,45 +141,55 @@ Yahoo Mail は認証不要です（アプリパスワードで接続）。
 ### 5. 動作確認
 
 ```bash
+cd packages/cli
+
 # 設定を確認
-pnpm dev:cli -- config
+pnpm dev config
 
 # Gmail・Yahoo 両方を1回チェックして返信
-pnpm dev:cli -- check all
+pnpm dev check all
 
 # Gmail のみチェック
-pnpm dev:cli -- check gmail
+pnpm dev check gmail
 
 # Yahoo のみチェック
-pnpm dev:cli -- check yahoo
+pnpm dev check yahoo
 
 # 処理履歴を確認（直近20件）
-pnpm dev:cli -- history
-pnpm dev:cli -- history --limit 50
+pnpm dev history
+pnpm dev history --limit 50
 ```
 
 ### 6. 定期監視の起動（watch モード）
 
 ```bash
+cd packages/cli
+
 # 15分ごとに全サービスをチェック（.env の CRON_SCHEDULE に従う）
-pnpm dev:cli -- watch all
+pnpm dev watch all
 
 # 5分ごとにチェック（スケジュールを上書き）
-pnpm dev:cli -- watch all --schedule "*/5 * * * *"
+pnpm dev watch all --schedule "*/5 * * * *"
 
 # Gmailのみを1時間ごとにチェック
-pnpm dev:cli -- watch gmail --schedule "0 * * * *"
+pnpm dev watch gmail --schedule "0 * * * *"
 
 # 起動後1回だけ実行して終了（動作確認用）
-pnpm dev:cli -- watch all --once
+pnpm dev watch all --once
 ```
 
 `Ctrl+C` で停止します。サーバーで常駐させる場合は `pm2` や `systemd` での管理を推奨します。
 
+> **ルートから実行する場合**  
+> `pnpm dev:cli` でも動作しますが、引数を渡す際は `--` セパレータが必要です。  
+> `pnpm dev:cli -- watch all --schedule "*/5 * * * *"`  
+> `packages/cli` に `cd` して `pnpm dev <command>` で実行する方がシンプルです。
+
 ### CLI コマンドリファレンス
 
 ```
-pnpm dev:cli -- <command> [options]
+# packages/cli ディレクトリで実行
+pnpm dev <command> [options]
 
 コマンド:
   check [service]              メールを1回チェックして返信

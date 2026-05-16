@@ -6,17 +6,10 @@ settings:
 
 importers:
 
-  .:
-    devDependencies:
-      typescript:
-        specifier: ^5.4.5
-        version: 5.9.3
+  .: {}
 
   packages/cli:
     dependencies:
-      '@email-reply/core':
-        specifier: workspace:*
-        version: link:../core
       better-sqlite3:
         specifier: ^9.4.3
         version: 9.6.0
@@ -94,9 +87,6 @@ importers:
 
   packages/server:
     dependencies:
-      '@email-reply/core':
-        specifier: workspace:*
-        version: link:../core
       drizzle-orm:
         specifier: ^0.30.10
         version: 0.30.10(@cloudflare/workers-types@4.20260515.1)(@types/better-sqlite3@7.6.13)(better-sqlite3@9.6.0)

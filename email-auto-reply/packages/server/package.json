@@ -11,7 +11,6 @@
     "db:migrate:local": "wrangler d1 migrations apply email-reply-db --local"
   },
   "dependencies": {
-    "@email-reply/core": "workspace:*",
     "drizzle-orm": "^0.30.10",
     "hono": "^4.3.7"
   },

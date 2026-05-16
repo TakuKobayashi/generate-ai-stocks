@@ -2,18 +2,5 @@
   "name": "email-auto-reply",
   "version": "1.0.0",
   "private": true,
-  "description": "メール自動返信ツール モノリポジトリ",
-  "scripts": {
-    "build": "pnpm --filter @email-reply/core build && pnpm --filter @email-reply/cli build && pnpm --filter @email-reply/server build",
-    "build:core": "pnpm --filter @email-reply/core build",
-    "build:cli": "pnpm --filter @email-reply/core build && pnpm --filter @email-reply/cli build",
-    "build:server": "pnpm --filter @email-reply/core build && pnpm --filter @email-reply/server build",
-    "dev:cli": "pnpm --filter @email-reply/core build && pnpm --filter @email-reply/cli dev",
-    "dev:server": "pnpm --filter @email-reply/core build && pnpm --filter @email-reply/server dev",
-    "typecheck": "pnpm --filter @email-reply/core build && pnpm -r typecheck",
-    "deploy:server": "pnpm --filter @email-reply/server deploy"
-  },
-  "devDependencies": {
-    "typescript": "^5.4.5"
-  }
+  "description": "メール自動返信ツール モノリポジトリ"
 }
