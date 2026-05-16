@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- API サーバー URL -->
+    <key>API_BASE_URL</key>
+    <string>https://nomikai-server.YOUR-ACCOUNT.workers.dev</string>
+
+    <!-- Google Maps API キー -->
+    <key>GMSApiKey</key>
+    <string>YOUR_GOOGLE_MAPS_API_KEY</string>
+
+    <!-- 位置情報使用許可 -->
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>周辺の飲食店を検索するために位置情報を使用します。</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>周辺の飲食店を検索するために位置情報を使用します。</string>
+
+    <!-- プッシュ通知 (Background Modes) -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>remote-notification</string>
+        <string>fetch</string>
+    </array>
+
+    <!-- Firebase -->
+    <key>FirebaseAppDelegateProxyEnabled</key>
+    <false/>
+
+    <!-- アプリ表示名 -->
+    <key>CFBundleDisplayName</key>
+    <string>飲みに行きたい！</string>
+
+    <key>CFBundleIdentifier</key>
+    <string>com.example.nomikai</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+</dict>
+</plist>

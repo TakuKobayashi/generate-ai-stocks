@@ -1,0 +1,25 @@
+{
+  "name": "nomikai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "飲みに行きたい！- モノレポ (Android / iOS / Web Frontend / Web Backend)",
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "dev":            "pnpm --filter frontend dev",
+    "dev:backend":    "pnpm --filter backend dev",
+    "build":          "pnpm --filter frontend build",
+    "build:deploy":   "pnpm build && pnpm --filter backend deploy:full",
+    "deploy:backend": "pnpm --filter backend deploy",
+    "db:migrate":     "pnpm --filter backend db:migrate",
+    "vapid:gen":      "pnpm --filter backend vapid:generate",
+    "lint":           "pnpm -r lint",
+    "typecheck":      "pnpm -r typecheck"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0"
+  }
+}

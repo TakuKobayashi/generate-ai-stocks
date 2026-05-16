@@ -1,0 +1,103 @@
+/* デザイントークン定義 - Tailwind を使わず CSS カスタムプロパティで管理 */
+
+:root {
+  /* ブランドカラー (ビールアンバー) */
+  --color-primary:       #F59E0B;
+  --color-primary-hover: #D97706;
+  --color-primary-light: #FDE68A;
+  --color-primary-pale:  #FFFBEB;
+  --color-primary-text:  #92400E;
+
+  /* セカンダリ (ナイトブルー) */
+  --color-secondary:     #1E293B;
+  --color-secondary-dark:#0F172A;
+
+  /* テキスト */
+  --color-text:          #1E293B;
+  --color-text-sub:      #64748B;
+  --color-text-muted:    #94A3B8;
+  --color-text-inverse:  #FFFFFF;
+
+  /* 背景・サーフェス */
+  --color-bg:            #FFFBF5;
+  --color-surface:       #FFFFFF;
+  --color-surface-raised:#FFFFFF;
+  --color-border:        #E2E8F0;
+  --color-border-light:  #F1F5F9;
+
+  /* フィードバック */
+  --color-error:         #EF4444;
+  --color-error-bg:      #FEF2F2;
+  --color-success:       #22C55E;
+  --color-success-bg:    #F0FDF4;
+  --color-unread-bg:     #FFFBEB;
+
+  /* シャドウ */
+  --shadow-xs:  0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm:  0 1px 4px rgba(0, 0, 0, 0.08);
+  --shadow-md:  0 4px 12px rgba(0, 0, 0, 0.10);
+  --shadow-lg:  0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-xl:  0 16px 48px rgba(0, 0, 0, 0.14);
+
+  /* 角丸 */
+  --radius-xs:   4px;
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --radius-xl:   20px;
+  --radius-full: 9999px;
+
+  /* スペーシング */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* フォント */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN',
+               'Noto Sans JP', 'Yu Gothic', 'Meiryo', sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', monospace;
+
+  /* フォントサイズ */
+  --text-xs:   11px;
+  --text-sm:   13px;
+  --text-base: 15px;
+  --text-md:   16px;
+  --text-lg:   18px;
+  --text-xl:   20px;
+  --text-2xl:  24px;
+  --text-3xl:  30px;
+  --text-4xl:  36px;
+
+  /* 行の高さ */
+  --leading-tight:  1.25;
+  --leading-snug:   1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed:1.625;
+
+  /* トランジション */
+  --transition-fast:   0.1s ease;
+  --transition-base:   0.2s ease;
+  --transition-slow:   0.3s ease;
+
+  /* レイアウト */
+  --max-width:    640px;
+  --header-height: 56px;
+}
+
+/* ダークモード (オプション) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg:      #0F172A;
+    --color-surface: #1E293B;
+    --color-text:    #F1F5F9;
+    --color-text-sub:#94A3B8;
+    --color-border:  #334155;
+  }
+}

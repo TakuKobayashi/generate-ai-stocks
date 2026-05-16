@@ -1,0 +1,277 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  padding-bottom: var(--space-16);
+}
+
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--color-border);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sectionTitle {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* 日時 */
+.dateInput {
+  width: 100%;
+  padding: 10px var(--space-3);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  background: var(--color-bg);
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+.dateInput:focus { border-color: var(--color-primary); }
+
+/* カウンター */
+.counterRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.counterBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-pale);
+  border: 1.5px solid var(--color-primary-light);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--color-primary-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast);
+  cursor: pointer;
+}
+.counterBtn:hover:not(:disabled) { background: var(--color-primary-light); }
+.counterBtn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.counterValue {
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  color: var(--color-text);
+  min-width: 48px;
+  text-align: center;
+}
+.counterUnit { font-size: var(--text-md); font-weight: 500; }
+
+.quickBtns {
+  display: flex;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+.quickBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--color-border);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text-sub);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.quickBtnActive {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+/* マップ */
+.mapToggle {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-primary-text);
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-primary-light);
+  background: var(--color-primary-pale);
+  transition: background var(--transition-fast);
+}
+.mapToggle:hover { background: var(--color-primary-light); }
+
+.mapWrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.mapLoading {
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-border-light);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  color: var(--color-text-sub);
+}
+
+.geoPrompt {
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--color-border-light);
+  border-radius: var(--radius-lg);
+}
+.geoBtn {
+  padding: 8px 20px;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.selectedCoord {
+  font-size: var(--text-xs);
+  color: var(--color-primary-text);
+  font-weight: 500;
+}
+
+/* テキスト */
+.textInput {
+  width: 100%;
+  padding: 10px var(--space-3);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  background: var(--color-bg);
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+.textInput:focus { border-color: var(--color-primary); }
+
+.textarea {
+  width: 100%;
+  padding: 10px var(--space-3);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  background: var(--color-bg);
+  resize: none;
+  outline: none;
+  transition: border-color var(--transition-fast);
+  line-height: var(--leading-normal);
+}
+.textarea:focus { border-color: var(--color-primary); }
+.charCount { font-size: var(--text-xs); color: var(--color-text-muted); text-align: right; }
+
+/* 送信ボタン */
+.sendBtn {
+  width: 100%;
+  height: 60px;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-xl);
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  box-shadow: var(--shadow-md);
+  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.sendBtn:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+.sendBtn:active:not(:disabled) { transform: translateY(0); }
+.sendBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* フィードバック */
+.errorBox {
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-error-bg);
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-md);
+  color: var(--color-error);
+  font-size: var(--text-sm);
+}
+
+.successBox {
+  padding: var(--space-4);
+  background: var(--color-success-bg);
+  border: 1px solid var(--color-success);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+.successTitle { font-size: var(--text-lg); font-weight: 700; margin-bottom: var(--space-1); }
+
+/* スピナー */
+.spinner {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  border-top-color: white;
+  border-radius: var(--radius-full);
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* 飲食店 */
+.restaurants {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.restaurantsTitle {
+  font-size: var(--text-lg);
+  font-weight: 800;
+  color: var(--color-text);
+}
+.restaurantLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  font-size: var(--text-sm);
+  color: var(--color-text-sub);
+}
+.restaurantError {
+  color: var(--color-error);
+  font-size: var(--text-sm);
+}
+.restaurantList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}

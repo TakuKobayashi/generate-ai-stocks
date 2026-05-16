@@ -1,0 +1,19 @@
+{
+  "recommendations": [
+    // TypeScript / Web
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    // Cloudflare Workers
+    "cloudflare.workers",
+    // Kotlin / Android
+    "fwcd.kotlin",
+    "mathiasfrohlich.kotlin",
+    // Swift / iOS
+    "sswg.swift-lang",
+    // General
+    "eamodio.gitlens",
+    "github.copilot",
+    "ms-vscode.vscode-json"
+  ]
+}

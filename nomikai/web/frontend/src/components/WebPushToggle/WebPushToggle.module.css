@@ -1,0 +1,77 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-xs);
+}
+
+.toggle:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  background: var(--color-primary-pale);
+}
+
+.toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.on {
+  border-color: var(--color-primary);
+  background: var(--color-primary-pale);
+}
+
+.denied {
+  border-color: var(--color-border);
+  background: var(--color-border-light);
+}
+
+.icon { font-size: 20px; line-height: 1; }
+
+.label {
+  flex: 1;
+  text-align: left;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.pill {
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 700;
+}
+
+.pillOn {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.pillOff {
+  background: var(--color-border);
+  color: var(--color-text-sub);
+}
+
+.error {
+  font-size: var(--text-xs);
+  color: var(--color-error);
+}
+
+.denied_hint {
+  font-size: var(--text-xs);
+  color: var(--color-text-sub);
+  padding: 0 var(--space-4);
+}

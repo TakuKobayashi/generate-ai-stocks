@@ -1,0 +1,49 @@
+# ─── Node / pnpm ──────────────────────────────────────────────────────────
+node_modules/
+.pnpm-store/
+.turbo/
+
+# ─── Web Frontend (Next.js) ────────────────────────────────────────────────
+web/frontend/.next/
+web/frontend/out/
+web/frontend/.env.local
+web/frontend/firebase-config.js
+
+# ─── Web Backend (Cloudflare Workers) ─────────────────────────────────────
+web/backend/.wrangler/
+web/backend/web-dist/
+web/backend/.dev.vars
+web/backend/dist/
+
+# ─── Android ──────────────────────────────────────────────────────────────
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+android/app/google-services.json
+*.apk
+*.aab
+
+# ─── iOS ──────────────────────────────────────────────────────────────────
+ios/Pods/
+ios/*.xcworkspace/
+ios/DerivedData/
+ios/NomikaiApp.xcodeproj/
+ios/NomikaiApp/Resources/GoogleService-Info.plist
+ios/NomikaiApp/Resources/firebase-config.js
+*.xcuserstate
+*.xcbkptlist
+
+# ─── 共通 ─────────────────────────────────────────────────────────────────
+.DS_Store
+*.log
+*.swp
+.env
+.env.*
+!.env.*.example
+!.env.local.example
+
+# ─── IDE ──────────────────────────────────────────────────────────────────
+.idea/
+.vscode/settings.json
+*.iml

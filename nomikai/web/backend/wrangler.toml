@@ -1,0 +1,25 @@
+name = "nomikai-server"
+main = "src/index.ts"
+compatibility_date = "2024-04-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Next.js SSG ビルド成果物を静的アセットとして配信
+[assets]
+directory = "./web-dist"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "nomikai-db"
+database_id = "YOUR_D1_DATABASE_ID"
+
+[vars]
+HOTPEPPER_AFFILIATE_ID = "YOUR_VALUECOMMERCE_SID"
+HOTPEPPER_AFFILIATE_PID = "YOUR_VALUECOMMERCE_PID"
+CORS_ORIGIN = "https://nomikai-server.YOUR-ACCOUNT.workers.dev"
+
+# シークレットは wrangler secret put で設定:
+# HOTPEPPER_API_KEY  - ホットペッパーAPIキー
+# FCM_PROJECT_ID     - Firebase プロジェクトID (Android・Web 共通)
+# FCM_CLIENT_EMAIL   - サービスアカウントのメール
+# FCM_PRIVATE_KEY    - サービスアカウント秘密鍵 (base64エンコード)

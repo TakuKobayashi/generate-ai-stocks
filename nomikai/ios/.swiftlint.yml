@@ -1,0 +1,21 @@
+disabled_rules:
+  - trailing_whitespace
+  - line_length
+  - function_body_length
+  - type_body_length
+  - file_length
+
+opt_in_rules:
+  - empty_count
+  - fatal_error_message
+  - first_where
+  - contains_over_filter_count
+  - force_unwrapping
+
+excluded:
+  - Pods
+  - DerivedData
+  - .build
+
+force_cast: warning
+force_try: warning

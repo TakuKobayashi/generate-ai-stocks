@@ -1,0 +1,15 @@
+platform :ios, '16.0'
+use_frameworks!
+inhibit_all_warnings!
+
+target 'NomikaiApp' do
+  # Firebase
+  pod 'Firebase/Core'
+  pod 'Firebase/Messaging'
+
+  # Google Maps
+  pod 'GoogleMaps', '~> 8.0'
+
+  # SQLite ORM (ActiveRecordパターン基盤)
+  pod 'GRDB.swift', '~> 6.29'
+end
