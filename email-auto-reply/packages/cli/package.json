@@ -1,0 +1,38 @@
+{
+  "name": "@email-reply/cli",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "email-reply": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/index.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "wrangler": "wrangler"
+  },
+  "dependencies": {
+    "@email-reply/core": "*",
+    "better-sqlite3": "^9.4.3",
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.30.10",
+    "googleapis": "^140.0.1",
+    "html-to-text": "^9.0.5",
+    "imapflow": "^1.0.164",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.13"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.10",
+    "@types/html-to-text": "^9.0.4",
+    "@types/node": "^20.12.0",
+    "@types/node-cron": "^3.0.11",
+    "@types/nodemailer": "^6.4.14",
+    "drizzle-kit": "^0.20.18",
+    "tsx": "^4.7.3",
+    "typescript": "^5.4.5"
+  }
+}

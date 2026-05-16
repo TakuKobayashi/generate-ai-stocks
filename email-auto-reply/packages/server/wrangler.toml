@@ -1,0 +1,48 @@
+name = "email-auto-reply"
+main = "src/index.ts"
+compatibility_date = "2024-05-12"
+compatibility_flags = ["nodejs_compat"]
+
+# ─────────────────────────────────────────────
+# D1 データベース
+# `wrangler d1 create email-reply-db` で作成後、
+# 生成された database_id をここに設定してください
+# ─────────────────────────────────────────────
+[[d1_databases]]
+binding     = "DB"
+database_name = "email-reply-db"
+database_id   = "YOUR_D1_DATABASE_ID"
+
+# ─────────────────────────────────────────────
+# 環境変数 (Secret は `wrangler secret put` で設定)
+# ─────────────────────────────────────────────
+[vars]
+AI_PROVIDER         = "groq"
+GMAIL_TARGET_LABEL  = "要返信"
+YAHOO_TARGET_FOLDER = "要返信"
+
+# ─────────────────────────────────────────────
+# Secrets (wrangler secret put で設定する変数):
+#   GROQ_API_KEY
+#   GEMINI_API_KEY
+#   GMAIL_CLIENT_ID
+#   GMAIL_CLIENT_SECRET
+#   GMAIL_ACCESS_TOKEN
+#   GMAIL_REFRESH_TOKEN
+#   YAHOO_EMAIL
+#   YAHOO_APP_PASSWORD
+#   WEBHOOK_SECRET          # Gmail Pub/Sub 検証トークン
+#   SIGNATURE               # 署名テキスト（Markdown）
+# ─────────────────────────────────────────────
+
+# ─────────────────────────────────────────────
+# Cron Trigger (5分ごとに Yahoo IMAP をポーリング)
+# ─────────────────────────────────────────────
+[triggers]
+crons = ["*/5 * * * *"]
+
+# ─────────────────────────────────────────────
+# 開発環境
+# ─────────────────────────────────────────────
+[env.development]
+vars = { AI_PROVIDER = "groq", LOG_LEVEL = "debug" }

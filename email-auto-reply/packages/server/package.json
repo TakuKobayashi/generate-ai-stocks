@@ -1,0 +1,25 @@
+{
+  "name": "@email-reply/server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --env development",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "db:migrate": "wrangler d1 migrations apply email-reply-db",
+    "db:migrate:local": "wrangler d1 migrations apply email-reply-db --local",
+    "wrangler": "wrangler"
+  },
+  "dependencies": {
+    "@email-reply/core": "*",
+    "drizzle-orm": "^0.30.10",
+    "hono": "^4.3.7"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240512.0",
+    "drizzle-kit": "^0.20.18",
+    "typescript": "^5.4.5",
+    "wrangler": "^3.57.0"
+  }
+}

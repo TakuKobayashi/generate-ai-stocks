@@ -1,0 +1,25 @@
+# =============================================
+# Cloudflare Workers ローカル開発用シークレット
+# `.dev.vars` にリネームして使用 (wrangler dev が自動読み込み)
+# 本番は `wrangler secret put <KEY>` で設定
+# =============================================
+
+AI_PROVIDER=groq
+GROQ_API_KEY=gsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+GEMINI_API_KEY=AIzaSy_xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+GMAIL_CLIENT_ID=xxxx.apps.googleusercontent.com
+GMAIL_CLIENT_SECRET=GOCSPX-xxxx
+GMAIL_ACCESS_TOKEN=ya29.xxxx
+GMAIL_REFRESH_TOKEN=1//xxxx
+GMAIL_TARGET_LABEL=要返信
+
+YAHOO_EMAIL=your_address@yahoo.co.jp
+YAHOO_APP_PASSWORD=xxxx xxxx xxxx xxxx
+YAHOO_TARGET_FOLDER=要返信
+
+# Gmail Pub/Sub 検証トークン & 管理API Bearer トークンを兼ねる
+WEBHOOK_SECRET=your-random-secret-here
+
+# 署名テキスト（改行は \n でエスケープ）
+SIGNATURE=---\n山田 太郎\n株式会社サンプル\n📧 taro@example.com

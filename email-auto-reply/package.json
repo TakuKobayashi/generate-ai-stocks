@@ -1,0 +1,24 @@
+{
+  "name": "email-auto-reply",
+  "version": "1.0.0",
+  "private": true,
+  "description": "メール自動返信ツール モノリポジトリ",
+  "workspaces": [
+    "packages/core",
+    "packages/cli",
+    "packages/server"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "build:core": "npm run build -w packages/core",
+    "build:cli": "npm run build -w packages/cli",
+    "build:server": "npm run build -w packages/server",
+    "dev:cli": "npm run dev -w packages/cli",
+    "dev:server": "npm run dev -w packages/server",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "deploy:server": "npm run deploy -w packages/server"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}
