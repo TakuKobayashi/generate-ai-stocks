@@ -29,7 +29,12 @@ import type { Room } from '@chat-app/shared';
               <span class="room-item-name">{{ room.name }}</span>
             </a>
           }
-          <button class="room-item" style="color:var(--accent);margin-top:4px;background:none;border:none;width:100%;cursor:pointer;font-family:inherit" (click)="showModal.set(true)" type="button">
+          <button
+            class="room-item"
+            style="color:var(--accent);margin-top:4px;background:none;border:none;width:100%;cursor:pointer;font-family:inherit"
+            (click)="showModal.set(true)"
+            type="button"
+          >
             <span class="room-item-icon">+</span>
             <span class="room-item-name">新しいルーム</span>
           </button>
@@ -43,8 +48,9 @@ import type { Room } from '@chat-app/shared';
             </div>
             <button class="btn btn-ghost btn-sm" (click)="logout()" title="ログアウト" type="button">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
               </svg>
             </button>
           </div>
@@ -63,10 +69,28 @@ export class AppShellComponent implements OnInit {
   private router = inject(Router);
   rooms = signal<Room[]>([]);
   showModal = signal(false);
-  initials = () => (this.auth.user()?.displayName ?? '').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  initials = () =>
+    (this.auth.user()?.displayName ?? '')
+      .split(' ')
+      .map((w) => w[0])
+      .join('')
+      .slice(0, 2)
+      .toUpperCase();
 
-  ngOnInit() { this.loadRooms(); }
-  async loadRooms() { try { this.rooms.set(await this.roomService.list()); } catch {} }
-  onCreated() { this.showModal.set(false); this.loadRooms(); }
-  async logout() { await this.auth.logout(); this.router.navigate(['/login']); }
+  ngOnInit() {
+    this.loadRooms();
+  }
+  async loadRooms() {
+    try {
+      this.rooms.set(await this.roomService.list());
+    } catch {}
+  }
+  onCreated() {
+    this.showModal.set(false);
+    this.loadRooms();
+  }
+  async logout() {
+    await this.auth.logout();
+    this.router.navigate(['/login']);
+  }
 }

@@ -3,7 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import type { User } from '@chat-app/shared';
 
-export interface AuthResponse { token: string; user: User }
+export interface AuthResponse {
+  token: string;
+  user: User;
+}
 const TOKEN_KEY = 'chat_token';
 
 @Injectable({ providedIn: 'root' })
@@ -16,7 +19,9 @@ export class AuthService {
   readonly loading = this._loading.asReadonly();
   readonly isLoggedIn = computed(() => !!this._user());
 
-  constructor(private http: HttpClient) { this.initFromStorage(); }
+  constructor(private http: HttpClient) {
+    this.initFromStorage();
+  }
 
   private async initFromStorage() {
     const token = localStorage.getItem(TOKEN_KEY);
@@ -25,7 +30,10 @@ export class AuthService {
       try {
         const res = await firstValueFrom(this.http.get<{ user: User }>('/api/auth/me'));
         this._user.set(res.user);
-      } catch { localStorage.removeItem(TOKEN_KEY); this._token.set(null); }
+      } catch {
+        localStorage.removeItem(TOKEN_KEY);
+        this._token.set(null);
+      }
     }
     this._loading.set(false);
   }
@@ -37,11 +45,15 @@ export class AuthService {
   }
 
   async logout(): Promise<void> {
-    try { await firstValueFrom(this.http.post('/api/auth/logout', {})); } catch {}
+    try {
+      await firstValueFrom(this.http.post('/api/auth/logout', {}));
+    } catch {}
     localStorage.removeItem(TOKEN_KEY);
     this._token.set(null);
     this._user.set(null);
   }
 
-  getToken(): string | null { return localStorage.getItem(TOKEN_KEY); }
+  getToken(): string | null {
+    return localStorage.getItem(TOKEN_KEY);
+  }
 }

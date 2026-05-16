@@ -16,7 +16,9 @@ import type { Room } from '@chat-app/shared';
           <h3>{{ editRoom ? 'ルームを編集' : 'ルームを作成' }}</h3>
           <button class="btn btn-ghost btn-sm" (click)="close.emit()" type="button">✕</button>
         </div>
-        @if (error()) { <div class="alert alert-error">{{ error() }}</div> }
+        @if (error()) {
+          <div class="alert alert-error">{{ error() }}</div>
+        }
         <form (ngSubmit)="submit()">
           <div class="field">
             <label class="label" for="rname">ルーム名</label>
@@ -29,7 +31,7 @@ import type { Room } from '@chat-app/shared';
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" (click)="close.emit()">キャンセル</button>
             <button class="btn btn-primary" type="submit" [disabled]="loading()">
-              {{ loading() ? '保存中...' : (editRoom ? '更新' : '作成') }}
+              {{ loading() ? '保存中...' : editRoom ? '更新' : '作成' }}
             </button>
           </div>
         </form>
@@ -42,21 +44,33 @@ export class RoomModalComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
   @Output() saved = new EventEmitter<void>();
   private roomService = inject(RoomService);
-  name = ''; description = '';
-  error = signal(''); loading = signal(false);
+  name = '';
+  description = '';
+  error = signal('');
+  loading = signal(false);
 
-  ngOnInit() { if (this.editRoom) { this.name = this.editRoom.name; this.description = this.editRoom.description ?? ''; } }
-  onOverlay(e: MouseEvent) { if (e.target === e.currentTarget) this.close.emit(); }
+  ngOnInit() {
+    if (this.editRoom) {
+      this.name = this.editRoom.name;
+      this.description = this.editRoom.description ?? '';
+    }
+  }
+  onOverlay(e: MouseEvent) {
+    if (e.target === e.currentTarget) this.close.emit();
+  }
 
   async submit() {
     if (!this.name.trim()) return;
-    this.error.set(''); this.loading.set(true);
+    this.error.set('');
+    this.loading.set(true);
     try {
       if (this.editRoom) await this.roomService.update(this.editRoom.id, { name: this.name, description: this.description || undefined });
       else await this.roomService.create({ name: this.name, description: this.description || undefined });
       this.saved.emit();
     } catch (err: unknown) {
       this.error.set(err instanceof Error ? err.message : '失敗しました');
-    } finally { this.loading.set(false); }
+    } finally {
+      this.loading.set(false);
+    }
   }
 }

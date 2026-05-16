@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/lib/auth-context";
-import { api } from "@/lib/api";
-import type { Room } from "@chat-app/shared";
-import RoomModal from "./RoomModal";
+import { useEffect, useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/auth-context';
+import { api } from '@/lib/api';
+import type { Room } from '@chat-app/shared';
+import RoomModal from './RoomModal';
 
 interface Props {
   children: React.ReactNode;
@@ -19,19 +19,34 @@ export default function AppShell({ children, currentRoomId }: Props) {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    if (!loading && !user) router.replace("/login");
+    if (!loading && !user) router.replace('/login');
   }, [user, loading, router]);
 
   const loadRooms = useCallback(() => {
-    api.rooms.list().then((r) => setRooms(r.data)).catch(() => {});
+    api.rooms
+      .list()
+      .then((r) => setRooms(r.data))
+      .catch(() => {});
   }, []);
 
-  useEffect(() => { if (user) loadRooms(); }, [user, loadRooms]);
+  useEffect(() => {
+    if (user) loadRooms();
+  }, [user, loadRooms]);
 
-  if (loading) return <div className="loading-center"><div className="spinner" /></div>;
+  if (loading)
+    return (
+      <div className="loading-center">
+        <div className="spinner" />
+      </div>
+    );
   if (!user) return null;
 
-  const initials = user.displayName.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
+  const initials = user.displayName
+    .split(' ')
+    .map((w) => w[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
 
   return (
     <div className="app-shell">
@@ -48,7 +63,7 @@ export default function AppShell({ children, currentRoomId }: Props) {
           {rooms.map((room) => (
             <button
               key={room.id}
-              className={`room-item ${currentRoomId === room.id ? "active" : ""}`}
+              className={`room-item ${currentRoomId === room.id ? 'active' : ''}`}
               onClick={() => router.push(`/rooms?id=${room.id}`)}
               type="button"
             >
@@ -56,12 +71,7 @@ export default function AppShell({ children, currentRoomId }: Props) {
               <span className="room-item-name">{room.name}</span>
             </button>
           ))}
-          <button
-            className="room-item"
-            style={{ color: "var(--accent)", marginTop: 4 }}
-            onClick={() => setShowModal(true)}
-            type="button"
-          >
+          <button className="room-item" style={{ color: 'var(--accent)', marginTop: 4 }} onClick={() => setShowModal(true)} type="button">
             <span className="room-item-icon">+</span>
             <span className="room-item-name">新しいルーム</span>
           </button>
@@ -76,13 +86,17 @@ export default function AppShell({ children, currentRoomId }: Props) {
             </div>
             <button
               className="btn btn-ghost btn-sm"
-              onClick={async () => { await logout(); router.replace("/login"); }}
+              onClick={async () => {
+                await logout();
+                router.replace('/login');
+              }}
               title="ログアウト"
               type="button"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                <polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
               </svg>
             </button>
           </div>
@@ -94,7 +108,10 @@ export default function AppShell({ children, currentRoomId }: Props) {
       {showModal && (
         <RoomModal
           onClose={() => setShowModal(false)}
-          onCreated={() => { loadRooms(); setShowModal(false); }}
+          onCreated={() => {
+            loadRooms();
+            setShowModal(false);
+          }}
         />
       )}
     </div>

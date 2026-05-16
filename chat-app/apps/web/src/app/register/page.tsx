@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { startRegistration } from "@simplewebauthn/browser";
-import type { PublicKeyCredentialCreationOptionsJSON } from "@simplewebauthn/types";
-import { api } from "@/lib/api";
-import { useAuth } from "@/lib/auth-context";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { startRegistration } from '@simplewebauthn/browser';
+import type { PublicKeyCredentialCreationOptionsJSON } from '@simplewebauthn/types';
+import { api } from '@/lib/api';
+import { useAuth } from '@/lib/auth-context';
 
 export default function RegisterPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [displayName, setDisplayName] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [passkeyLoading, setPasskeyLoading] = useState(false);
   const { user, login } = useAuth();
@@ -21,7 +21,7 @@ export default function RegisterPage() {
 
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
-    setError("");
+    setError('');
     setLoading(true);
     try {
       const { token, user: newUser } = await api.auth.register({
@@ -30,9 +30,9 @@ export default function RegisterPage() {
         displayName,
       });
       login(token, newUser);
-      router.replace("/rooms");
+      router.replace('/rooms');
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "登録に失敗しました");
+      setError(err instanceof Error ? err.message : '登録に失敗しました');
     } finally {
       setLoading(false);
     }
@@ -40,11 +40,11 @@ export default function RegisterPage() {
 
   async function handleAddPasskey() {
     if (!user) {
-      setError("先にパスワードで登録してください");
+      setError('先にパスワードで登録してください');
       return;
     }
-    setError("");
-    setSuccess("");
+    setError('');
+    setSuccess('');
     setPasskeyLoading(true);
     try {
       const { options, challengeId } = await api.auth.passkeyRegisterOptions({
@@ -54,9 +54,9 @@ export default function RegisterPage() {
       // @simplewebauthn/browser v10: options を直接渡す
       const response = await startRegistration(options as PublicKeyCredentialCreationOptionsJSON);
       await api.auth.passkeyRegisterVerify({ challengeId, response });
-      setSuccess("パスキーを登録しました！");
+      setSuccess('パスキーを登録しました！');
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "パスキー登録に失敗しました");
+      setError(err instanceof Error ? err.message : 'パスキー登録に失敗しました');
     } finally {
       setPasskeyLoading(false);
     }
@@ -123,37 +123,24 @@ export default function RegisterPage() {
                 autoComplete="new-password"
               />
             </div>
-            <button
-              className="btn btn-primary btn-full"
-              type="submit"
-              disabled={loading}
-              style={{ marginTop: 20 }}
-            >
-              {loading ? "登録中..." : "アカウントを作成"}
+            <button className="btn btn-primary btn-full" type="submit" disabled={loading} style={{ marginTop: 20 }}>
+              {loading ? '登録中...' : 'アカウントを作成'}
             </button>
           </form>
 
           {user && (
             <>
               <div className="auth-divider">パスキーを追加</div>
-              <button
-                className="passkey-btn"
-                onClick={handleAddPasskey}
-                disabled={passkeyLoading}
-                type="button"
-              >
+              <button className="passkey-btn" onClick={handleAddPasskey} disabled={passkeyLoading} type="button">
                 <PasskeyIcon />
-                {passkeyLoading ? "登録中..." : "このデバイスにパスキーを登録"}
+                {passkeyLoading ? '登録中...' : 'このデバイスにパスキーを登録'}
               </button>
-              <p style={{ fontSize: 12, color: "var(--text-3)", marginTop: 8 }}>
-                次回から指紋・顔認証でログインできます
-              </p>
+              <p style={{ fontSize: 12, color: 'var(--text-3)', marginTop: 8 }}>次回から指紋・顔認証でログインできます</p>
             </>
           )}
 
           <div className="auth-footer">
-            すでにアカウントをお持ちの方は{" "}
-            <Link href="/login">ログイン</Link>
+            すでにアカウントをお持ちの方は <Link href="/login">ログイン</Link>
           </div>
         </div>
       </div>
@@ -163,14 +150,7 @@ export default function RegisterPage() {
 
 function PasskeyIcon() {
   return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <circle cx="12" cy="8" r="4" />
       <path d="M20 21a8 8 0 1 0-16 0" />
       <path d="M16 11l1.5 1.5L20 10" />

@@ -15,11 +15,18 @@ import type { Room } from '@chat-app/shared';
   template: `
     <app-shell>
       <div class="page-header">
-        <div><h1>ルーム一覧</h1><p>チャットルームを選択してください</p></div>
+        <div>
+          <h1>ルーム一覧</h1>
+          <p>チャットルームを選択してください</p>
+        </div>
         <button class="btn btn-primary" (click)="showCreate.set(true)" type="button">+ 新しいルーム</button>
       </div>
 
-      @if (error()) { <div style="padding:16px 24px"><div class="alert alert-error">{{ error() }}</div></div> }
+      @if (error()) {
+        <div style="padding:16px 24px">
+          <div class="alert alert-error">{{ error() }}</div>
+        </div>
+      }
 
       @if (loading()) {
         <div class="loading-center"><div class="spinner"></div></div>
@@ -43,7 +50,15 @@ import type { Room } from '@chat-app/shared';
                 @if (auth.user()?.id === room.createdBy) {
                   <div class="room-card-actions">
                     <button class="btn btn-ghost btn-sm" (click)="editRoom.set(room)" title="編集" type="button">✏️</button>
-                    <button class="btn btn-ghost btn-sm" (click)="deleteConfirm.set(room.id)" title="削除" type="button" style="color:var(--danger)">🗑️</button>
+                    <button
+                      class="btn btn-ghost btn-sm"
+                      (click)="deleteConfirm.set(room.id)"
+                      title="削除"
+                      type="button"
+                      style="color:var(--danger)"
+                    >
+                      🗑️
+                    </button>
                   </div>
                 }
               </div>
@@ -76,17 +91,37 @@ import type { Room } from '@chat-app/shared';
 export class RoomsComponent implements OnInit {
   auth = inject(AuthService);
   private roomService = inject(RoomService);
-  rooms = signal<Room[]>([]); loading = signal(true); error = signal('');
-  showCreate = signal(false); editRoom = signal<Room | undefined>(undefined); deleteConfirm = signal<string | null>(null);
+  rooms = signal<Room[]>([]);
+  loading = signal(true);
+  error = signal('');
+  showCreate = signal(false);
+  editRoom = signal<Room | undefined>(undefined);
+  deleteConfirm = signal<string | null>(null);
 
-  ngOnInit() { this.load(); }
+  ngOnInit() {
+    this.load();
+  }
   async load() {
     this.loading.set(true);
-    try { this.rooms.set(await this.roomService.list()); } catch { this.error.set('ルームの取得に失敗しました'); } finally { this.loading.set(false); }
+    try {
+      this.rooms.set(await this.roomService.list());
+    } catch {
+      this.error.set('ルームの取得に失敗しました');
+    } finally {
+      this.loading.set(false);
+    }
   }
-  onSaved() { this.showCreate.set(false); this.load(); }
+  onSaved() {
+    this.showCreate.set(false);
+    this.load();
+  }
   async deleteRoom(id: string) {
-    try { await this.roomService.delete(id); this.deleteConfirm.set(null); this.load(); }
-    catch (err: unknown) { this.error.set(err instanceof Error ? err.message : '削除に失敗しました'); }
+    try {
+      await this.roomService.delete(id);
+      this.deleteConfirm.set(null);
+      this.load();
+    } catch (err: unknown) {
+      this.error.set(err instanceof Error ? err.message : '削除に失敗しました');
+    }
   }
 }

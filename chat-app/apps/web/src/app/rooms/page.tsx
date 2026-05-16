@@ -1,6 +1,6 @@
-import { Suspense } from "react";
+import { Suspense } from 'react';
 
-import RoomsListView from "@/components/RoomsListView";
+import RoomsListView from '@/components/RoomsListView';
 
 export default function RoomsPage() {
   return (
