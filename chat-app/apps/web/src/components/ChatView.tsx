@@ -6,6 +6,7 @@ import AppShell from "@/components/AppShell";
 import RoomModal from "@/components/RoomModal";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
+import { createRoomWebSocketUrl } from "@/lib/ws";
 import type { Message, Room } from "@chat-app/shared";
 
 type ConnStatus = "disconnected" | "connecting" | "connected";
@@ -35,8 +36,7 @@ export default function ChatView({ roomId }: Props) {
 
   useEffect(() => {
     if (typeof window !== "undefined" && roomId && token) {
-      const proto = location.protocol === "https:" ? "wss" : "ws";
-      const url = `${proto}://${location.host}/ws/${roomId}?token=${token}`;
+      const url = createRoomWebSocketUrl(roomId, token);
       setWsUrl(url); setEditUrl(url);
     }
   }, [roomId, token]);

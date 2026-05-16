@@ -1,10 +1,10 @@
 import { createMiddleware } from "hono/factory";
 import type { Env } from "../env";
+import { getSessionToken } from "../utils/auth";
 import { getSession, getUserById } from "../utils/kv";
 type V = { userId: string; displayName: string; email: string };
 export const authMiddleware = createMiddleware<{ Bindings: Env; Variables: V }>(async (c, next) => {
-  const auth = c.req.header("Authorization");
-  const token = auth?.startsWith("Bearer ") ? auth.slice(7) : c.req.query("token");
+  const token = getSessionToken(c.req);
   if (!token) return c.json({ error: "Unauthorized" }, 401);
   const session = await getSession(c.env, token);
   if (!session || session.expiresAt < new Date().toISOString()) return c.json({ error: "Unauthorized" }, 401);

@@ -19,7 +19,7 @@ app.get("/ws/:roomId", authMiddleware, async (c) => {
   const stub = c.env.CHAT_ROOM.get(doId);
   const url = new URL(c.req.url);
   url.searchParams.set("userId", c.get("userId"));
-  url.searchParams.set("displayName", encodeURIComponent(c.get("displayName")));
+  url.searchParams.set("displayName", c.get("displayName"));
   url.searchParams.set("roomId", roomId);
   return stub.fetch(new Request(url.toString(), c.req.raw));
 });

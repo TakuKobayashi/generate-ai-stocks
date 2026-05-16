@@ -3,6 +3,7 @@ import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { generateRegistrationOptions, verifyRegistrationResponse, generateAuthenticationOptions, verifyAuthenticationResponse } from "@simplewebauthn/server";
 import type { Env } from "../env";
+import { getSessionToken } from "../utils/auth";
 import { getUserByEmail, saveUser, getPasskeysByUserId, getPasskeyByCredentialId, savePasskey, updatePasskeyCounter, saveChallenge, getChallenge, deleteChallenge, saveSession, deleteSession, getSession, getUserById } from "../utils/kv";
 import { hashPassword, verifyPassword, generateId, generateSessionToken } from "../utils/crypto";
 
@@ -88,15 +89,15 @@ app.post("/passkey/auth/verify", zValidator("json", z.object({ challengeId: z.st
 });
 
 app.post("/logout", async (c) => {
-  const auth = c.req.header("Authorization");
-  if (auth?.startsWith("Bearer ")) await deleteSession(c.env, auth.slice(7));
+  const token = getSessionToken(c.req);
+  if (token) await deleteSession(c.env, token);
   return c.json({ success: true });
 });
 
 app.get("/me", async (c) => {
-  const auth = c.req.header("Authorization");
-  if (!auth?.startsWith("Bearer ")) return c.json({ error: "Unauthorized" }, 401);
-  const session = await getSession(c.env, auth.slice(7));
+  const token = getSessionToken(c.req);
+  if (!token) return c.json({ error: "Unauthorized" }, 401);
+  const session = await getSession(c.env, token);
   if (!session || session.expiresAt < new Date().toISOString()) return c.json({ error: "Unauthorized" }, 401);
   const user = await getUserById(c.env, session.userId);
   if (!user) return c.json({ error: "Unauthorized" }, 401);
