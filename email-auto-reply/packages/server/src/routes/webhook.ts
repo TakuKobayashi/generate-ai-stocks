@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import type { Env } from '../bindings.js';
-import type { GmailWebhookPayload, GmailPubSubData } from '@email-reply/core';
+import type { GmailWebhookPayload, GmailPubSubData } from '../lib/index.js';
 import { processSingleGmailMessage, processGmailEmails } from '../services/reply.js';
 import { getNewMessageIds } from '../services/gmail-api.js';
 

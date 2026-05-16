@@ -1,7 +1,7 @@
 import { ImapFlow } from 'imapflow';
 import nodemailer from 'nodemailer';
-import type { EmailMessage } from '@email-reply/core';
-import { htmlToPlainText, truncateBody } from '@email-reply/core';
+import type { EmailMessage } from '../lib/index.js';
+import { htmlToPlainText, truncateBody } from '../lib/index.js';
 import { config } from '../config.js';
 import { logger } from '../utils/logger.js';
 

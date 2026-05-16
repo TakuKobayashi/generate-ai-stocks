@@ -7,11 +7,7 @@
     "lib": ["ES2022"],
     "types": ["@cloudflare/workers-types"],
     "outDir": "./dist",
-    "noEmit": false,
-    "paths": {
-      "@email-reply/core": ["../core/src/index.ts"],
-      "@email-reply/core/*": ["../core/src/*"]
-    }
+    "noEmit": false
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

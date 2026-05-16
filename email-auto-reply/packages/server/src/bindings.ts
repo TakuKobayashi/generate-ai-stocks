@@ -1,4 +1,4 @@
-import type { AIProvider } from '@email-reply/core';
+import type { AIProvider } from './lib/index.js';
 
 /**
  * Cloudflare Workers の環境バインディング型

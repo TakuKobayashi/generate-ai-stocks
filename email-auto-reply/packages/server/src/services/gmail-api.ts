@@ -5,8 +5,8 @@
  */
 
 import type { Env } from '../bindings.js';
-import type { EmailMessage } from '@email-reply/core';
-import { extractGmailBody, getGmailHeader, truncateBody } from '@email-reply/core';
+import type { EmailMessage } from '../lib/index.js';
+import { extractGmailBody, getGmailHeader, truncateBody } from '../lib/index.js';
 
 // ─────────────────────────────────────────────
 // OAuth2 アクセストークンのリフレッシュ

@@ -15,7 +15,7 @@
  */
 
 import type { Env } from '../bindings.js';
-import type { EmailMessage } from '@email-reply/core';
+import type { EmailMessage } from '../lib/index.js';
 
 /**
  * Yahoo IMAP ポーリング

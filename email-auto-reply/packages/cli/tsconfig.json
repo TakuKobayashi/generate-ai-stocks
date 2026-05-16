@@ -3,11 +3,7 @@
   "compilerOptions": {
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "outDir": "./dist",
-    "paths": {
-      "@email-reply/core": ["../core/src/index.ts"],
-      "@email-reply/core/*": ["../core/src/*"]
-    }
+    "outDir": "./dist"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

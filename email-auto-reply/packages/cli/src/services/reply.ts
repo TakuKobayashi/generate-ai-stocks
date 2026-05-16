@@ -1,13 +1,13 @@
 import { eq } from 'drizzle-orm';
-import type { ServiceType } from '@email-reply/core';
-import { generateReply, appendSignature } from '@email-reply/core';
+import type { ServiceType } from '../lib/index.js';
+import { generateReply, appendSignature } from '../lib/index.js';
 import { getDb, schema } from '../db/index.js';
 import { fetchGmailMessages, sendGmailReply } from './gmail.js';
 import { fetchYahooMessages, sendYahooReply } from './yahoo.js';
 import { loadSignature } from '../utils/signature.js';
 import { logger } from '../utils/logger.js';
 import { config } from '../config.js';
-import type { EmailMessage } from '@email-reply/core';
+import type { EmailMessage } from '../lib/index.js';
 import chalk from 'chalk';
 
 // ─────────────────────────────────────────────

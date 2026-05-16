@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import type { Env } from '../bindings.js';
-import type { EmailMessage } from '@email-reply/core';
-import { generateReply, appendSignature } from '@email-reply/core';
+import type { EmailMessage } from '../lib/index.js';
+import { generateReply, appendSignature } from '../lib/index.js';
 import { getDb, schema } from '../db/index.js';
 import { fetchGmailMessages, sendGmailReply } from './gmail-api.js';
 import { fetchYahooMessages, sendYahooReply } from './yahoo-imap.js';
@@ -125,7 +125,7 @@ export async function processSingleGmailMessage(
 
   // Gmail API でメッセージ詳細を取得（単一メッセージ版）
   const { getAccessToken } = await import('./gmail-api.js');
-  const { extractGmailBody, getGmailHeader, truncateBody } = await import('@email-reply/core');
+  const { extractGmailBody, getGmailHeader, truncateBody } = await import('../lib/index.js');
 
   const token = await getAccessToken(env);
   const res   = await fetch(

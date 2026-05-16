@@ -2,7 +2,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { processEmails, listHistory } from '../services/reply.js';
 import { logger } from '../utils/logger.js';
-import type { ServiceType } from '@email-reply/core';
+import type { ServiceType } from '../lib/index.js';
 
 export const checkCommand = new Command('check')
   .description('メールをチェックして自動返信する（1回実行）')

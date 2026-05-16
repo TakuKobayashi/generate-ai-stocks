@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import { processEmails } from '../services/reply.js';
 import { logger } from '../utils/logger.js';
 import { config } from '../config.js';
-import type { ServiceType } from '@email-reply/core';
+import type { ServiceType } from '../lib/index.js';
 
 export const watchCommand = new Command('watch')
   .description('cronで定期的にメールをチェックして自動返信する')

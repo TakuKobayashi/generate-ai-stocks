@@ -2,8 +2,8 @@ import { google, gmail_v1 } from 'googleapis';
 import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
-import type { EmailMessage } from '@email-reply/core';
-import { extractGmailBody, getGmailHeader, truncateBody } from '@email-reply/core';
+import type { EmailMessage } from '../lib/index.js';
+import { extractGmailBody, getGmailHeader, truncateBody } from '../lib/index.js';
 import { config } from '../config.js';
 import { logger } from '../utils/logger.js';
 

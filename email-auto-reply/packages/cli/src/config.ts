@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-import type { AIProvider } from '@email-reply/core';
+import type { AIProvider } from './lib/index.js';
 
 function opt(key: string, def: string): string {
   return process.env[key] ?? def;

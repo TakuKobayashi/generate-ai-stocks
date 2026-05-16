@@ -2,11 +2,6 @@ import Groq from 'groq-sdk';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import type { AIProvider, EmailContext } from './types.js';
 
-// ─────────────────────────────────────────────
-// AI返信生成 (Groq / Gemini)
-// Node.js (CLI) と Cloudflare Workers (Server) 両対応
-// ─────────────────────────────────────────────
-
 const SYSTEM_PROMPT = `あなたはプロフェッショナルなビジネスメール返信アシスタントです。
 受信したメールに対して、適切な日本語ビジネスメールの返信本文を生成してください。
 
@@ -32,14 +27,7 @@ ${email.subject}
 ${email.body}`;
 }
 
-/**
- * Groq で返信生成
- * モデル: llama-3.3-70b-versatile（無料枠・高品質）
- */
-async function generateWithGroq(
-  apiKey: string,
-  email: EmailContext
-): Promise<string> {
+async function generateWithGroq(apiKey: string, email: EmailContext): Promise<string> {
   const groq = new Groq({ apiKey });
   const completion = await groq.chat.completions.create({
     model: 'llama-3.3-70b-versatile',
@@ -55,14 +43,7 @@ async function generateWithGroq(
   return text.trim();
 }
 
-/**
- * Gemini で返信生成
- * モデル: gemini-2.0-flash（無料枠・日本語品質高）
- */
-async function generateWithGemini(
-  apiKey: string,
-  email: EmailContext
-): Promise<string> {
+async function generateWithGemini(apiKey: string, email: EmailContext): Promise<string> {
   const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({
     model: 'gemini-2.0-flash',
@@ -80,10 +61,6 @@ export interface GenerateReplyOptions {
   geminiApiKey?: string;
 }
 
-/**
- * 設定に応じたプロバイダーで返信本文を生成する
- * キーは呼び出し元 (CLI=process.env / Server=Env binding) から渡す
- */
 export async function generateReply(
   email: EmailContext,
   opts: GenerateReplyOptions
@@ -97,7 +74,6 @@ export async function generateReply(
   }
 }
 
-/** 署名Markdownをプレーンテキスト末尾に付与する */
 export function appendSignature(body: string, signature: string): string {
   if (!signature) return body;
   return `${body}\n\n${signature}`;
