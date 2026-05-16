@@ -1,0 +1,51 @@
+name: Daily Report Generation
+
+on:
+  schedule:
+    # 平日の18:00 JST (09:00 UTC)に実行
+    - cron: '0 9 * * 1-5'
+  workflow_dispatch: # 手動実行も可能
+
+jobs:
+  generate-report:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build
+        run: npm run build
+        
+      - name: Generate daily report
+        env:
+          # Secretsに保存されたトークンを使用
+          GITHUB_TOKEN: ${{ secrets.GH_PERSONAL_TOKEN }}
+          ASANA_TOKEN: ${{ secrets.ASANA_TOKEN }}
+          GOOGLE_TASKS_TOKEN: ${{ secrets.GOOGLE_TASKS_TOKEN }}
+          TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+          TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
+        run: |
+          npm start generate \
+            --github-token "$GITHUB_TOKEN" \
+            --asana-token "$ASANA_TOKEN" \
+            --google-tasks-token "$GOOGLE_TASKS_TOKEN" \
+            --trello-token "$TRELLO_TOKEN" \
+            --trello-api-key "$TRELLO_API_KEY" \
+            --output "./reports/daily-report-$(date +%Y-%m-%d).md"
+      
+      - name: Commit and push report
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add reports/
+          git commit -m "Add daily report for $(date +%Y-%m-%d)" || echo "No changes to commit"
+          git push
