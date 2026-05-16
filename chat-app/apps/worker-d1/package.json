@@ -9,8 +9,8 @@
     "generate": "drizzle-kit generate",
     "migrate:remote": "wrangler d1 migrations apply chat-d1-db --remote",
     "migrate:local": "wrangler d1 migrations apply chat-d1-db --local",
-    "db:clear:local": "tsx scripts/generate-drop-sql.ts && wrangler d1 execute chat-d1-db --local --file=./drop_tables.sql",
-    "db:reset": "pnpm run db:clear:local && wrangler d1 migrations apply chat-d1-db --local",
+    "db:clear:local": "tsx scripts/generate-drop-sql.ts && wrangler d1 execute chat-d1-db --local --file=./seeds/drop_tables.sql",
+    "db:reset:local": "pnpm run db:clear:local && wrangler d1 migrations apply chat-d1-db --local",
     "wrangler": "wrangler",
     "tsx": "tsx"
   },
