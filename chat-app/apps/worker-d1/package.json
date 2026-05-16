@@ -1,10 +1,18 @@
 {
-  "name": "worker-d1", "version": "0.0.1", "private": true,
+  "name": "worker-d1",
+  "version": "0.0.1",
+  "private": true,
   "scripts": {
     "dev": "wrangler dev --port 8787",
     "build": "wrangler deploy --dry-run",
     "typecheck": "tsc --noEmit",
-    "generate": "drizzle-kit generate"
+    "generate": "drizzle-kit generate",
+    "migrate:remote": "wrangler d1 migrations apply chat-d1-db --remote",
+    "migrate:local": "wrangler d1 migrations apply chat-d1-db --local",
+    "db:clear:local": "tsx scripts/generate-drop-sql.ts && wrangler d1 execute chat-d1-db --local --file=./drop_tables.sql",
+    "db:reset": "pnpm run db:clear:local && wrangler d1 migrations apply chat-d1-db --local",
+    "wrangler": "wrangler",
+    "tsx": "tsx"
   },
   "dependencies": {
     "@chat-app/shared": "workspace:*",
@@ -17,7 +25,8 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240725.0",
     "drizzle-kit": "^0.21.4",
+    "tsx": "^4.22.0",
     "typescript": "^5.4.5",
-    "wrangler": "^3.60.0"
+    "wrangler": "^3.114.17"
   }
 }
