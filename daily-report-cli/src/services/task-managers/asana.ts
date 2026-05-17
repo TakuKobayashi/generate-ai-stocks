@@ -1,31 +1,36 @@
-import Asana from 'asana';
+import * as Asana from 'asana';
 import { Task, TaskComment, DateRange } from '../../types';
 
 export class AsanaService {
-  private client: Asana.ApiClient;
+  private client: any;
 
   constructor(token: string) {
-    this.client = new Asana.ApiClient({
-      defaultHeaders: { 'asana-enable': 'new_user_task_lists' },
-      logAsanaChangeWarnings: false,
-    }).useAccessToken(token);
+    this.client = Asana.ApiClient.instance;
+    const token_auth = this.client.authentications['token'];
+    token_auth.accessToken = token;
   }
 
   public async getCompletedTasks(dateRange: DateRange): Promise<Task[]> {
     try {
-      const me = await this.client.users.me();
-      const workspaces = await this.client.workspaces.findAll();
+      const usersApi = new Asana.UsersApi();
+      const workspacesApi = new Asana.WorkspacesApi();
+      const tasksApi = new Asana.TasksApi();
+      
+      const me = await usersApi.getUser('me');
+      const workspaces = await workspacesApi.getUserWorkspaces(me.gid);
       const tasks: Task[] = [];
 
-      for await (const workspace of workspaces) {
-        const completedTasks = await this.client.tasks.findAll({
+      for (const workspace of workspaces.data) {
+        const opts = {
           assignee: me.gid,
           workspace: workspace.gid,
           completed_since: dateRange.start.toISOString(),
           opt_fields: 'name,completed_at,permalink_url,parent.name,parent.permalink_url',
-        });
+        };
 
-        for await (const task of completedTasks) {
+        const completedTasks = await tasksApi.getTasks(opts);
+
+        for (const task of completedTasks.data) {
           const completedAt = task.completed_at ? new Date(task.completed_at) : null;
           
           if (completedAt && completedAt >= dateRange.start && completedAt <= dateRange.end) {
@@ -53,18 +58,24 @@ export class AsanaService {
 
   public async getCreatedTasks(dateRange: DateRange): Promise<Task[]> {
     try {
-      const me = await this.client.users.me();
-      const workspaces = await this.client.workspaces.findAll();
+      const usersApi = new Asana.UsersApi();
+      const workspacesApi = new Asana.WorkspacesApi();
+      const tasksApi = new Asana.TasksApi();
+      
+      const me = await usersApi.getUser('me');
+      const workspaces = await workspacesApi.getUserWorkspaces(me.gid);
       const tasks: Task[] = [];
 
-      for await (const workspace of workspaces) {
-        const createdTasks = await this.client.tasks.findAll({
+      for (const workspace of workspaces.data) {
+        const opts = {
           assignee: me.gid,
           workspace: workspace.gid,
           opt_fields: 'name,created_at,permalink_url,parent.name,parent.permalink_url',
-        });
+        };
 
-        for await (const task of createdTasks) {
+        const createdTasks = await tasksApi.getTasks(opts);
+
+        for (const task of createdTasks.data) {
           const createdAt = task.created_at ? new Date(task.created_at) : null;
           
           if (createdAt && createdAt >= dateRange.start && createdAt <= dateRange.end) {
@@ -92,23 +103,32 @@ export class AsanaService {
 
   public async getComments(dateRange: DateRange): Promise<TaskComment[]> {
     try {
-      const me = await this.client.users.me();
-      const workspaces = await this.client.workspaces.findAll();
+      const usersApi = new Asana.UsersApi();
+      const workspacesApi = new Asana.WorkspacesApi();
+      const tasksApi = new Asana.TasksApi();
+      const storiesApi = new Asana.StoriesApi();
+      
+      const me = await usersApi.getUser('me');
+      const workspaces = await workspacesApi.getUserWorkspaces(me.gid);
       const comments: TaskComment[] = [];
 
-      for await (const workspace of workspaces) {
-        const tasks = await this.client.tasks.findAll({
+      for (const workspace of workspaces.data) {
+        const opts = {
           assignee: me.gid,
           workspace: workspace.gid,
           opt_fields: 'name,permalink_url',
-        });
+        };
 
-        for await (const task of tasks) {
-          const stories = await this.client.stories.findByTask(task.gid, {
+        const tasks = await tasksApi.getTasks(opts);
+
+        for (const task of tasks.data) {
+          const storiesOpts = {
             opt_fields: 'created_at,created_by,text,type',
-          });
+          };
+          
+          const stories = await storiesApi.getStoriesForTask(task.gid, storiesOpts);
 
-          for await (const story of stories) {
+          for (const story of stories.data) {
             if (
               story.type === 'comment' &&
               story.created_by?.gid === me.gid &&
@@ -139,7 +159,8 @@ export class AsanaService {
 
   public async testConnection(): Promise<boolean> {
     try {
-      await this.client.users.me();
+      const usersApi = new Asana.UsersApi();
+      await usersApi.getUser('me');
       return true;
     } catch {
       return false;
