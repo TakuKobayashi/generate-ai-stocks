@@ -17,7 +17,7 @@ export class AsanaService {
       const tasksApi = new Asana.TasksApi();
       
       const me = await usersApi.getUser('me');
-      const workspaces = await workspacesApi.getUserWorkspaces(me.gid);
+      const workspaces = await workspacesApi.getWorkspaces();
       const tasks: Task[] = [];
 
       for (const workspace of workspaces.data) {
@@ -63,7 +63,7 @@ export class AsanaService {
       const tasksApi = new Asana.TasksApi();
       
       const me = await usersApi.getUser('me');
-      const workspaces = await workspacesApi.getUserWorkspaces(me.gid);
+      const workspaces = await workspacesApi.getWorkspaces();
       const tasks: Task[] = [];
 
       for (const workspace of workspaces.data) {
@@ -109,7 +109,7 @@ export class AsanaService {
       const storiesApi = new Asana.StoriesApi();
       
       const me = await usersApi.getUser('me');
-      const workspaces = await workspacesApi.getUserWorkspaces(me.gid);
+      const workspaces = await workspacesApi.getWorkspaces();
       const comments: TaskComment[] = [];
 
       for (const workspace of workspaces.data) {
