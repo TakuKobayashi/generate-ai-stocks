@@ -35,10 +35,8 @@ program.command("pull").action(updateSubmodules);
 
 program.command("push").action(pushSubmodules);
 
-program
-  .command("status")
-  .action(async () => {
-    execSync("git submodule foreach git status", { stdio: "inherit" });
-  });
+program.command("status").action(async () => {
+  execSync("git submodule foreach git status", { stdio: "inherit" });
+});
 
 program.parse();

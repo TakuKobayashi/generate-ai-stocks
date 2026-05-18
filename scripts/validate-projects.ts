@@ -10,15 +10,11 @@ export async function validateProjects() {
       const raw = await fs.readFile(file, "utf8");
       const data: any = yaml.load(raw);
 
-      ["name", "slug", "description", "status"].forEach(
-        (field) => {
-          if (!data[field]) {
-            throw new Error(
-              `${file}: missing ${field}`
-            );
-          }
+      ["name", "slug", "description", "status"].forEach((field) => {
+        if (!data[field]) {
+          throw new Error(`${file}: missing ${field}`);
         }
-      );
+      });
     } catch (err) {
       console.error(err);
       process.exit(1);

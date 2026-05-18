@@ -5,11 +5,11 @@ import yaml from "js-yaml";
 
 export async function syncPortfolio() {
   const projectFiles = await fg("projects/*/project.yml", {
-    onlyFiles: true
+    onlyFiles: true,
   });
 
   const fallbackReadmes = await fg("projects/*/README.md", {
-    onlyFiles: true
+    onlyFiles: true,
   });
 
   const loadedSlugs = new Set<string>();
@@ -20,8 +20,7 @@ export async function syncPortfolio() {
       const raw = await fs.readFile(file, "utf8");
       const data: any = yaml.load(raw);
 
-      const slug =
-        data.slug || path.basename(path.dirname(file));
+      const slug = data.slug || path.basename(path.dirname(file));
 
       loadedSlugs.add(slug);
 
@@ -31,7 +30,7 @@ export async function syncPortfolio() {
         description: data.description || "",
         status: data.status || "incubating",
         repo: data.repo || "",
-        tags: data.tags || []
+        tags: data.tags || [],
       });
     } catch (err) {
       console.error(`Failed loading ${file}:`, err);
@@ -49,29 +48,23 @@ export async function syncPortfolio() {
       description: "",
       status: "incubating",
       repo: "",
-      tags: []
+      tags: [],
     });
   }
 
-  projects.sort((a, b) =>
-    a.slug.localeCompare(b.slug)
-  );
+  projects.sort((a, b) => a.slug.localeCompare(b.slug));
 
   await fs.mkdir("portfolio", {
-    recursive: true
+    recursive: true,
   });
 
   await fs.writeFile(
     "portfolio/projects.json",
     JSON.stringify(projects, null, 2),
-    "utf8"
+    "utf8",
   );
 
-  await fs.writeFile(
-    "portfolio/projects.yml",
-    yaml.dump(projects),
-    "utf8"
-  );
+  await fs.writeFile("portfolio/projects.yml", yaml.dump(projects), "utf8");
 
   console.log(`Synced ${projects.length} projects.`);
 }

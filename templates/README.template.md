@@ -3,6 +3,7 @@
 生成AIに作らせたそれぞれの各種開発プロジェクトをストック・管理する統合リポジトリです。
 
 ## 開発フェーズ
+
 - incubating → 開発中
 - validating → 動作確認中
 - launched → ローンチ済（submodule化候補）
@@ -13,7 +14,8 @@
 ## プロジェクト一覧
 
 | プロジェクト | 説明 | status |
-|------|------|------|
+| ------------ | ---- | ------ |
+
 {{PROJECT_TABLE}}
 
 ---
@@ -21,9 +23,10 @@
 ## 開発フロー
 
 ### 新規プロジェクト追加
+
 ```bash
 npm run projects:add -- --name my-new-project
-````
+```
 
 ### portfolio / README同期
 
@@ -69,10 +72,10 @@ npm run projects:status
 
 ## Submodule重要ポイント
 
-* 親repoはsubmoduleのcommit pointerを管理
-* 子repo更新後は親repo側pointer更新も必要
-* projects:pull → 全PC同期用
-* projects:push → 全更新反映用
+- 親repoはsubmoduleのcommit pointerを管理
+- 子repo更新後は親repo側pointer更新も必要
+- projects:pull → 全PC同期用
+- projects:push → 全更新反映用
 
 ---
 
@@ -89,5 +92,7 @@ Launch済プロジェクトを独立repo化
 ### Phase3:
 
 generate-ai-stocks に submodule統合
+
+```
 
 ```

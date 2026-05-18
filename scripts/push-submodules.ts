@@ -8,22 +8,19 @@ export async function pushSubmodules() {
       git push
     "`,
     {
-      stdio: "inherit"
-    }
+      stdio: "inherit",
+    },
   );
 
   execSync("git add .", {
-    stdio: "inherit"
+    stdio: "inherit",
   });
 
-  execSync(
-    `git commit -m "Update submodule pointers" || true`,
-    {
-      stdio: "inherit"
-    }
-  );
+  execSync(`git commit -m "Update submodule pointers" || true`, {
+    stdio: "inherit",
+  });
 
   execSync("git push", {
-    stdio: "inherit"
+    stdio: "inherit",
   });
 }
