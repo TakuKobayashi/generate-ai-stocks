@@ -1,0 +1,5 @@
+.next/
+out/
+.wrangler/
+node_modules/
+next-env.d.ts

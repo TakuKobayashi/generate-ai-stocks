@@ -1,11 +1,45 @@
+# ── Dependencies ──────────────────────────────────────────
 node_modules/
+.pnp
+.pnp.cjs
+.pnp.loader.mjs
+
+# ── Next.js ───────────────────────────────────────────────
 .next/
 out/
+next-env.d.ts
+
+# ── Build output ──────────────────────────────────────────
+/build
+/dist
+
+# ── Cloudflare / Wrangler ─────────────────────────────────
 .wrangler/
-.vercel/
-*.local
+.dev.vars
+
+# ── Environment variables ─────────────────────────────────
 .env
 .env.local
-.dev.vars
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ── OS / Editor ───────────────────────────────────────────
 .DS_Store
+.DS_Store?
+._*
+Thumbs.db
+*.pem
+
+# ── Debug logs ────────────────────────────────────────────
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ── TypeScript ────────────────────────────────────────────
 *.tsbuildinfo
+
+# ── Misc ──────────────────────────────────────────────────
+.vercel
+*.local

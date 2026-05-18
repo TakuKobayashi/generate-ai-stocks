@@ -1,0 +1,17 @@
+{
+  // RecStudio — Cloudflare Workers Assets
+  // Deploy: npm run deploy  (builds Next.js then runs wrangler deploy)
+  //
+  // This project uses Workers Assets for pure static file serving.
+  // No worker script is required — assets are served directly by Cloudflare.
+  "name": "recstudio",
+  "compatibility_date": "2025-03-01",
+  "assets": {
+    // Next.js static export output directory
+    "directory": "./out",
+    // Serve the generated 404.html for missing paths
+    "not_found_handling": "404-page",
+    // Respect the trailing-slash convention from Next.js (trailingSlash: true)
+    "html_handling": "auto-trailing-slash"
+  }
+}
