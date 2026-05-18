@@ -1,0 +1,22 @@
+{
+  "name": "generate-ai-stocks",
+  "private": true,
+  "scripts": {
+    "projects:add": "tsx scripts/cli.ts add",
+    "projects:sync": "tsx scripts/cli.ts sync",
+    "projects:readme": "tsx scripts/cli.ts readme",
+    "projects:validate": "tsx scripts/cli.ts validate",
+    "projects:pull": "tsx scripts/cli.ts pull",
+    "projects:push": "tsx scripts/cli.ts push",
+    "projects:status": "tsx scripts/cli.ts status",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "commander": "^12.0.0",
+    "js-yaml": "^4.1.0",
+    "prettier": "^3.2.5",
+    "tsx": "^4.7.1",
+    "typescript": "^5.4.2"
+  }
+}
