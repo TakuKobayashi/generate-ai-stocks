@@ -1,0 +1,10 @@
+name: github-leak-detector
+slug: github-leak-detector
+description: Github上にソースコードが流出していないか検出するツール
+status: incubating
+repo:
+tags:
+  - github
+  - security
+  - leak-detection
+  - monitoring
