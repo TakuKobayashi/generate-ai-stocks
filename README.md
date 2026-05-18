@@ -1,72 +1,64 @@
 # generate-ai-stocks
 
-生成AIに作らせたそれぞれの各種開発プロジェクトを、  
-**単なるアイデア集ではなく「技術検証・自動化・将来のローンチ候補」まで含めて体系的にストック・管理する統合リポジトリ** です。
+generate-ai-stocks は、  
+時間的制約で埋もれがちなアイディアを、生成AIでまず“動く形”として具現化し、  
+改善・統合・公開可能な開発資産として蓄積していくための統合リポジトリです。
 
 ---
 
-# generate-ai-stocks の目的
+## generate-ai-stocks の目的
 
-generate-ai-stocks は、生成AIを活用して高速にプロジェクトを企画・構築し、  
-それぞれを以下の3段階で運用する **AI駆動プロダクト研究所 / 開発資産管理基盤** です。
-
-## 1. Sample（技術検証）
-- PartyKit / LiveKit / WebRTC / OCR / GitHub API などの新技術検証
-- 無料枠や低コスト環境でどこまで構築可能か確認
-- 将来の本番プロジェクト用テンプレート化
-
-## 2. CLI / Automation（自動化基盤）
-- GitHub Actions
-- Cron
-- 定期監視
-- 自動記事生成
-- OCR処理
-- セキュリティ監視
-
-CLIツール群は単体利用だけでなく、  
-**GitHub Actions による完全自動運用** を前提とした基盤として活用されます。
-
-## 3. Launch Candidate（ローンチ候補）
-- 実運用可能なWebサービス
-- SaaS候補
-- SEO / 収益化候補
-- 独立リポジトリ化 + submodule管理
+- アイディアを構想段階で止めない
+- 初期実装の速度を最大化する
+- まず動く状態にして判断しやすくする
+- 改善・再利用・統合しやすい形で蓄積する
+- 有望なものは独立運用・公開へ進める
 
 ---
 
-# generate-ai-stocks の強み
+## 基本方針
 
-## 単なるポートフォリオではなく…
-### 「AI × 技術検証 × 自動化 × 事業化」の一連フローを持つこと
+### 1. まず“動く形”にする
+生成AIを活用して、ゼロからすべてを手作業で作る時間を圧縮し、  
+まず一定水準で可動する状態まで高速に到達することを優先します。
 
-- AIで高速試作
-- 動作確認
-- 改良
-- ストック
-- 自動化
-- ローンチ判断
-- 独立repo化
+### 2. 調整・改善はその後
+可動状態になっていれば、
+- 必要な改善点の判断
+- 他プロジェクトへの統合
+- 他者への説明
+- 公開判断
+が大幅に容易になります。
 
----
-
-## 開発資産としての価値
-- 再利用可能テンプレート
-- GitHub Actions化しやすいCLI群
-- 無料インフラ検証
-- Submoduleによる段階的独立運用
-- ポートフォリオとしても強い
+### 3. サンプルや技術検証も資産化
+サンプル用途や学習目的のプロジェクトであっても、  
+“ちゃんと動く” 状態で蓄積することで、
+将来的な転用・統合・再利用コストを下げます。
 
 ---
 
-# 開発フェーズ
-- incubating → 開発中
-- validating → 動作確認中
-- launched → ローンチ済（submodule化候補）
-- archived → 保守停止
+## プロジェクトカテゴリ
+
+### Product Candidate
+公開・サービス化・収益化候補
+
+### Utility / Automation
+CLI / GitHub Actions / 自動化基盤
+
+### Technical Asset
+技術検証 / サンプル / 将来統合用
 
 ---
 
-# プロジェクト一覧
+## 開発フェーズ
+- incubating → アイディア具現化中
+- validating → 改善・運用調整中
+- launched → 公開 / 独立運用可能
+- archived → 保守停止 / 技術資産化
+
+---
+
+## プロジェクト一覧
 
 | プロジェクト | 説明 | status |
 |------|------|------|
@@ -82,99 +74,75 @@ CLIツール群は単体利用だけでなく、
 
 ---
 
-# 開発フロー
+## 開発フロー
 
-## 新規プロジェクト追加
+### 新規プロジェクト追加
 ```bash
 npm run projects:add -- --name my-new-project --description "Project description"
 ```
 
-## portfolio / README同期
+### portfolio / README同期
 ```bash
 npm run projects:sync
 ```
 
-## project.yml検証
+### project.yml検証
 ```bash
 npm run projects:validate
 ```
 
 ---
 
-# Submodule運用（ローンチ後）
+## Submodule運用（ローンチ後）
 
-## 初回clone
+### 初回clone
 ```bash
 git clone --recurse-submodules <repo-url>
 ```
 
-## 他PCで最新取得（親 + 全submodule）
+### 他PCで最新取得（親 + 全submodule）
 ```bash
 npm run projects:pull
 ```
 
-## 開発内容を全反映
+### 開発内容を全反映
 ```bash
 npm run projects:push
 ```
 
-## 状態確認
+### 状態確認
 ```bash
 npm run projects:status
 ```
 
 ---
 
-# Submodule重要ポイント
-- 親repoはsubmoduleのcommit pointerを管理
-- 子repo更新後は親repo側pointer更新も必要
-- generate-ai-stocks 直下で従来通り開発可能
-- 他PCでも同一構成を再現可能
-- projects:pull → 全PC同期用
-- projects:push → 全更新反映用
+## Submodule重要ポイント
+- generate-ai-stocks 配下で従来通り開発可能
+- ローンチ後は独立repo化可能
+- 他PCでも同一構成再現可能
+- 親repoは統合管理母艦として機能
 
 ---
 
-# 推奨プロジェクト分類
+## 運用戦略
 
-## sample
-技術検証 / 学習 / 無料インフラ研究  
-例:
-- chat-app
-- gather-app
+### Phase1:
+Idea → Generate → Working Prototype  
+生成AIでアイディアを高速に具現化し、まず動く形にする
 
-## cli
-GitHub Actions / 自動化 / 定期実行基盤  
-例:
-- daily-report-cli
-- github-leak-detector
+### Phase2:
+Refine / Integrate  
+改善・調整・統合によって価値を高める
 
-## service
-ローンチ候補 / SaaS / 独立運用  
-例:
-- recstudio
-- stamp-rally
+### Phase3:
+Launch / Spin-out  
+有望プロジェクトを独立repo化し、公開・運用する
 
 ---
 
-# 運用戦略
+## 最終ビジョン
 
-## Phase1:
-Monorepo高速開発  
-AIで大量試作 + 技術検証 + 資産化
-
-## Phase2:
-有望プロジェクトをLaunch  
-project.yml整備 + 自動化 + 公開準備
-
-## Phase3:
-独立repo化 + Submodule統合  
-generate-ai-stocks は「統合管理母艦」として機能
-
----
-
-# 最終的なビジョン
-
-generate-ai-stocks は  
-**「生成AI時代における、プロダクト量産・検証・管理・独立運用のための母艦リポジトリ」**  
+generate-ai-stocks は、  
+**「思いついたアイディアを時間不足で終わらせず、生成AIによって先に形にし、必要ならそのまま世に出せる状態まで加速するための開発資産基盤」**  
 として進化していきます。
