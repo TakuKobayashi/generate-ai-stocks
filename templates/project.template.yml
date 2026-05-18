@@ -1,7 +1,8 @@
 name: New Project
 slug: new-project
-description: English project description
+description:
 description_ja: 日本語のプロジェクト説明
+translation_locked: false
 status: incubating
 repo:
 tags: []

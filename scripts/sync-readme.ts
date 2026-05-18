@@ -7,10 +7,7 @@ type Project = {
   status?: string;
 };
 
-function buildTable(
-  projects: Project[],
-  lang: "en" | "ja"
-) {
+function buildTable(projects: Project[], lang: "en" | "ja") {
   if (projects.length === 0) {
     return "| No projects found |  |  |";
   }
@@ -30,16 +27,11 @@ function buildTable(
 async function buildReadme(
   templatePath: string,
   outputPath: string,
-  replacements: Record<string, string>
+  replacements: Record<string, string>,
 ) {
-  let template = await fs.readFile(
-    templatePath,
-    "utf8"
-  );
+  let template = await fs.readFile(templatePath, "utf8");
 
-  for (const [key, value] of Object.entries(
-    replacements
-  )) {
+  for (const [key, value] of Object.entries(replacements)) {
     template = template.replace(key, value);
   }
 
@@ -47,33 +39,20 @@ async function buildReadme(
 }
 
 export async function syncReadme() {
-  const raw = await fs.readFile(
-    "portfolio/projects.json",
-    "utf8"
-  );
+  const raw = await fs.readFile("portfolio/projects.json", "utf8");
 
   const projects: Project[] = JSON.parse(raw);
 
   const tableEn = buildTable(projects, "en");
   const tableJa = buildTable(projects, "ja");
 
-  await buildReadme(
-    "templates/README.template.md",
-    "README.md",
-    {
-      "{{PROJECT_TABLE_EN}}": tableEn
-    }
-  );
+  await buildReadme("templates/README.template.md", "README.md", {
+    "{{PROJECT_TABLE_EN}}": tableEn,
+  });
 
-  await buildReadme(
-    "templates/README.ja.template.md",
-    "README.ja.md",
-    {
-      "{{PROJECT_TABLE_JA}}": tableJa
-    }
-  );
+  await buildReadme("templates/README.ja.template.md", "README.ja.md", {
+    "{{PROJECT_TABLE_JA}}": tableJa,
+  });
 
-  console.log(
-    "README.md + README.ja.md synced."
-  );
+  console.log("README.md + README.ja.md synced.");
 }

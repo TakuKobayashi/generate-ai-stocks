@@ -21,18 +21,22 @@ generate-ai-stocks は、
 ## 基本方針
 
 ### 1. まず“動く形”にする
+
 生成AIを活用して、ゼロからすべてを手作業で作る時間を圧縮し、  
 まず一定水準で可動する状態まで高速に到達することを優先します。
 
 ### 2. 調整・改善はその後
+
 可動状態になっていれば、
+
 - 必要な改善点の判断
 - 他プロジェクトへの統合
 - 他者への説明
 - 公開判断
-が容易になります。
+  が容易になります。
 
 ### 3. サンプルや技術検証も資産化
+
 サンプル用途や学習目的のプロジェクトであっても、  
 “ちゃんと動く” 状態で蓄積することで、
 将来的な転用・統合・再利用コストを下げます。
@@ -42,17 +46,21 @@ generate-ai-stocks は、
 ## プロジェクトカテゴリ
 
 ### Product Candidate
+
 公開・サービス化・収益化候補
 
 ### Utility / Automation
+
 CLI / GitHub Actions / 自動化基盤
 
 ### Technical Asset
+
 技術検証 / サンプル / 将来統合用
 
 ---
 
 ## 開発フェーズ
+
 - incubating → アイディア具現化中
 - validating → 改善・運用調整中
 - launched → 公開 / 独立運用可能
@@ -62,33 +70,36 @@ CLI / GitHub Actions / 自動化基盤
 
 ## プロジェクト一覧
 
-| プロジェクト | 説明 | status |
-|------|------|------|
-| [chat-app](./projects/chat-app/) | Sample chat application built with PartyKit for learning real-time communication, WebSocket architecture, and free hosting possibilities across multiple platforms. | incubating |
-| [daily-report-cli](./projects/daily-report-cli/) | CLI tool for automatically generating engineer daily reports, designed for workflow automation, GitHub Actions, and operational reporting pipelines. | incubating |
-| [doc-scanner-unified](./projects/doc-scanner-unified/) | Unified CLI and web-based document scanning project that converts images into text for OCR workflows, document digitization, and automation. | incubating |
-| [email-auto-reply](./projects/email-auto-reply/) | Tool project for automatically generating email replies, supporting productivity improvement, response drafting, and communication automation. | incubating |
-| [gather-app](./projects/gather-app/) | Virtual workspace and communication platform inspired by Gather, using PartyKit and LiveKit to explore WebSocket/WebRTC architecture and interactive online spaces. | incubating |
-| [github-leak-detector](./projects/github-leak-detector/) | Security-oriented tool for detecting leaked source code or sensitive information exposure across GitHub repositories. | incubating |
-| [nomikai](./projects/nomikai/) | Social app and website for quickly inviting, recruiting, and notifying people for spontaneous drinking events or casual gatherings. | incubating |
-| [recstudio](./projects/recstudio/) | Browser-based screen recording web application that records and saves video files entirely client-side without backend infrastructure. | incubating |
-| [stamp-rally](./projects/stamp-rally/) | Service platform for creating, sharing, and participating in digital stamp rally experiences for events, tourism, and community engagement. | incubating |
+| プロジェクト                                             | 説明                                                                                                                                                                | status     |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| [chat-app](./projects/chat-app/)                         | Sample chat application built with PartyKit for learning real-time communication, WebSocket architecture, and free hosting possibilities across multiple platforms. | incubating |
+| [daily-report-cli](./projects/daily-report-cli/)         | CLI tool for automatically generating engineer daily reports, designed for workflow automation, GitHub Actions, and operational reporting pipelines.                | incubating |
+| [doc-scanner-unified](./projects/doc-scanner-unified/)   | Unified CLI and web-based document scanning project that converts images into text for OCR workflows, document digitization, and automation.                        | incubating |
+| [email-auto-reply](./projects/email-auto-reply/)         | Tool project for automatically generating email replies, supporting productivity improvement, response drafting, and communication automation.                      | incubating |
+| [gather-app](./projects/gather-app/)                     | Virtual workspace and communication platform inspired by Gather, using PartyKit and LiveKit to explore WebSocket/WebRTC architecture and interactive online spaces. | incubating |
+| [github-leak-detector](./projects/github-leak-detector/) | Security-oriented tool for detecting leaked source code or sensitive information exposure across GitHub repositories.                                               | incubating |
+| [nomikai](./projects/nomikai/)                           | Social app and website for quickly inviting, recruiting, and notifying people for spontaneous drinking events or casual gatherings.                                 | incubating |
+| [recstudio](./projects/recstudio/)                       | Browser-based screen recording web application that records and saves video files entirely client-side without backend infrastructure.                              | incubating |
+| [stamp-rally](./projects/stamp-rally/)                   | Service platform for creating, sharing, and participating in digital stamp rally experiences for events, tourism, and community engagement.                         | incubating |
 
 ---
 
 ## 開発フロー
 
 ### 新規プロジェクト追加
+
 ```bash
 npm run projects:add -- --name my-new-project --description "Project description"
 ```
 
 ### portfolio / README同期
+
 ```bash
 npm run projects:sync
 ```
 
 ### project.yml検証
+
 ```bash
 npm run projects:validate
 ```
@@ -98,21 +109,25 @@ npm run projects:validate
 ## Submodule運用（ローンチ後）
 
 ### 初回clone
+
 ```bash
 git clone --recurse-submodules <repo-url>
 ```
 
 ### 他PCで最新取得（親 + 全submodule）
+
 ```bash
 npm run projects:pull
 ```
 
 ### 開発内容を全反映
+
 ```bash
 npm run projects:push
 ```
 
 ### 状態確認
+
 ```bash
 npm run projects:status
 ```

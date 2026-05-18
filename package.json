@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "projects:add": "tsx scripts/cli.ts add",
+    "projects:translate": "tsx scripts/cli.ts translate",
     "projects:sync": "tsx scripts/cli.ts sync",
     "projects:readme": "tsx scripts/cli.ts readme",
     "projects:validate": "tsx scripts/cli.ts validate",
