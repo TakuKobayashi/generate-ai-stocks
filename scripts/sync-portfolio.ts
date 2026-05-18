@@ -1,67 +1,65 @@
 import fs from "fs/promises";
 import path from "path";
+import fg from "fast-glob";
 import yaml from "js-yaml";
 
-async function exists(target: string) {
-  try {
-    await fs.access(target);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 export async function syncPortfolio() {
-  const entries = await fs.readdir("projects", {
-    withFileTypes: true
+  const projectFiles = await fg("projects/*/project.yml", {
+    onlyFiles: true
   });
 
+  const fallbackReadmes = await fg("projects/*/README.md", {
+    onlyFiles: true
+  });
+
+  const loadedSlugs = new Set<string>();
   const projects = [];
 
-  for (const entry of entries) {
-    if (!entry.isDirectory()) continue;
-
-    const slug = entry.name;
-    const projectDir = path.join("projects", slug);
-
-    const ymlPath = path.join(projectDir, "project.yml");
-    const readmePath = path.join(projectDir, "README.md");
-
+  for (const file of projectFiles) {
     try {
-      if (await exists(ymlPath)) {
-        const raw = await fs.readFile(ymlPath, "utf8");
-        const data: any = yaml.load(raw);
+      const raw = await fs.readFile(file, "utf8");
+      const data: any = yaml.load(raw);
 
-        projects.push({
-          name: data.name || slug,
-          slug: data.slug || slug,
-          description: data.description || "",
-          status: data.status || "incubating",
-          repo: data.repo || "",
-          tags: data.tags || []
-        });
+      const slug =
+        data.slug || path.basename(path.dirname(file));
 
-        continue;
-      }
+      loadedSlugs.add(slug);
 
-      if (await exists(readmePath)) {
-        projects.push({
-          name: slug,
-          slug,
-          description: "",
-          status: "incubating",
-          repo: "",
-          tags: []
-        });
-      }
+      projects.push({
+        name: data.name || slug,
+        slug,
+        description: data.description || "",
+        status: data.status || "incubating",
+        repo: data.repo || "",
+        tags: data.tags || []
+      });
     } catch (err) {
-      console.error(`Failed loading ${slug}:`, err);
+      console.error(`Failed loading ${file}:`, err);
     }
   }
 
-  projects.sort((a, b) => a.slug.localeCompare(b.slug));
+  for (const readme of fallbackReadmes) {
+    const slug = path.basename(path.dirname(readme));
 
-  await fs.mkdir("portfolio", { recursive: true });
+    if (loadedSlugs.has(slug)) continue;
+
+    projects.push({
+      name: slug,
+      slug,
+      description: "",
+      status: "incubating",
+      repo: "",
+      tags: []
+    });
+  }
+
+  projects.sort((a, b) =>
+    a.slug.localeCompare(b.slug)
+  );
+
+  await fs.mkdir("portfolio", {
+    recursive: true
+  });
 
   await fs.writeFile(
     "portfolio/projects.json",

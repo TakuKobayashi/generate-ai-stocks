@@ -1,0 +1,10 @@
+name: email-auto-reply
+slug: email-auto-reply
+description: メールの返答を自動的に作成してくれるツールプロジェクト
+status: incubating
+repo:
+tags:
+  - email
+  - automation
+  - ai
+  - productivity

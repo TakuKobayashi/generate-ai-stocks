@@ -1,0 +1,10 @@
+name: daily-report-cli
+slug: daily-report-cli
+description: エンジニア向け、日報自動作成ツール
+status: incubating
+repo:
+tags:
+  - cli
+  - productivity
+  - report
+  - engineer

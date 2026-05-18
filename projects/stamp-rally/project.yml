@@ -1,0 +1,11 @@
+name: stamp-rally
+slug: stamp-rally
+description: スタンプラリーの作成と共有をして遊ぶことができるサービス
+status: incubating
+repo:
+tags:
+  - game
+  - event
+  - web
+  - social
+  - location

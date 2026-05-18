@@ -1,0 +1,11 @@
+name: recstudio
+slug: recstudio
+description: ブラウザ上で画面録画を行い動画ファイルとして保存することができるWebサイト。バックエンド不使用。
+status: incubating
+repo:
+tags:
+  - browser
+  - recording
+  - video
+  - frontend-only
+  - web

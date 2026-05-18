@@ -7,14 +7,23 @@ export async function pushSubmodules() {
       git commit -m 'auto update' || true &&
       git push
     "`,
-    { stdio: "inherit" }
+    {
+      stdio: "inherit"
+    }
   );
 
-  execSync("git add .", { stdio: "inherit" });
-
-  execSync(`git commit -m "Update submodule pointers" || true`, {
+  execSync("git add .", {
     stdio: "inherit"
   });
 
-  execSync("git push", { stdio: "inherit" });
+  execSync(
+    `git commit -m "Update submodule pointers" || true`,
+    {
+      stdio: "inherit"
+    }
+  );
+
+  execSync("git push", {
+    stdio: "inherit"
+  });
 }

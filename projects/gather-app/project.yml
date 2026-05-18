@@ -1,0 +1,12 @@
+name: gather-app
+slug: gather-app
+description: Gatherのようなバーチャルワークスペースサービス、PartyKitとLiveKitを使ったWebSocketとWebRTCを使ったサービスのサンプル
+status: incubating
+repo:
+tags:
+  - partykit
+  - livekit
+  - webrtc
+  - websocket
+  - workspace
+  - virtual-office

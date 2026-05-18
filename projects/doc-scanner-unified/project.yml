@@ -1,0 +1,10 @@
+name: doc-scanner-unified
+slug: doc-scanner-unified
+description: 画像から文字におこしてくれるCLIツール、Webサービス
+status: incubating
+repo:
+tags:
+  - ocr
+  - cli
+  - web
+  - scanner
