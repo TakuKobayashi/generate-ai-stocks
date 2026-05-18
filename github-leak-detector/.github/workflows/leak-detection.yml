@@ -1,0 +1,49 @@
+name: GitHub Leak Detection
+
+on:
+  schedule:
+    # 毎日午前9時（UTC）に実行
+    - cron: '0 9 * * *'
+  workflow_dispatch: # 手動実行を可能にする
+
+jobs:
+  detect-leaks:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 全履歴を取得
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install github-leak-detector
+        run: |
+          npm install -g github-leak-detector
+          # または、ローカルにインストールする場合:
+          # npm install github-leak-detector
+
+      - name: Run leak detection
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          github-leak-detector detect \
+            --api-token "$GITHUB_TOKEN" \
+            --notify \
+            --notification-url "${{ secrets.SLACK_WEBHOOK_URL }}" \
+            --notification-type slack \
+            --notification-message "⚠️ ソースコードの流出が検出されました"
+        continue-on-error: true
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: leak-detection-results
+          path: |
+            leak-detection-*.json
+          retention-days: 30

@@ -1,0 +1,47 @@
+name: 'GitHub Leak Detector'
+description: 'Detect source code leaks on GitHub'
+author: 'Your Name'
+
+branding:
+  icon: 'shield'
+  color: 'red'
+
+inputs:
+  exclude-forks:
+    description: 'Exclude forked repositories from search'
+    required: false
+    default: 'true'
+  notify:
+    description: 'Send notification when leaks are detected'
+    required: false
+    default: 'false'
+  notification-url:
+    description: 'URL for sending notifications (Slack webhook or custom webhook)'
+    required: false
+  notification-type:
+    description: 'Notification type: slack, webhook, email'
+    required: false
+    default: 'slack'
+  notification-message:
+    description: 'Custom notification message'
+    required: false
+  api-token:
+    description: 'GitHub API token (uses GITHUB_TOKEN by default)'
+    required: false
+  patterns:
+    description: 'Comma-separated search patterns (auto-detected if not provided)'
+    required: false
+  max-results:
+    description: 'Maximum number of results to return'
+    required: false
+    default: '50'
+
+outputs:
+  leaks-found:
+    description: 'Number of leaks detected'
+  results-json:
+    description: 'Detection results in JSON format'
+
+runs:
+  using: 'node16'
+  main: 'dist/action.js'
