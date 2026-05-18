@@ -71,7 +71,6 @@ Samples / infrastructure experiments / reusable technical foundations
 
 | Project | Description | status |
 | ------- | ----------- | ------ |
-
 {{PROJECT_TABLE_EN}}
 
 ---

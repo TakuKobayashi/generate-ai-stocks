@@ -72,7 +72,6 @@ CLI / GitHub Actions / 自動化基盤
 
 | プロジェクト | 説明 | status |
 | ------------ | ---- | ------ |
-
 {{PROJECT_TABLE_JA}}
 
 ---

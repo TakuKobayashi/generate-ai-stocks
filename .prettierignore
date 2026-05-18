@@ -5,3 +5,5 @@ projects
 */node_modules
 portfolio/projects.json
 portfolio/projects.yml
+templates/README.ja.template.md
+templates/README.template.md
