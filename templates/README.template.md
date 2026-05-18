@@ -1,140 +1,135 @@
 # generate-ai-stocks
 
-generate-ai-stocks は、  
-時間的制約で埋もれがちなアイディアを、生成AIでまず“動く形”として具現化し、  
-改善・統合・公開可能な開発資産として蓄積していくための統合リポジトリです。
+[日本語版はこちら / Japanese README](./README.ja.md)
+
+generate-ai-stocks is an integrated repository designed to transform ideas that would otherwise be buried by time constraints into working implementations using generative AI first, then refine, integrate, and launch them as reusable development assets.
 
 ---
 
-## generate-ai-stocks の目的
+## Purpose
 
-- アイディアを構想段階で止めない
-- 初期実装の速度を最大化する
-- まず動く状態にして判断しやすくする
-- 改善・再利用・統合しやすい形で蓄積する
-- 有望なものは独立運用・公開へ進める
-
----
-
-## 基本方針
-
-### 1. まず“動く形”にする
-生成AIを活用して、ゼロからすべてを手作業で作る時間を圧縮し、  
-まず一定水準で可動する状態まで高速に到達することを優先します。
-
-### 2. 調整・改善はその後
-可動状態になっていれば、
-- 必要な改善点の判断
-- 他プロジェクトへの統合
-- 他者への説明
-- 公開判断
-が大幅に容易になります。
-
-### 3. サンプルや技術検証も資産化
-サンプル用途や学習目的のプロジェクトであっても、  
-“ちゃんと動く” 状態で蓄積することで、
-将来的な転用・統合・再利用コストを下げます。
+- Prevent ideas from stopping at the concept stage
+- Maximize implementation speed
+- Prioritize getting ideas into a working state first
+- Accumulate projects as reusable, integratable assets
+- Launch promising projects independently
 
 ---
 
-## プロジェクトカテゴリ
+## Core Philosophy
+
+### 1. Build working implementations first
+Instead of spending excessive time building everything manually from scratch, generative AI is used to rapidly create functional first versions.
+
+### 2. Refine after functionality exists
+Once something works:
+- Improvements become clearer
+- Integration becomes easier
+- Explanation to others becomes easier
+- Launch decisions become easier
+
+### 3. Even samples become assets
+Technical experiments, prototypes, and samples are also valuable when they function properly, because they reduce future:
+- Development time
+- Integration cost
+- Explanation cost
+- Reuse barriers
+
+---
+
+## Project Categories
 
 ### Product Candidate
-公開・サービス化・収益化候補
+Launch / SaaS / monetization candidates
 
 ### Utility / Automation
-CLI / GitHub Actions / 自動化基盤
+CLI / GitHub Actions / operational tooling
 
 ### Technical Asset
-技術検証 / サンプル / 将来統合用
+Samples / infrastructure experiments / reusable technical foundations
 
 ---
 
-## 開発フェーズ
-- incubating → アイディア具現化中
-- validating → 改善・運用調整中
-- launched → 公開 / 独立運用可能
-- archived → 保守停止 / 技術資産化
+## Development Phases
+- incubating → Idea becoming real
+- validating → Improving and operational tuning
+- launched → Public / independently operational
+- archived → Maintenance stopped / retained as technical asset
 
 ---
 
-## プロジェクト一覧
+## Projects
 
-| プロジェクト | 説明 | status |
+| Project | Description | status |
 |------|------|------|
-{{PROJECT_TABLE}}
+{{PROJECT_TABLE_EN}}
 
 ---
 
-## 開発フロー
+## Development Workflow
 
-### 新規プロジェクト追加
+### Add new project
 ```bash
 npm run projects:add -- --name my-new-project --description "Project description"
 ```
 
-### portfolio / README同期
+### Sync portfolio + README
 ```bash
 npm run projects:sync
 ```
 
-### project.yml検証
+### Validate project.yml
 ```bash
 npm run projects:validate
 ```
 
 ---
 
-## Submodule運用（ローンチ後）
+## Submodule Workflow (Post-launch)
 
-### 初回clone
+### Initial clone
 ```bash
 git clone --recurse-submodules <repo-url>
 ```
 
-### 他PCで最新取得（親 + 全submodule）
+### Pull latest parent + all submodules
 ```bash
 npm run projects:pull
 ```
 
-### 開発内容を全反映
+### Push all development updates
 ```bash
 npm run projects:push
 ```
 
-### 状態確認
+### Check status
 ```bash
 npm run projects:status
 ```
 
 ---
 
-## Submodule重要ポイント
-- generate-ai-stocks 配下で従来通り開発可能
-- ローンチ後は独立repo化可能
-- 他PCでも同一構成再現可能
-- 親repoは統合管理母艦として機能
+## Submodule Notes
+- Continue development inside generate-ai-stocks as before
+- Launch-ready projects can become independent repositories
+- Same environment reproducible across multiple PCs
+- Parent repo functions as central command hub
 
 ---
 
-## 運用戦略
+## Operational Strategy
 
 ### Phase1:
-Idea → Generate → Working Prototype  
-生成AIでアイディアを高速に具現化し、まず動く形にする
+Idea → Generate → Working Implementation
 
 ### Phase2:
-Refine / Integrate  
-改善・調整・統合によって価値を高める
+Refine / Integrate
 
 ### Phase3:
-Launch / Spin-out  
-有望プロジェクトを独立repo化し、公開・運用する
+Launch / Spin-out
 
 ---
 
-## 最終ビジョン
+## Vision
 
-generate-ai-stocks は、  
-**「思いついたアイディアを時間不足で終わらせず、生成AIによって先に形にし、必要ならそのまま世に出せる状態まで加速するための開発資産基盤」**  
-として進化していきます。
+generate-ai-stocks evolves into a development asset platform that accelerates turning ideas into reality first, then into refined, launchable products.

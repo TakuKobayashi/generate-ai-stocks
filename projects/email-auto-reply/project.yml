@@ -1,10 +1,11 @@
 name: email-auto-reply
 slug: email-auto-reply
-description: メールの返答を自動的に作成してくれるツールプロジェクト
+description: Tool project for automatically generating email replies, supporting productivity improvement, response drafting, and communication automation.
+description_ja: メール返信文を自動生成するツールプロジェクト。返信下書きや業務効率化、自動応答基盤として活用可能。
 status: incubating
 repo:
 tags:
   - email
   - automation
-  - ai
+  - AI
   - productivity

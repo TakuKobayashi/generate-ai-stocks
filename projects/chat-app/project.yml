@@ -1,10 +1,11 @@
 name: chat-app
 slug: chat-app
-description: partykitでチャットアプリをサンプルとして作成したプロジェクト、様々なプラットフォームで動くサンプルを作成
+description: Sample chat application built with PartyKit for learning real-time communication, WebSocket architecture, and free hosting possibilities across multiple platforms.
+description_ja: PartyKitを活用し、リアルタイム通信・WebSocket構成・無料運用可能性を学ぶためのマルチプラットフォーム対応チャットアプリサンプル。
 status: incubating
 repo:
 tags:
-  - partykit
-  - chat
-  - websocket
+  - PartyKit
+  - WebSocket
   - sample
+  - real-time

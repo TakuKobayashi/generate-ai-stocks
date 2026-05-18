@@ -1,11 +1,11 @@
 name: stamp-rally
 slug: stamp-rally
-description: スタンプラリーの作成と共有をして遊ぶことができるサービス
+description: Service platform for creating, sharing, and participating in digital stamp rally experiences for events, tourism, and community engagement.
+description_ja: スタンプラリーを作成・共有・参加できるサービス。イベント、観光、地域活性化用途を想定。
 status: incubating
 repo:
 tags:
-  - game
   - event
-  - web
-  - social
-  - location
+  - tourism
+  - community
+  - service
