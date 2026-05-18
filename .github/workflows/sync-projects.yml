@@ -9,7 +9,7 @@ on:
       - "scripts/**"
       - "templates/**"
       - "package.json"
-      - "package-lock.json"
+      - "pnpm-lock.yaml"
       - "tsconfig.json"
       - ".github/workflows/sync-projects.yml"
 
@@ -28,14 +28,18 @@ jobs:
           submodules: recursive
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
+          cache: pnpm
 
-      - run: npm ci
+      - run: pnpm install --frozen-lockfile
 
-      - run: npm run projects:sync
+      - run: pnpm run projects:sync
 
       - run: |
           git config user.name github-actions[bot]
