@@ -10,6 +10,8 @@
     "projects:pull": "tsx scripts/cli.ts pull",
     "projects:push": "tsx scripts/cli.ts push",
     "projects:status": "tsx scripts/cli.ts status",
+    "translate:start": "docker compose up -d",
+    "translate:stop": "docker compose down",
     "format": "prettier --write ."
   },
   "devDependencies": {

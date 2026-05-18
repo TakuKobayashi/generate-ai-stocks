@@ -13,11 +13,21 @@ type Project = {
   tags?: string[];
 };
 
-async function translateText(text: string): Promise<string> {
-  const res = await fetch("https://libretranslate.de/translate", {
+const ENDPOINTS = [
+  "http://localhost:5000/translate",
+  "https://translate.argosopentech.com/translate",
+  "https://translate.astian.org/translate",
+];
+
+async function requestTranslate(
+  endpoint: string,
+  text: string,
+): Promise<string> {
+  const res = await fetch(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Accept: "application/json",
     },
     body: JSON.stringify({
       q: text,
@@ -27,15 +37,45 @@ async function translateText(text: string): Promise<string> {
     }),
   });
 
+  const raw = await res.text();
+
   if (!res.ok) {
-    throw new Error(`Translation failed: ${res.status}`);
+    throw new Error(`HTTP ${res.status}: ${raw.slice(0, 200)}`);
   }
 
-  const data = (await res.json()) as {
-    translatedText: string;
+  let data: {
+    translatedText?: string;
   };
 
-  return data.translatedText;
+  try {
+    data = JSON.parse(raw);
+  } catch {
+    throw new Error(`Invalid JSON: ${raw.slice(0, 200)}`);
+  }
+
+  if (!data.translatedText) {
+    throw new Error("Missing translatedText");
+  }
+
+  return data.translatedText.trim();
+}
+
+async function translateText(text: string): Promise<string> {
+  let lastError: unknown;
+
+  for (const endpoint of ENDPOINTS) {
+    try {
+      console.log(`Trying: ${endpoint}`);
+
+      return await requestTranslate(endpoint, text);
+    } catch (err) {
+      lastError = err;
+
+      console.warn(`Failed: ${endpoint}`);
+    }
+  }
+
+  throw lastError;
 }
 
 export async function translateProjects() {
@@ -51,9 +91,7 @@ export async function translateProjects() {
         continue;
       }
 
-      const translated = await translateText(data.description_ja);
-
-      data.description = translated.trim();
+      data.description = await translateText(data.description_ja);
 
       await fs.writeFile(
         file,
