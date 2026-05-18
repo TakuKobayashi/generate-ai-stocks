@@ -1,0 +1,33 @@
+{
+  "name": "doc-scanner",
+  "version": "1.0.0",
+  "description": "Document scanning & OCR — CLI + Web API",
+  "scripts": {
+    "cli":    "tsx src/cli/index.ts",
+    "serve":  "tsx src/api/server.ts",
+    "deploy": "tsx src/deploy/index.ts",
+    "build":  "tsc",
+    "start":  "node dist/api/server.js"
+  },
+  "dependencies": {
+    "@hono/node-server":   "^1.10.0",
+    "@hono/zod-validator": "^0.2.1",
+    "@u4/opencv4nodejs":   "^6.4.0",
+    "commander":           "^12.0.0",
+    "fast-glob":           "^3.3.2",
+    "hono":                "^4.2.0",
+    "sharp":               "^0.33.2",
+    "tesseract.js":        "^5.0.4",
+    "uuid":                "^9.0.1",
+    "zod":                 "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/uuid": "^9.0.7",
+    "tsx":         "^4.7.2",
+    "typescript":  "^5.3.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
