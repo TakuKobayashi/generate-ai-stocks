@@ -3,14 +3,14 @@ name: Sync Projects
 on:
   push:
     paths:
-      - "projects/**"
-      - "scripts/**"
-      - "templates/**"
-      - "portfolio/**"
-      - "docker-compose.yml"
-      - "package.json"
-      - "pnpm-lock.yaml"
-      - ".github/workflows/projects-sync.yml"
+      - 'projects/**'
+      - 'scripts/**'
+      - 'templates/**'
+      - 'portfolio/**'
+      - 'docker-compose.yml'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/projects-sync.yml'
   workflow_dispatch:
 
 permissions:

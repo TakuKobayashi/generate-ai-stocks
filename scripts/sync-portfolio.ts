@@ -1,14 +1,14 @@
-import fs from "fs/promises";
-import path from "path";
-import fg from "fast-glob";
-import yaml from "js-yaml";
+import fs from 'fs/promises';
+import path from 'path';
+import fg from 'fast-glob';
+import yaml from 'js-yaml';
 
 export async function syncPortfolio() {
-  const projectFiles = await fg("projects/*/project.yml", {
+  const projectFiles = await fg('projects/*/project.yml', {
     onlyFiles: true,
   });
 
-  const fallbackReadmes = await fg("projects/*/README.md", {
+  const fallbackReadmes = await fg('projects/*/README.md', {
     onlyFiles: true,
   });
 
@@ -17,7 +17,7 @@ export async function syncPortfolio() {
 
   for (const file of projectFiles) {
     try {
-      const raw = await fs.readFile(file, "utf8");
+      const raw = await fs.readFile(file, 'utf8');
       const data: any = yaml.load(raw);
 
       const slug = data.slug || path.basename(path.dirname(file));
@@ -27,9 +27,9 @@ export async function syncPortfolio() {
       projects.push({
         name: data.name || slug,
         slug,
-        description: data.description || "",
-        status: data.status || "incubating",
-        repo: data.repo || "",
+        description: data.description || '',
+        status: data.status || 'incubating',
+        repo: data.repo || '',
         tags: data.tags || [],
       });
     } catch (err) {
@@ -45,26 +45,22 @@ export async function syncPortfolio() {
     projects.push({
       name: slug,
       slug,
-      description: "",
-      status: "incubating",
-      repo: "",
+      description: '',
+      status: 'incubating',
+      repo: '',
       tags: [],
     });
   }
 
   projects.sort((a, b) => a.slug.localeCompare(b.slug));
 
-  await fs.mkdir("portfolio", {
+  await fs.mkdir('portfolio', {
     recursive: true,
   });
 
-  await fs.writeFile(
-    "portfolio/projects.json",
-    JSON.stringify(projects, null, 2),
-    "utf8",
-  );
+  await fs.writeFile('portfolio/projects.json', JSON.stringify(projects, null, 2), 'utf8');
 
-  await fs.writeFile("portfolio/projects.yml", yaml.dump(projects), "utf8");
+  await fs.writeFile('portfolio/projects.yml', yaml.dump(projects), 'utf8');
 
   console.log(`Synced ${projects.length} projects.`);
 }

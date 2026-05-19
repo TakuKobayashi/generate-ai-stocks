@@ -1,4 +1,4 @@
-import { execSync } from "child_process";
+import { execSync } from 'child_process';
 
 export async function pushSubmodules() {
   execSync(
@@ -8,19 +8,19 @@ export async function pushSubmodules() {
       git push
     "`,
     {
-      stdio: "inherit",
+      stdio: 'inherit',
     },
   );
 
-  execSync("git add .", {
-    stdio: "inherit",
+  execSync('git add .', {
+    stdio: 'inherit',
   });
 
   execSync(`git commit -m "Update submodule pointers" || true`, {
-    stdio: "inherit",
+    stdio: 'inherit',
   });
 
-  execSync("git push", {
-    stdio: "inherit",
+  execSync('git push', {
+    stdio: 'inherit',
   });
 }

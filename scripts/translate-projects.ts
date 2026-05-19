@@ -1,6 +1,6 @@
-import fg from "fast-glob";
-import fs from "fs/promises";
-import yaml from "js-yaml";
+import fg from 'fast-glob';
+import fs from 'fs/promises';
+import yaml from 'js-yaml';
 
 type Project = {
   name: string;
@@ -14,26 +14,23 @@ type Project = {
 };
 
 const ENDPOINTS = [
-  "http://localhost:5000/translate",
-  "https://translate.argosopentech.com/translate",
-  "https://translate.astian.org/translate",
+  'http://localhost:5000/translate',
+  'https://translate.argosopentech.com/translate',
+  'https://translate.astian.org/translate',
 ];
 
-async function requestTranslate(
-  endpoint: string,
-  text: string,
-): Promise<string> {
+async function requestTranslate(endpoint: string, text: string): Promise<string> {
   const res = await fetch(endpoint, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
     },
     body: JSON.stringify({
       q: text,
-      source: "ja",
-      target: "en",
-      format: "text",
+      source: 'ja',
+      target: 'en',
+      format: 'text',
     }),
   });
 
@@ -54,7 +51,7 @@ async function requestTranslate(
   }
 
   if (!data.translatedText) {
-    throw new Error("Missing translatedText");
+    throw new Error('Missing translatedText');
   }
 
   return data.translatedText.trim();
@@ -79,11 +76,11 @@ async function translateText(text: string): Promise<string> {
 }
 
 export async function translateProjects() {
-  const files = await fg("projects/*/project.yml");
+  const files = await fg('projects/*/project.yml');
 
   for (const file of files) {
     try {
-      const raw = await fs.readFile(file, "utf8");
+      const raw = await fs.readFile(file, 'utf8');
 
       const data = yaml.load(raw) as Project;
 
@@ -98,7 +95,7 @@ export async function translateProjects() {
         yaml.dump(data, {
           lineWidth: -1,
         }),
-        "utf8",
+        'utf8',
       );
 
       console.log(`Translated: ${file}`);
