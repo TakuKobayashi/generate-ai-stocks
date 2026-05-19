@@ -33,11 +33,17 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      # =========================
+      # pnpm setup (UPDATED)
+      # =========================
       - name: Setup pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v6
         with:
-          version: 9
+          version: 10
 
+      # =========================
+      # Node.js (UPDATED)
+      # =========================
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -55,6 +61,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-libretranslate-data-
 
+      # =========================
+      # LibreTranslate (Docker)
+      # =========================
       - name: Ensure Docker Compose exists
         run: docker compose version
 
@@ -78,6 +87,9 @@ jobs:
           docker compose logs
           exit 1
 
+      # =========================
+      # Sync pipeline
+      # =========================
       - name: Validate projects
         run: pnpm run projects:validate
 
@@ -87,6 +99,9 @@ jobs:
       - name: Format repository
         run: pnpm run format
 
+      # =========================
+      # Commit changes
+      # =========================
       - name: Commit and push changes
         run: |
           git config user.name github-actions
@@ -99,6 +114,9 @@ jobs:
           git commit -m "Auto sync projects"
           git push
 
+      # =========================
+      # Debug on failure
+      # =========================
       - name: Debug LibreTranslate logs on failure
         if: failure()
         run: docker compose logs
