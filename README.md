@@ -77,7 +77,6 @@ Samples / infrastructure experiments / reusable technical foundations
 | [email-auto-reply](./projects/email-auto-reply/) | Tool project for automatically generating email replies, supporting productivity improvement, response drafting, and communication automation. | incubating |
 | [gather-app](./projects/gather-app/) | Virtual workspace and communication platform inspired by Gather, using PartyKit and LiveKit to explore WebSocket/WebRTC architecture and interactive online spaces. | incubating |
 | [github-leak-detector](./projects/github-leak-detector/) | Security-oriented tool for detecting leaked source code or sensitive information exposure across GitHub repositories. | incubating |
-| [kayaba-broadway](./projects/kayaba-broadway/) |  | incubating |
 | [nomikai](./projects/nomikai/) | Social app and website for quickly inviting, recruiting, and notifying people for spontaneous drinking events or casual gatherings. | incubating |
 | [recstudio](./projects/recstudio/) | Browser-based screen recording web application that records and saves video files entirely client-side without backend infrastructure. | incubating |
 | [stamp-rally](./projects/stamp-rally/) | Service platform for creating, sharing, and participating in digital stamp rally experiences for events, tourism, and community engagement. | incubating |
