@@ -1,0 +1,3 @@
+[submodule "projects/kayaba-broadway"]
+	path = projects/kayaba-broadway
+	url = git@github.com:study-basic-hackathon/kayaba-broadway.git
