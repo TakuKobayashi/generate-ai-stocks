@@ -4,3 +4,6 @@
 [submodule "projects/aozora-map"]
 	path = projects/aozora-map
 	url = git@github.com:TakuHackathons/BlueSkyHackathon202604.git
+[submodule "projects/passport-nft"]
+	path = projects/passport-nft
+	url = git@github.com:TakuHackathons/HackSonic202603-passport-nft.git
