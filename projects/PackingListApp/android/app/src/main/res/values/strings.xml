@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">パッキングリスト</string>
+    
+    <!-- Main Activity -->
+    <string name="add_packing_list">持ち物リストを追加</string>
+    <string name="no_packing_lists">持ち物リストがありません\nタップして追加してください</string>
+    <string name="sync_calendar">カレンダーと同期</string>
+    <string name="view_events">予定一覧</string>
+    
+    <!-- Packing List -->
+    <string name="packing_list_name">リスト名</string>
+    <string name="description">説明</string>
+    <string name="edit">編集</string>
+    <string name="delete">削除</string>
+    <string name="save">保存</string>
+    <string name="cancel">キャンセル</string>
+    
+    <!-- Item List Activity -->
+    <string name="add_item">持ち物を追加</string>
+    <string name="no_items">持ち物がありません\nタップして追加してください</string>
+    <string name="items">持ち物</string>
+    <string name="checklists">チェックリスト</string>
+    <string name="no_checklists">チェックリストがありません</string>
+    
+    <!-- Item -->
+    <string name="item_name">持ち物名</string>
+    <string name="quantity">数量</string>
+    <string name="drag_handle">ドラッグハンドル</string>
+    
+    <!-- Checklist Activity -->
+    <string name="no_checklist_items">チェック項目がありません</string>
+    <string name="progress">進捗</string>
+    <string name="checked_format">%1$d / %2$d</string>
+    
+    <!-- Event List Activity -->
+    <string name="events">予定一覧</string>
+    <string name="no_events">予定がありません</string>
+    <string name="link_packing_list">持ち物リストを紐付け</string>
+    <string name="create_checklist">チェックリストを作成</string>
+    
+    <!-- Dialogs -->
+    <string name="add_packing_list_title">持ち物リストを追加</string>
+    <string name="edit_packing_list_title">持ち物リストを編集</string>
+    <string name="add_item_title">持ち物を追加</string>
+    <string name="edit_item_title">持ち物を編集</string>
+    <string name="delete_packing_list_title">持ち物リストを削除</string>
+    <string name="delete_packing_list_message">このリストを削除してもよろしいですか?</string>
+    <string name="delete_item_title">持ち物を削除</string>
+    <string name="delete_item_message">この持ち物を削除してもよろしいですか?</string>
+    
+    <!-- Messages -->
+    <string name="error_empty_name">名前を入力してください</string>
+    <string name="calendar_permission_required">カレンダーへのアクセス権限が必要です</string>
+    <string name="calendar_sync_success">カレンダーと同期しました</string>
+    <string name="calendar_sync_error">カレンダーの同期に失敗しました</string>
+    
+    <!-- Widget -->
+    <string name="widget_description">持ち物リストとチェックリストを表示</string>
+</resources>
