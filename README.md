@@ -72,6 +72,7 @@ Samples / infrastructure experiments / reusable technical foundations
 | Project | Description | status |
 | ------- | ----------- | ------ |
 | [aozora-map](./projects/aozora-map/) |  | incubating |
+| [app-studio](./projects/app-studio/) |  | incubating |
 | [chat-app](./projects/chat-app/) | Sample chat application built with PartyKit for learning real-time communication, WebSocket architecture, and free hosting possibilities across multiple platforms. | incubating |
 | [daily-report-cli](./projects/daily-report-cli/) | CLI tool for automatically generating engineer daily reports, designed for workflow automation, GitHub Actions, and operational reporting pipelines. | incubating |
 | [doc-scanner-unified](./projects/doc-scanner-unified/) | Unified CLI and web-based document scanning project that converts images into text for OCR workflows, document digitization, and automation. | incubating |

@@ -1,0 +1,22 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build outputs
+.next
+out
+dist
+build
+
+# Logs
+*.log
+
+# Misc
+.DS_Store
+*.pem
+
+# Lock files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
