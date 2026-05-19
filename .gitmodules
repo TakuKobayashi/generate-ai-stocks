@@ -1,3 +1,6 @@
 [submodule "projects/kayaba-broadway"]
 	path = projects/kayaba-broadway
 	url = git@github.com:study-basic-hackathon/kayaba-broadway.git
+[submodule "projects/aozora-map"]
+	path = projects/aozora-map
+	url = git@github.com:TakuHackathons/BlueSkyHackathon202604.git
