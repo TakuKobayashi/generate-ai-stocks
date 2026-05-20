@@ -3,13 +3,13 @@ import { eq } from 'drizzle-orm';
 import type { Env } from '../env';
 import { getDB } from '../db';
 import { sessions, users } from '../db/schema';
+import { getSessionToken } from '../utils/auth';
 
 type Variables = { userId: string; displayName: string; email: string };
 
 export const authMiddleware = createMiddleware<{ Bindings: Env; Variables: Variables }>(async (c, next) => {
-  const auth = c.req.header('Authorization');
-  if (!auth?.startsWith('Bearer ')) return c.json({ error: 'Unauthorized' }, 401);
-  const token = auth.slice(7);
+  const token = getSessionToken(c.req);
+  if (!token) return c.json({ error: 'Unauthorized' }, 401);
   const db = getDB(c.env.DB);
   const now = new Date().toISOString();
   const result = await db
