@@ -1,0 +1,13 @@
+name = "webpush-demo"
+main = "worker/index.ts"
+compatibility_date = "2024-01-01"
+
+[vars]
+VAPID_PUBLIC_KEY = "YOUR_PUBLIC_KEY_HERE"
+VAPID_PRIVATE_KEY = "YOUR_PRIVATE_KEY_HERE"
+VAPID_SUBJECT = "mailto:your-email@example.com"
+
+[[kv_namespaces]]
+binding = "SUBSCRIPTIONS"
+id = "your_kv_namespace_id"
+preview_id = "your_preview_kv_namespace_id"
