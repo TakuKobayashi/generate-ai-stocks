@@ -72,17 +72,20 @@ CLI / GitHub Actions / 自動化基盤
 
 | プロジェクト | 説明 | status |
 | ------------ | ---- | ------ |
-| [app-studio](./projects/app-studio/) | Next.js app studio site to introduce mobile apps and build promotion pages。 | incubating |
-| [chat-app](./projects/chat-app/) | Sample chat application built with PartyKit for learning real-time communication, WebSocket architecture, and free hosting possibilities across multiple platforms. | incubating |
-| [daily-report-cli](./projects/daily-report-cli/) | CLI tool for automatically generating engineer daily reports, designed for workflow automation, GitHub Actions, and operational reporting pipelines. | incubating |
-| [doc-scanner-unified](./projects/doc-scanner-unified/) | Unified CLI and web-based document scanning project that converts images into text for OCR workflows, document digitization, and automation. | incubating |
-| [email-auto-reply](./projects/email-auto-reply/) | Tool project for automatically generating email replies, supporting productivity improvement, response drafting, and communication automation. | incubating |
-| [gather-app](./projects/gather-app/) | Virtual workspace and communication platform inspired by Gather, using PartyKit and LiveKit to explore WebSocket/WebRTC architecture and interactive online spaces. | incubating |
-| [github-leak-detector](./projects/github-leak-detector/) | Security-oriented tool for detecting leaked source code or sensitive information exposure across GitHub repositories. | incubating |
-| [nomikai](./projects/nomikai/) | Social app and website for quickly inviting, recruiting, and notifying people for spontaneous drinking events or casual gatherings. | incubating |
-| [PackingListApp](./projects/PackingListApp/) | Android native app that can create travel and business travel belonging lists and manage them as scheduled checklists。 | incubating |
-| [recstudio](./projects/recstudio/) | Browser-based screen recording web application that records and saves video files entirely client-side without backend infrastructure. | incubating |
-| [stamp-rally](./projects/stamp-rally/) | Service platform for creating, sharing, and participating in digital stamp rally experiences for events, tourism, and community engagement. | incubating |
+| [aozora-map](./projects/aozora-map/) |  | incubating |
+| [app-studio](./projects/app-studio/) | モバイルアプリの紹介やプロモーションページを構築するためのNext.js製アプリスタジオサイト。 | incubating |
+| [chat-app](./projects/chat-app/) | PartyKitを活用し、リアルタイム通信・WebSocket構成・無料運用可能性を学ぶためのマルチプラットフォーム対応チャットアプリサンプル。 | incubating |
+| [daily-report-cli](./projects/daily-report-cli/) | エンジニア向け日報を自動生成するCLIツール。GitHub Actionsや業務自動化パイプラインでの活用を想定。 | incubating |
+| [doc-scanner-unified](./projects/doc-scanner-unified/) | 画像から文字起こしを行うOCR対応のCLI / Web統合ドキュメントスキャンプロジェクト。文書電子化や自動化用途を想定。 | incubating |
+| [email-auto-reply](./projects/email-auto-reply/) | メール返信文を自動生成するツールプロジェクト。返信下書きや業務効率化、自動応答基盤として活用可能。 | incubating |
+| [gather-app](./projects/gather-app/) | Gather風バーチャルワークスペースサービス。PartyKitとLiveKitを用いたWebSocket / WebRTC構成やオンライン空間設計を検証。 | incubating |
+| [github-leak-detector](./projects/github-leak-detector/) | GitHub上でのソースコード流出や機密情報漏洩を検出するセキュリティ監視ツール。 | incubating |
+| [kayaba-broadway](./projects/kayaba-broadway/) |  | incubating |
+| [nomikai](./projects/nomikai/) | 急な飲み会やカジュアルな集まりに人を誘う・募集する・通知するためのソーシャルアプリ / Webサービス。 | incubating |
+| [PackingListApp](./projects/PackingListApp/) | 旅行や出張の持ち物リストを作成し、予定ごとのチェックリストとして管理できるAndroidネイティブアプリ。 | incubating |
+| [passport-nft](./projects/passport-nft/) |  | incubating |
+| [recstudio](./projects/recstudio/) | バックエンド不要でブラウザ上のみで画面録画と動画保存を実現するWebアプリケーション。 | incubating |
+| [stamp-rally](./projects/stamp-rally/) | スタンプラリーを作成・共有・参加できるサービス。イベント、観光、地域活性化用途を想定。 | incubating |
 
 ---
 
