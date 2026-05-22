@@ -1,6 +1,6 @@
 name: PackingListApp
 slug: PackingListApp
-description: ''
+description: Android native app that can create travel and business travel belonging lists and manage them as scheduled checklists。
 description_ja: 旅行や出張の持ち物リストを作成し、予定ごとのチェックリストとして管理できるAndroidネイティブアプリ。
 translation_locked: false
 status: incubating

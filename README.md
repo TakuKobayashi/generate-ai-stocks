@@ -71,18 +71,15 @@ Samples / infrastructure experiments / reusable technical foundations
 
 | Project | Description | status |
 | ------- | ----------- | ------ |
-| [aozora-map](./projects/aozora-map/) |  | incubating |
-| [app-studio](./projects/app-studio/) |  | incubating |
+| [app-studio](./projects/app-studio/) | Next.js app studio site to introduce mobile apps and build promotion pages。 | incubating |
 | [chat-app](./projects/chat-app/) | Sample chat application built with PartyKit for learning real-time communication, WebSocket architecture, and free hosting possibilities across multiple platforms. | incubating |
 | [daily-report-cli](./projects/daily-report-cli/) | CLI tool for automatically generating engineer daily reports, designed for workflow automation, GitHub Actions, and operational reporting pipelines. | incubating |
 | [doc-scanner-unified](./projects/doc-scanner-unified/) | Unified CLI and web-based document scanning project that converts images into text for OCR workflows, document digitization, and automation. | incubating |
 | [email-auto-reply](./projects/email-auto-reply/) | Tool project for automatically generating email replies, supporting productivity improvement, response drafting, and communication automation. | incubating |
 | [gather-app](./projects/gather-app/) | Virtual workspace and communication platform inspired by Gather, using PartyKit and LiveKit to explore WebSocket/WebRTC architecture and interactive online spaces. | incubating |
 | [github-leak-detector](./projects/github-leak-detector/) | Security-oriented tool for detecting leaked source code or sensitive information exposure across GitHub repositories. | incubating |
-| [kayaba-broadway](./projects/kayaba-broadway/) |  | incubating |
 | [nomikai](./projects/nomikai/) | Social app and website for quickly inviting, recruiting, and notifying people for spontaneous drinking events or casual gatherings. | incubating |
-| [PackingListApp](./projects/PackingListApp/) |  | incubating |
-| [passport-nft](./projects/passport-nft/) |  | incubating |
+| [PackingListApp](./projects/PackingListApp/) | Android native app that can create travel and business travel belonging lists and manage them as scheduled checklists。 | incubating |
 | [recstudio](./projects/recstudio/) | Browser-based screen recording web application that records and saves video files entirely client-side without backend infrastructure. | incubating |
 | [stamp-rally](./projects/stamp-rally/) | Service platform for creating, sharing, and participating in digital stamp rally experiences for events, tourism, and community engagement. | incubating |
 
