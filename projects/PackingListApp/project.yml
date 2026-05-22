@@ -1,7 +1,7 @@
 name: PackingListApp
 slug: PackingListApp
 description: ''
-description_ja: ''
+description_ja: 旅行や出張の持ち物リストを作成し、予定ごとのチェックリストとして管理できるAndroidネイティブアプリ。
 translation_locked: false
 status: incubating
 repo: ''
