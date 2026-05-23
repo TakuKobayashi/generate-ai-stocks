@@ -125,7 +125,8 @@ export default function Home() {
       if (!response.ok) {
         throw new Error('Failed to fetch VAPID key');
       }
-      const { publicKey } = await response.json();
+      const data = await response.json() as { publicKey: string };
+      const publicKey = data.publicKey;
       
       // プッシュ通知を購読
       const sub = await registration.pushManager.subscribe({
@@ -216,7 +217,7 @@ export default function Home() {
         throw new Error('Push send failed');
       }
       
-      const result = await response.json();
+      const result = await response.json() as { sent: number; total: number };
       setStatus(`✅ ${result.sent}件のデバイスに送信しました`);
       setTimeout(() => setStatus(''), 3000);
     } catch (error) {
