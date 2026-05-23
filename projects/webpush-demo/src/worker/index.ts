@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
-import { cors } from 'hono/cors';
 
 type Bindings = {
+  ASSETS: Fetcher;
   SUBSCRIPTIONS: KVNamespace;
   VAPID_PUBLIC_KEY: string;
   VAPID_PRIVATE_KEY: string;
@@ -9,21 +9,7 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>();
 
-// CORS設定
-app.use('/*', cors({
-  origin: '*',
-  allowMethods: ['GET', 'POST', 'OPTIONS'],
-  allowHeaders: ['Content-Type'],
-}));
-
-// ヘルスチェック
-app.get('/', (c) => {
-  return c.json({ 
-    status: 'ok', 
-    service: 'Web Push Demo API',
-    version: '1.0.0'
-  });
-});
+// API Routes
 
 // VAPID公開鍵を取得
 app.get('/api/vapid-public-key', (c) => {
@@ -144,13 +130,18 @@ app.post('/api/send-push', async (c) => {
   }
 });
 
-// 購読IDを生成
+// Static Assets - すべての非APIリクエストはフロントエンドへ
+app.get('*', async (c) => {
+  return c.env.ASSETS.fetch(c.req.raw);
+});
+
+// Helper Functions
+
 function createSubscriptionId(endpoint: string): string {
   const hash = endpoint.split('/').pop() || '';
   return hash.substring(0, 50);
 }
 
-// Web Push通知を送信
 async function sendPushNotification(
   subscription: any,
   message: string,

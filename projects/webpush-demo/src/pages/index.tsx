@@ -121,7 +121,7 @@ export default function Home() {
       const registration = await navigator.serviceWorker.ready;
       
       // VAPID公開鍵を取得
-      const response = await fetch('http://localhost:8787/api/vapid-public-key');
+      const response = await fetch('/api/vapid-public-key');
       if (!response.ok) {
         throw new Error('Failed to fetch VAPID key');
       }
@@ -135,7 +135,7 @@ export default function Home() {
       });
       
       // サーバーに購読情報を送信
-      const subscribeResponse = await fetch('http://localhost:8787/api/subscribe', {
+      const subscribeResponse = await fetch('/api/subscribe', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -202,7 +202,7 @@ export default function Home() {
         data = { raw: dataJson };
       }
       
-      const response = await fetch('http://localhost:8787/api/send-push', {
+      const response = await fetch('/api/send-push', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -287,7 +287,7 @@ export default function Home() {
             )}
             <button className={styles.secondaryButton} onClick={resetPermission}>
               許可をリセット
-              </button>
+            </button>
           </div>
         </div>
 

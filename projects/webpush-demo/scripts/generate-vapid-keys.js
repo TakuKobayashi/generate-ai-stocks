@@ -29,9 +29,10 @@ function generateVAPIDKeys() {
   console.log('\n========================================');
   console.log('Setup Instructions:');
   console.log('========================================\n');
-  console.log('1. Add to wrangler.toml:');
-  console.log('   [vars]');
-  console.log(`   VAPID_PUBLIC_KEY = "${publicKeyBase64}"`);
+  console.log('1. Add to wrangler.json:');
+  console.log('   "vars": {');
+  console.log(`     "VAPID_PUBLIC_KEY": "${publicKeyBase64}"`);
+  console.log('   }');
   console.log('\n2. Set private key as secret:');
   console.log('   wrangler secret put VAPID_PRIVATE_KEY');
   console.log('   Then paste:', privateKeyBase64);
