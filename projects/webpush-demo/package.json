@@ -1,26 +1,26 @@
 {
-  "name": "webpush-demo",
+  "name": "webpush-cloudflare-demo",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "worker:dev": "wrangler dev",
+    "worker:dev": "wrangler dev src/worker/index.ts",
     "worker:deploy": "wrangler deploy"
   },
   "dependencies": {
-    "hono": "^4.12.21",
-    "next": "16.2.6",
+    "hono": "^4.12.22",
+    "next": "^16.2.6",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260521.1",
+    "@cloudflare/workers-types": "^4.20260523.1",
     "@types/node": "^25.9.1",
     "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",
     "typescript": "^6.0.3",
-    "wrangler": "^4.93.0"
+    "wrangler": "^4.94.0"
   }
 }

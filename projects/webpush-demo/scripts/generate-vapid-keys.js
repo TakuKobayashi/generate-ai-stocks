@@ -19,17 +19,23 @@ function generateVAPIDKeys() {
   const publicKeyBase64 = urlBase64Encode(publicKey);
   const privateKeyBase64 = urlBase64Encode(privateKey);
 
-  console.log('VAPID Keys Generated:');
-  console.log('====================');
-  console.log('Public Key:', publicKeyBase64);
-  console.log('Private Key:', privateKeyBase64);
-  console.log('');
-  console.log('Add these to your wrangler.toml:');
-  console.log(`VAPID_PUBLIC_KEY = "${publicKeyBase64}"`);
-  console.log('');
-  console.log('Set the private key as a secret:');
-  console.log(`wrangler secret put VAPID_PRIVATE_KEY`);
-  console.log('Then paste:', privateKeyBase64);
+  console.log('\n========================================');
+  console.log('VAPID Keys Generated Successfully!');
+  console.log('========================================\n');
+  console.log('Public Key:');
+  console.log(publicKeyBase64);
+  console.log('\nPrivate Key:');
+  console.log(privateKeyBase64);
+  console.log('\n========================================');
+  console.log('Setup Instructions:');
+  console.log('========================================\n');
+  console.log('1. Add to wrangler.toml:');
+  console.log('   [vars]');
+  console.log(`   VAPID_PUBLIC_KEY = "${publicKeyBase64}"`);
+  console.log('\n2. Set private key as secret:');
+  console.log('   wrangler secret put VAPID_PRIVATE_KEY');
+  console.log('   Then paste:', privateKeyBase64);
+  console.log('\n========================================\n');
 }
 
 function urlBase64Encode(buffer) {
