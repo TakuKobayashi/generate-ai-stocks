@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package arpreview.v1;
+
+option java_package         = "com.arpreview.proto";
+option java_multiple_files  = true;
+option csharp_namespace     = "AREditorPreview.Proto";
+option swift_prefix         = "AR";
+
+import "arpreview/v1/frame.proto";
+
+// ─────────────────────────────────────────────────────────────────
+// Plane Tracking
+// ─────────────────────────────────────────────────────────────────
+
+enum PlaneAlignment {
+  PLANE_ALIGNMENT_HORIZONTAL_UP   = 0;
+  PLANE_ALIGNMENT_HORIZONTAL_DOWN = 1;
+  PLANE_ALIGNMENT_VERTICAL        = 2;
+  PLANE_ALIGNMENT_NOT_AXIS_ALIGNED = 3;
+}
+
+enum TrackingState {
+  TRACKING_STATE_TRACKING = 0;
+  TRACKING_STATE_PAUSED   = 1;
+  TRACKING_STATE_STOPPED  = 2;
+}
+
+enum TrackingEventType {
+  TRACKING_EVENT_ADDED   = 0;
+  TRACKING_EVENT_UPDATED = 1;
+  TRACKING_EVENT_REMOVED = 2;
+}
+
+message PlaneData {
+  string            id             = 1;   // UUID
+  TrackingEventType event          = 2;
+  TrackingState     tracking_state = 3;
+  PlaneAlignment    alignment      = 4;
+  Vec3              center         = 5;   // World-space center
+  Quaternion        rotation       = 6;
+  Vec2              extents        = 7;   // Half-size in X/Z (meters)
+  // Boundary polygon in local XZ plane (list of [x, z] pairs, interleaved)
+  repeated float    boundary_xz    = 8;
+  // 合体元プレーン ID (subsumed)
+  string            subsumed_by_id = 9;
+}
+
+// 差分更新バッチ (毎フレームではなく変化時のみ送信)
+message ARPlaneUpdate {
+  int64             timestamp_ms = 1;
+  repeated PlaneData planes      = 2;
+}

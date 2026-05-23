@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package arpreview.v1;
+
+option java_package         = "com.arpreview.proto";
+option java_multiple_files  = true;
+option csharp_namespace     = "AREditorPreview.Proto";
+option swift_prefix         = "AR";
+
+import "arpreview/v1/frame.proto";
+import "arpreview/v1/plane.proto";
+
+// ─────────────────────────────────────────────────────────────────
+// Session State
+// ─────────────────────────────────────────────────────────────────
+
+enum SessionStatus {
+  SESSION_STATUS_INITIALIZING = 0;
+  SESSION_STATUS_READY        = 1;
+  SESSION_STATUS_TRACKING     = 2;
+  SESSION_STATUS_LIMITED      = 3;
+  SESSION_STATUS_STOPPED      = 4;
+}
+
+enum LimitedReason {
+  LIMITED_REASON_NONE                    = 0;
+  LIMITED_REASON_INITIALIZING            = 1;
+  LIMITED_REASON_RELOCALIZING            = 2;
+  LIMITED_REASON_EXCESSIVE_MOTION        = 3;
+  LIMITED_REASON_INSUFFICIENT_FEATURES   = 4;
+  LIMITED_REASON_INSUFFICIENT_LIGHT      = 5;
+}
+
+enum Platform {
+  PLATFORM_UNKNOWN = 0;
+  PLATFORM_ANDROID = 1;
+  PLATFORM_IOS     = 2;
+}
+
+message SessionState {
+  int64          timestamp_ms   = 1;
+  SessionStatus  status         = 2;
+  LimitedReason  limited_reason = 3;
+  Platform       platform       = 4;
+  string         device_model   = 5;
+  string         os_version     = 6;
+  string         ar_sdk_version = 7;   // ARCore / ARKit version
+  // サポートしている拡張機能 (例: "depth", "face", "body")
+  repeated string features      = 8;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// 統合エンベロープ — Data Channel の 1パケット = 1 Envelope
+// ─────────────────────────────────────────────────────────────────
+// oneof により受信側でメッセージ種別を判定する
+
+message Envelope {
+  oneof payload {
+    ARFrame      frame        = 1;
+    ARPlaneUpdate planes      = 2;
+    SessionState  session     = 3;
+    Ping          ping        = 4;
+    Pong          pong        = 5;
+  }
+}
+
+message Ping {
+  int64 timestamp_ms = 1;
+}
+
+message Pong {
+  int64 ping_timestamp_ms = 1;
+  int64 pong_timestamp_ms = 2;
+}

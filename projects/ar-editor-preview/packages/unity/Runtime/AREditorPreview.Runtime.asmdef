@@ -1,0 +1,21 @@
+{
+    "name": "AREditorPreview.Runtime",
+    "rootNamespace": "AREditorPreview",
+    "references": [
+        "GUID:d8b63aba1907145bea998dd612889d6b",
+        "GUID:4a3a15a2e6fb64b97babb1cc739fe50d",
+        "GUID:0acc523941302664db1f4e527237feb3",
+        "Unity.WebRTC"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [
+        "Google.Protobuf.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

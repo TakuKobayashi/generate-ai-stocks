@@ -1,0 +1,26 @@
+{
+  "name": "com.arpreview",
+  "version": "0.1.0",
+  "displayName": "AR Editor Preview",
+  "description": "Stream ARCore/ARKit camera, pose and plane data to Unity Editor via LiveKit WebRTC. Reproduces ARCore Instant Preview for both Android and iOS.",
+  "unity": "2022.3",
+  "unityRelease": "0f1",
+  "documentationUrl": "https://github.com/your-org/ar-editor-preview/blob/main/docs/ARCHITECTURE.md",
+  "dependencies": {
+    "com.unity.xr.arfoundation": "5.1.0",
+    "com.unity.xr.management": "4.4.0",
+    "com.unity.webrtc": "3.0.0-pre.6"
+  },
+  "keywords": ["AR", "ARCore", "ARKit", "Editor", "Preview", "LiveKit", "WebRTC", "XR"],
+  "author": {
+    "name": "ar-editor-preview"
+  },
+  "samples": [
+    {
+      "displayName": "Basic AR Scene",
+      "description": "AR Foundation シーンで Editor Preview を有効にする最小構成",
+      "path": "Samples~/BasicARScene"
+    }
+  ],
+  "type": "tool"
+}

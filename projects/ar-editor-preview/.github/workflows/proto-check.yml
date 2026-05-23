@@ -1,0 +1,50 @@
+# .github/workflows/proto-check.yml
+# proto/ 変更時に生成コードが最新かチェックする
+
+name: Proto Check
+
+on:
+  push:
+    paths:
+      - 'proto/**'
+      - 'gen/**'
+      - 'tools/proto-gen.sh'
+  pull_request:
+    paths:
+      - 'proto/**'
+      - 'gen/**'
+      - 'tools/proto-gen.sh'
+
+jobs:
+  proto-gen-check:
+    name: Check generated code is up to date
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install protoc
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y protobuf-compiler
+          protoc --version
+
+      - name: Install swift-protobuf
+        run: |
+          # GitHub Actions の ubuntu では snap で入れる
+          sudo snap install swift --classic 2>/dev/null || true
+          pip install grpcio-tools --quiet
+
+      - name: Run proto generation
+        run: |
+          chmod +x tools/proto-gen.sh
+          tools/proto-gen.sh
+
+      - name: Check for diff
+        run: |
+          if ! git diff --exit-code gen/ packages/unity/Runtime/Generated/ apps/ios/ARCompanion/Proto/; then
+            echo "❌ Generated code is out of date!"
+            echo "Run 'tools/proto-gen.sh' and commit the results."
+            exit 1
+          fi
+          echo "✅ Generated code is up to date."

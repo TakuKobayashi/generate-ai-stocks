@@ -1,0 +1,46 @@
+# apps/android/gradle/libs.versions.toml
+
+[versions]
+agp              = "8.3.2"
+kotlin           = "1.9.23"
+wire             = "4.9.9"
+arcore           = "1.43.0"
+livekit          = "2.7.0"
+coroutines       = "1.8.1"
+compose-bom      = "2024.04.01"
+activity-compose = "1.9.0"
+lifecycle        = "2.7.0"
+datastore        = "1.1.1"
+
+[libraries]
+# AR
+arcore                  = { group = "com.google.ar",                 name = "core",                        version.ref = "arcore"           }
+
+# LiveKit
+livekit-android         = { group = "io.livekit.android",            name = "livekit-android",             version.ref = "livekit"          }
+
+# Wire (Protobuf)
+wire-runtime            = { group = "com.squareup.wire",             name = "wire-runtime-jvm",            version.ref = "wire"             }
+
+# Coroutines
+coroutines-android      = { group = "org.jetbrains.kotlinx",         name = "kotlinx-coroutines-android",  version.ref = "coroutines"       }
+
+# Compose
+compose-bom             = { group = "androidx.compose",              name = "compose-bom",                 version.ref = "compose-bom"      }
+compose-ui              = { group = "androidx.compose.ui",           name = "ui"                                                            }
+compose-material3       = { group = "androidx.compose.material3",    name = "material3"                                                     }
+compose-ui-tooling      = { group = "androidx.compose.ui",           name = "ui-tooling-preview"                                            }
+activity-compose        = { group = "androidx.activity",             name = "activity-compose",            version.ref = "activity-compose" }
+lifecycle-viewmodel     = { group = "androidx.lifecycle",            name = "lifecycle-viewmodel-compose", version.ref = "lifecycle"        }
+
+# DataStore
+datastore-preferences   = { group = "androidx.datastore",           name = "datastore-preferences",       version.ref = "datastore"        }
+
+# Test
+junit                   = { group = "junit",                         name = "junit",                       version      = "4.13.2"          }
+androidx-test-ext       = { group = "androidx.test.ext",             name = "junit",                       version      = "1.1.5"           }
+
+[plugins]
+android-application     = { id = "com.android.application",          version.ref = "agp"    }
+kotlin-android          = { id = "org.jetbrains.kotlin.android",     version.ref = "kotlin" }
+wire                    = { id = "com.squareup.wire",                version.ref = "wire"   }

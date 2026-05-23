@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package arpreview.v1;
+
+option java_package         = "com.arpreview.proto";
+option java_multiple_files  = true;
+option csharp_namespace     = "AREditorPreview.Proto";
+option swift_prefix         = "AR";
+
+// ─────────────────────────────────────────────────────────────────
+// 基本型
+// ─────────────────────────────────────────────────────────────────
+
+message Vec3 {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+}
+
+message Quaternion {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+  float w = 4;
+}
+
+message Vec2 {
+  float x = 1;
+  float y = 2;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// ARFrame — 毎フレーム送信されるメインペイロード
+// ─────────────────────────────────────────────────────────────────
+
+// カメラ姿勢 (Unity 座標系: Y-up, left-hand)
+message CameraPose {
+  Vec3       position   = 1;
+  Quaternion rotation   = 2;
+}
+
+// カメラ内部パラメータ
+message CameraIntrinsics {
+  float fx  = 1;   // 焦点距離 X (pixels)
+  float fy  = 2;   // 焦点距離 Y (pixels)
+  float ppx = 3;   // 主点 X (pixels)
+  float ppy = 4;   // 主点 Y (pixels)
+  int32 w   = 5;   // 画像幅
+  int32 h   = 6;   // 画像高さ
+}
+
+// 環境光推定
+message LightEstimate {
+  float average_intensity   = 1;  // lux
+  float color_temperature   = 2;  // Kelvin
+  // HDR Spherical Harmonics (optional, 27 floats = 9 coeff × RGB)
+  repeated float spherical_harmonics = 3;
+}
+
+// 1フレーム分のARデータ (Data Channelで送信)
+message ARFrame {
+  int64            timestamp_ms  = 1;
+  CameraPose       pose          = 2;
+  LightEstimate    light         = 3;
+  CameraIntrinsics intrinsics    = 4;
+  // フレーム番号 (ドロップ検出用)
+  uint64           frame_number  = 5;
+}

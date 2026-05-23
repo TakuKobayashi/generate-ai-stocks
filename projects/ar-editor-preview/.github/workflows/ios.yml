@@ -1,0 +1,61 @@
+# .github/workflows/ios.yml
+# iOS Companion App のビルドと検証
+
+name: iOS
+
+on:
+  push:
+    paths:
+      - 'apps/ios/**'
+      - 'proto/**'
+      - 'gen/swift/**'
+  pull_request:
+    paths:
+      - 'apps/ios/**'
+      - 'proto/**'
+      - 'gen/swift/**'
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: macos-14   # Apple Silicon (Xcode 15)
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app
+
+      - name: Cache Swift Package Manager
+        uses: actions/cache@v4
+        with:
+          path: apps/ios/ARCompanion/.build
+          key: ${{ runner.os }}-spm-${{ hashFiles('apps/ios/ARCompanion/Package.resolved') }}
+          restore-keys: ${{ runner.os }}-spm-
+
+      - name: Resolve Swift packages
+        working-directory: apps/ios
+        run: xcodebuild -resolvePackageDependencies -project ARCompanion.xcodeproj -scheme ARCompanion
+
+      - name: Build (simulator)
+        working-directory: apps/ios
+        run: |
+          xcodebuild build \
+            -project ARCompanion.xcodeproj \
+            -scheme ARCompanion \
+            -destination 'platform=iOS Simulator,name=iPhone 15 Pro,OS=17.5' \
+            -configuration Debug \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            | xcpretty
+
+      - name: Run tests (simulator)
+        working-directory: apps/ios
+        run: |
+          xcodebuild test \
+            -project ARCompanion.xcodeproj \
+            -scheme ARCompanionTests \
+            -destination 'platform=iOS Simulator,name=iPhone 15 Pro,OS=17.5' \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            | xcpretty

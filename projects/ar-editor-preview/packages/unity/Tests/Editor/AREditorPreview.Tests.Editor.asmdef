@@ -1,0 +1,23 @@
+{
+    "name": "AREditorPreview.Tests.Editor",
+    "rootNamespace": "AREditorPreview.Tests.Editor",
+    "references": [
+        "AREditorPreview.Runtime",
+        "AREditorPreview.Editor",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
