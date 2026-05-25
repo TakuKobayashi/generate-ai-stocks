@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Whisper 文字起こし</string>
+    <string name="start">開始</string>
+    <string name="stop">停止</string>
+    <string name="status_idle">停止中</string>
+    <string name="status_listening">待機中</string>
+    <string name="status_recording">録音中</string>
+    <string name="status_transcribing">文字起こし中...</string>
+    <string name="notification_channel_name">音声文字起こし</string>
+    <string name="notification_title">🎙️ Whisper 文字起こし</string>
+</resources>

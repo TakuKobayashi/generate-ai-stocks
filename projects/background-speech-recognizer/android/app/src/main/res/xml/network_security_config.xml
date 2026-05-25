@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  バックグラウンド実行の制限を回避するための設定
+  WorkManager / JobScheduler が不要な常駐型アプリ向け
+-->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="false">localhost</domain>
+    </domain-config>
+</network-security-config>
