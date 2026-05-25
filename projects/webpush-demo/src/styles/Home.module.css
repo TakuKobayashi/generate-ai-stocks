@@ -310,6 +310,30 @@
   font-weight: 500;
 }
 
+.badgeGroup {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.typeBadgeFcm {
+  background: #fef3c7;
+  color: #d97706;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.typeBadgeStandard {
+  background: #e0e7ff;
+  color: #4338ca;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
 .modeBadgeSilent {
   background: #f3f4f6;
   color: #6b7280;
