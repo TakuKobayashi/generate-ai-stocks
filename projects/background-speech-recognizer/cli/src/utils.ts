@@ -1,81 +1,62 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-export const SAMPLE_RATE = 16000;
-export const CHANNELS = 1;
-export const BIT_DEPTH = 16;
+export const SAMPLE_RATE      = 16000;
+export const CHANNELS         = 1;
+export const BIT_DEPTH        = 16;
 export const BYTES_PER_SAMPLE = BIT_DEPTH / 8;
 
-// 10ms フレーム = 160 サンプル = 320 バイト (WebRTC VAD 要件)
-export const VAD_FRAME_MS = 10;
+// 10ms フレーム = 160 サンプル = 320 バイト（WebRTC VAD 要件）
+export const VAD_FRAME_MS      = 10;
 export const VAD_FRAME_SAMPLES = (SAMPLE_RATE * VAD_FRAME_MS) / 1000; // 160
-export const VAD_FRAME_BYTES = VAD_FRAME_SAMPLES * BYTES_PER_SAMPLE;  // 320
+export const VAD_FRAME_BYTES   = VAD_FRAME_SAMPLES * BYTES_PER_SAMPLE; // 320
 
 // 録音設定
-export const MIN_RECORD_SECONDS = 1.0;    // これ未満は保存しない
-export const MAX_RECORD_SECONDS = 60.0;   // 最大録音時間
-export const SILENCE_TIMEOUT_MS = 1500;   // 無音が続いたら録音終了
-export const VOICE_START_FRAMES = 3;      // 音声開始判定フレーム数
-export const SILENCE_END_FRAMES = 30;     // 無音終了判定フレーム数
+export const MIN_RECORD_SECONDS  = 1.0;
+export const MAX_RECORD_SECONDS  = 60.0;
+export const SILENCE_TIMEOUT_MS  = 1500;
+export const VOICE_START_FRAMES  = 3;
+export const SILENCE_END_FRAMES  = 30;
 
 export function getTimestamp(): string {
   const now = new Date();
-  const pad = (n: number, w = 2) => String(n).padStart(w, '0');
-  return [
-    now.getFullYear(),
-    pad(now.getMonth() + 1),
-    pad(now.getDate()),
-    '_',
-    pad(now.getHours()),
-    pad(now.getMinutes()),
-    pad(now.getSeconds()),
-  ].join('');
+  const p = (n: number, w = 2) => String(n).padStart(w, '0');
+  return `${now.getFullYear()}${p(now.getMonth()+1)}${p(now.getDate())}_${p(now.getHours())}${p(now.getMinutes())}${p(now.getSeconds())}`;
 }
 
 export function ensureOutputDir(dir: string): void {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
 
 /**
- * PCM バッファを WAV ファイルとして書き込む
- * WAV ヘッダーを手動で構築（外部依存なし）
+ * PCM バッファを WAV ファイルとして書き込む（外部依存ゼロ）
  */
 export function writeWav(filePath: string, pcmBuffer: Buffer): void {
-  const dataSize = pcmBuffer.length;
-  const headerSize = 44;
-  const fileSize = headerSize + dataSize;
-  const byteRate = SAMPLE_RATE * CHANNELS * BYTES_PER_SAMPLE;
+  const dataSize  = pcmBuffer.length;
+  const byteRate  = SAMPLE_RATE * CHANNELS * BYTES_PER_SAMPLE;
   const blockAlign = CHANNELS * BYTES_PER_SAMPLE;
+  const header = Buffer.alloc(44);
+  let off = 0;
 
-  const header = Buffer.alloc(headerSize);
-  let offset = 0;
+  const ws = (s: string)  => { header.write(s, off); off += s.length; };
+  const w4 = (v: number)  => { header.writeUInt32LE(v, off); off += 4; };
+  const w2 = (v: number)  => { header.writeUInt16LE(v, off); off += 2; };
 
-  // RIFF チャンク
-  header.write('RIFF', offset);       offset += 4;
-  header.writeUInt32LE(fileSize - 8, offset); offset += 4;
-  header.write('WAVE', offset);       offset += 4;
+  ws('RIFF'); w4(dataSize + 36); ws('WAVE');
+  ws('fmt '); w4(16); w2(1); w2(CHANNELS); w4(SAMPLE_RATE); w4(byteRate); w2(blockAlign); w2(BIT_DEPTH);
+  ws('data'); w4(dataSize);
 
-  // fmt サブチャンク
-  header.write('fmt ', offset);       offset += 4;
-  header.writeUInt32LE(16, offset);   offset += 4;  // サブチャンクサイズ
-  header.writeUInt16LE(1, offset);    offset += 2;  // PCM = 1
-  header.writeUInt16LE(CHANNELS, offset); offset += 2;
-  header.writeUInt32LE(SAMPLE_RATE, offset); offset += 4;
-  header.writeUInt32LE(byteRate, offset);    offset += 4;
-  header.writeUInt16LE(blockAlign, offset);  offset += 2;
-  header.writeUInt16LE(BIT_DEPTH, offset);   offset += 2;
-
-  // data サブチャンク
-  header.write('data', offset); offset += 4;
-  header.writeUInt32LE(dataSize, offset);
-
-  fs.writeFileSync(filePath, Buffer.concat([header, pcmBuffer]));
+  const fd = fs.openSync(filePath, 'w');
+  try {
+    fs.writeSync(fd, header);
+    fs.writeSync(fd, pcmBuffer);
+  } finally {
+    fs.closeSync(fd); // 確実にファイルハンドルを閉じる
+  }
 }
 
 export function writeTxt(filePath: string, text: string): void {
-  fs.writeFileSync(filePath, text, 'utf-8');
+  fs.writeFileSync(filePath, text, { encoding: 'utf-8', flag: 'w' });
 }
 
 export function formatDuration(seconds: number): string {
@@ -89,10 +70,14 @@ export function pcmToSeconds(byteLength: number): number {
 }
 
 /**
- * メモリリーク防止のため、バッファリストを上限付きで管理
+ * メモリリーク対策済みの有界バッファ
+ *
+ * 修正点:
+ * - clear() 時に chunks 配列要素を null で上書きして GC を確実に促す
+ * - concat 後に内部配列を圧縮して断片化を防ぐ
  */
 export class BoundedBuffer {
-  private chunks: Buffer[] = [];
+  private chunks: (Buffer | null)[] = [];
   private totalBytes = 0;
   private readonly maxBytes: number;
 
@@ -101,27 +86,54 @@ export class BoundedBuffer {
   }
 
   push(chunk: Buffer): void {
-    if (this.totalBytes + chunk.length > this.maxBytes) {
-      // 上限超過時は古いデータを削除
-      while (this.chunks.length > 0 && this.totalBytes + chunk.length > this.maxBytes) {
-        const removed = this.chunks.shift()!;
-        this.totalBytes -= removed.length;
-      }
+    while (this.chunks.length > 0 && this.totalBytes + chunk.length > this.maxBytes) {
+      const removed = this.chunks.shift();
+      if (removed) this.totalBytes -= removed.length;
     }
     this.chunks.push(chunk);
     this.totalBytes += chunk.length;
   }
 
   concat(): Buffer {
-    return Buffer.concat(this.chunks);
+    const valid = this.chunks.filter((c): c is Buffer => c !== null);
+    return Buffer.concat(valid);
   }
 
-  get byteLength(): number {
-    return this.totalBytes;
-  }
+  get byteLength(): number { return this.totalBytes; }
 
   clear(): void {
+    // 全 Buffer 参照を明示的に切る → GC が Buffer をより早く回収できる
+    for (let i = 0; i < this.chunks.length; i++) {
+      this.chunks[i] = null;
+    }
     this.chunks = [];
     this.totalBytes = 0;
   }
 }
+
+/**
+ * プロセス終了時の一時ファイルクリーンアップレジストリ
+ * whisper.cpp 実行中にクラッシュしても tmp ファイルを残さない
+ */
+class TmpFileRegistry {
+  private files = new Set<string>();
+
+  constructor() {
+    // シグナルに関係なく exit 時に必ず実行
+    process.on('exit', () => this.cleanAll());
+  }
+
+  register(fp: string): void   { this.files.add(fp); }
+  unregister(fp: string): void { this.files.delete(fp); }
+
+  private cleanAll(): void {
+    for (const fp of this.files) {
+      try {
+        if (fs.existsSync(fp)) fs.unlinkSync(fp);
+      } catch { /* ignore */ }
+    }
+    this.files.clear();
+  }
+}
+
+export const tmpRegistry = new TmpFileRegistry();

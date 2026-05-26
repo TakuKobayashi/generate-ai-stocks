@@ -10,36 +10,25 @@ import androidx.lifecycle.lifecycleScope
 import com.example.whispertranscriber.whisper.ModelDownloader
 import kotlinx.coroutines.launch
 
-/**
- * スプラッシュ画面
- * モデルファイルの存在確認と assets からのコピーを行い、
- * 完了後に MainActivity へ遷移する
- */
 class SplashActivity : AppCompatActivity() {
-
-    private lateinit var statusText: TextView
+    private lateinit var statusText:  TextView
     private lateinit var progressBar: ProgressBar
-    private lateinit var errorText: TextView
+    private lateinit var errorText:   TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-
         statusText  = findViewById(R.id.text_splash_status)
         progressBar = findViewById(R.id.progress_splash)
         errorText   = findViewById(R.id.text_splash_error)
-
-        lifecycleScope.launch {
-            checkModel()
-        }
+        lifecycleScope.launch { checkModel() }
     }
 
     private suspend fun checkModel() {
         statusText.text = "モデルを確認中..."
-
         when (val result = ModelDownloader.findOrCopyModel(this@SplashActivity)) {
             is ModelDownloader.ModelResult.Found -> {
-                statusText.text = "モデル準備完了 (${ModelDownloader.formatModelSize(result.file)})"
+                statusText.text = "準備完了 (${ModelDownloader.formatModelSize(result.file)})"
                 progressBar.visibility = View.GONE
                 startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                 finish()
@@ -49,7 +38,6 @@ class SplashActivity : AppCompatActivity() {
                 statusText.text = "モデルが見つかりません"
                 errorText.visibility = View.VISIBLE
                 errorText.text = result.message
-                // リトライボタンなどをここに追加可能
             }
         }
     }

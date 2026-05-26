@@ -10,6 +10,8 @@
     <color name="md_theme_surface_variant">#DDE3EA</color>
     <color name="md_theme_on_surface_variant">#41474D</color>
     <color name="md_theme_outline_variant">#C1C7CE</color>
-
-    <!-- ダークテーマ用 (values-night/colors.xml でオーバーライド) -->
+    <color name="md_theme_error">#BA1A1A</color>
+    <color name="md_theme_on_error">#FFFFFF</color>
+    <color name="md_theme_error_container">#FFDAD6</color>
+    <color name="md_theme_on_error_container">#410002</color>
 </resources>

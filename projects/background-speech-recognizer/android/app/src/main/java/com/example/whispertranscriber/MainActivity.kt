@@ -1,20 +1,15 @@
 package com.example.whispertranscriber
 
-import android.Manifest
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
-import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -23,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.whispertranscriber.service.TranscriptionService
 import com.example.whispertranscriber.ui.HistoryAdapter
+import com.example.whispertranscriber.util.PermissionHelper
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -30,68 +26,66 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    // ===== Views =====
-    private lateinit var statusCard: MaterialCardView
-    private lateinit var statusText: TextView
-    private lateinit var stateIcon: TextView
-    private lateinit var latestTranscriptionText: TextView
-    private lateinit var levelIndicator: LinearProgressIndicator
-    private lateinit var startStopButton: MaterialButton
-    private lateinit var historyRecycler: RecyclerView
-    private lateinit var emptyHistoryText: TextView
-
-    private val adapter = HistoryAdapter { result ->
-        showDeleteDialog(result)
+    companion object {
+        private const val TAG = "MainActivity"
     }
 
-    // ===== Service 接続 =====
+    // ===== Views =====
+    private lateinit var statusCard:              MaterialCardView
+    private lateinit var statusText:              TextView
+    private lateinit var stateIcon:               TextView
+    private lateinit var latestTranscriptionText: TextView
+    private lateinit var levelIndicator:          LinearProgressIndicator
+    private lateinit var startStopButton:         MaterialButton
+    private lateinit var historyRecycler:         RecyclerView
+    private lateinit var emptyHistoryText:        TextView
+
+    private val historyAdapter = HistoryAdapter { result -> showDeleteDialog(result) }
+
+    // ===== Service =====
     private var service: TranscriptionService? = null
     private var isBound = false
-    private val history = mutableListOf<TranscriptionService.TranscriptionResult>()
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
             service = (binder as TranscriptionService.LocalBinder).getService()
             isBound = true
+            Log.d(TAG, "Service 接続")
             observeService()
         }
         override fun onServiceDisconnected(name: ComponentName) {
             service = null
             isBound = false
+            Log.d(TAG, "Service 切断")
         }
     }
 
-    // ===== パーミッション =====
-    private val requestPermissionsLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grants ->
-            val micGranted = grants[Manifest.permission.RECORD_AUDIO] == true
-            if (micGranted) {
-                startTranscriptionService()
-            } else {
-                showPermissionRationale()
-            }
-        }
+    // ===== Permission =====
+    private lateinit var permissionHelper: PermissionHelper
 
-    // ===== ライフサイクル =====
+    private val history = mutableListOf<TranscriptionService.TranscriptionResult>()
+
+    // ===================================================================
+    // ライフサイクル
+    // ===================================================================
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        permissionHelper = PermissionHelper(this)
+
         bindViews()
         setupRecyclerView()
-        setupButtons()
-        updateUi(TranscriptionService.ServiceState.Idle())
+        setupButton()
+        updateUi(TranscriptionService.ServiceState.Idle)
     }
 
     override fun onStart() {
         super.onStart()
-        // 既に Service が動いていればバインド
-        bindService(
-            Intent(this, TranscriptionService::class.java),
-            serviceConnection,
-            Context.BIND_AUTO_CREATE,
-        )
+        // 既に Service が起動中であればバインド
+        val intent = Intent(this, TranscriptionService::class.java)
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
     override fun onStop() {
@@ -102,7 +96,9 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
     }
 
-    // ===== View セットアップ =====
+    // ===================================================================
+    // 初期化
+    // ===================================================================
 
     private fun bindViews() {
         statusCard              = findViewById(R.id.card_status)
@@ -116,36 +112,41 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        historyRecycler.adapter = adapter
+        historyRecycler.adapter = historyAdapter
         historyRecycler.layoutManager = LinearLayoutManager(this)
     }
 
-    private fun setupButtons() {
+    private fun setupButton() {
         startStopButton.setOnClickListener {
-            if (service == null || service?.serviceState?.value is TranscriptionService.ServiceState.Idle) {
-                checkAndRequestPermissions()
+            val svc = service
+            val isIdle = svc == null ||
+                svc.serviceState.value is TranscriptionService.ServiceState.Idle ||
+                svc.serviceState.value is TranscriptionService.ServiceState.Error
+
+            if (isIdle) {
+                startWithPermissionCheck()
             } else {
-                stopTranscriptionService()
+                service?.stopListening()
             }
         }
     }
 
-    // ===== Service 観察 =====
+    // ===================================================================
+    // Service 観察
+    // ===================================================================
 
     private fun observeService() {
         val svc = service ?: return
 
         lifecycleScope.launch {
-            svc.serviceState.collect { state ->
-                updateUi(state)
-            }
+            svc.serviceState.collect { state -> updateUi(state) }
         }
 
         lifecycleScope.launch {
             svc.latestResult.collect { result ->
                 result ?: return@collect
                 history.add(0, result)
-                adapter.submitList(history.toList())
+                historyAdapter.submitList(history.toList())
                 updateHistoryVisibility()
                 latestTranscriptionText.text = result.text
             }
@@ -153,55 +154,56 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             svc.audioLevel.collect { db ->
-                // -60dB〜0dB を 0〜100 に変換
                 val progress = ((db + 60f) / 60f * 100f).coerceIn(0f, 100f).toInt()
                 levelIndicator.setProgressCompat(progress, true)
             }
         }
     }
 
-    // ===== UI 更新 =====
+    // ===================================================================
+    // UI 更新
+    // ===================================================================
 
     private fun updateUi(state: TranscriptionService.ServiceState) {
         when (state) {
             is TranscriptionService.ServiceState.Initializing -> {
-                stateIcon.text = "⏳"
-                statusText.text = "モデル読み込み中..."
+                stateIcon.text       = "⏳"
+                statusText.text      = "モデル読み込み中..."
                 startStopButton.text = "停止"
                 startStopButton.isEnabled = true
                 levelIndicator.visibility = View.GONE
             }
             is TranscriptionService.ServiceState.Idle -> {
-                stateIcon.text = "⏸️"
-                statusText.text = "停止中"
+                stateIcon.text       = "⏸️"
+                statusText.text      = "停止中"
                 startStopButton.text = "開始"
                 startStopButton.isEnabled = true
                 levelIndicator.visibility = View.GONE
             }
             is TranscriptionService.ServiceState.Listening -> {
-                stateIcon.text = "👂"
-                statusText.text = "待機中"
+                stateIcon.text       = "👂"
+                statusText.text      = "待機中"
                 startStopButton.text = "停止"
                 startStopButton.isEnabled = true
                 levelIndicator.visibility = View.VISIBLE
             }
             is TranscriptionService.ServiceState.Recording -> {
-                stateIcon.text = "🔴"
-                statusText.text = "録音中"
+                stateIcon.text       = "🔴"
+                statusText.text      = "録音中"
                 startStopButton.text = "停止"
                 startStopButton.isEnabled = true
                 levelIndicator.visibility = View.VISIBLE
             }
             is TranscriptionService.ServiceState.Transcribing -> {
-                stateIcon.text = "📝"
-                statusText.text = "文字起こし中 (%.1fs)".format(state.durationSec)
+                stateIcon.text       = "📝"
+                statusText.text      = "文字起こし中 (%.1fs)".format(state.durationSec)
                 startStopButton.text = "停止"
                 startStopButton.isEnabled = true
                 levelIndicator.visibility = View.GONE
             }
             is TranscriptionService.ServiceState.Error -> {
-                stateIcon.text = "⚠️"
-                statusText.text = "エラー: ${state.message}"
+                stateIcon.text       = "⚠️"
+                statusText.text      = "エラー: ${state.message}"
                 startStopButton.text = "開始"
                 startStopButton.isEnabled = true
                 levelIndicator.visibility = View.GONE
@@ -210,70 +212,47 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateHistoryVisibility() {
-        if (history.isEmpty()) {
-            emptyHistoryText.visibility = View.VISIBLE
-            historyRecycler.visibility = View.GONE
-        } else {
-            emptyHistoryText.visibility = View.GONE
-            historyRecycler.visibility = View.VISIBLE
-        }
+        emptyHistoryText.visibility = if (history.isEmpty()) View.VISIBLE else View.GONE
+        historyRecycler.visibility  = if (history.isEmpty()) View.GONE  else View.VISIBLE
     }
 
-    // ===== Service 起動/停止 =====
+    // ===================================================================
+    // Service 起動
+    // ===================================================================
+
+    private fun startWithPermissionCheck() {
+        permissionHelper.requestPermissions(
+            onGranted = {
+                startTranscriptionService()
+                // バッテリー最適化除外を提案（初回のみ推奨）
+                if (PermissionHelper.needsBatteryOptimizationExemption(this)) {
+                    permissionHelper.requestBatteryOptimizationExemption()
+                }
+            },
+            onDenied = {
+                Toast.makeText(this, "マイクのアクセス許可が必要です", Toast.LENGTH_SHORT).show()
+            }
+        )
+    }
 
     private fun startTranscriptionService() {
         val intent = Intent(this, TranscriptionService::class.java).apply {
             action = TranscriptionService.ACTION_START
         }
         ContextCompat.startForegroundService(this, intent)
-        // バインドして観察
-        bindService(
-            Intent(this, TranscriptionService::class.java),
-            serviceConnection,
-            Context.BIND_AUTO_CREATE,
-        )
-    }
 
-    private fun stopTranscriptionService() {
-        service?.stopListening()
-    }
-
-    // ===== パーミッション =====
-
-    private fun checkAndRequestPermissions() {
-        val permissions = buildList {
-            if (!hasPermission(Manifest.permission.RECORD_AUDIO))
-                add(Manifest.permission.RECORD_AUDIO)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                !hasPermission(Manifest.permission.POST_NOTIFICATIONS))
-                add(Manifest.permission.POST_NOTIFICATIONS)
-        }
-
-        if (permissions.isEmpty()) {
-            startTranscriptionService()
-        } else {
-            requestPermissionsLauncher.launch(permissions.toTypedArray())
+        if (!isBound) {
+            bindService(
+                Intent(this, TranscriptionService::class.java),
+                serviceConnection,
+                Context.BIND_AUTO_CREATE,
+            )
         }
     }
 
-    private fun hasPermission(permission: String) =
-        ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
-
-    private fun showPermissionRationale() {
-        AlertDialog.Builder(this)
-            .setTitle("マイクのアクセス許可が必要です")
-            .setMessage("音声文字起こしにはマイクへのアクセスが必要です。設定から許可してください。")
-            .setPositiveButton("設定を開く") { _, _ ->
-                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                    data = Uri.fromParts("package", packageName, null)
-                    startActivity(this)
-                }
-            }
-            .setNegativeButton("キャンセル", null)
-            .show()
-    }
-
-    // ===== 履歴操作 =====
+    // ===================================================================
+    // 履歴操作
+    // ===================================================================
 
     private fun showDeleteDialog(result: TranscriptionService.TranscriptionResult) {
         AlertDialog.Builder(this)
@@ -281,7 +260,7 @@ class MainActivity : AppCompatActivity() {
             .setMessage("この文字起こし結果を削除しますか？\n\n${result.text.take(80)}")
             .setPositiveButton("削除") { _, _ ->
                 history.removeAll { it.timestamp == result.timestamp }
-                adapter.submitList(history.toList())
+                historyAdapter.submitList(history.toList())
                 updateHistoryVisibility()
                 Toast.makeText(this, "削除しました", Toast.LENGTH_SHORT).show()
             }

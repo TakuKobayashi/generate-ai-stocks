@@ -1,7 +1,4 @@
 import { EventEmitter } from 'events';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const mic = require('mic');
-
 import {
   BoundedBuffer,
   SAMPLE_RATE,
@@ -12,6 +9,11 @@ import {
   pcmToSeconds,
 } from './utils';
 import { VadProcessor, VadStateMachine, VadResult, VadMode } from './vad';
+import { getMicConfig } from './platform';
+import { logger } from './logger';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const mic = require('mic');
 
 export interface RecordingSession {
   pcmBuffer: Buffer;
@@ -21,135 +23,199 @@ export interface RecordingSession {
 
 export type RecorderEvent =
   | { type: 'voice_start' }
-  | { type: 'voice_end'; session: RecordingSession }
-  | { type: 'too_short'; durationSeconds: number }
-  | { type: 'error'; error: Error }
-  | { type: 'level'; db: number };
+  | { type: 'voice_end';    session: RecordingSession }
+  | { type: 'too_short';    durationSeconds: number }
+  | { type: 'error';        error: Error }
+  | { type: 'level';        db: number }
+  | { type: 'reconnecting'; attempt: number };
 
 /**
- * マイク入力を監視し、VAD で音声区間を検出して録音セッションを返す
+ * マイク入力監視 + VAD 統合レコーダー
+ *
+ * 修正点:
+ * - マイクエラー時の自動再接続（最大 MAX_RECONNECT_ATTEMPTS 回）
+ * - preRollBuffer を固定長配列で管理（リーク防止）
+ * - activeBuffer は stop() 時に必ず clear() する
+ * - isRunning フラグを stop() 前に立てて二重停止を防ぐ
  */
 export class VoiceRecorder extends EventEmitter {
-  private micInstance: unknown;
-  private micStream: NodeJS.ReadableStream | null = null;
-  private vadProcessor: VadProcessor;
+  // マイク関連
+  private micInstance: unknown = null;
+  private micStream:   NodeJS.ReadableStream | null = null;
+
+  // VAD
+  private vadProcessor:   VadProcessor;
   private vadStateMachine: VadStateMachine;
-  private activeBuffer: BoundedBuffer | null = null;
-  private sessionStart: Date | null = null;
+
+  // 録音バッファ
+  private activeBuffer:   BoundedBuffer | null = null;
+  private sessionStart:   Date | null = null;
+
+  // プリロールバッファ（固定サイズ循環）
+  private readonly PRE_ROLL_FRAMES = 15; // 150ms
+  private preRoll: Buffer[] = [];
+
+  // 状態
   private isRunning = false;
 
-  // VAD 前のバッファ（音声開始直前のデータも含めるため）
-  private preRollBuffer: Buffer[] = [];
-  private readonly PRE_ROLL_FRAMES = 10; // 100ms のプリロール
+  // 再接続
+  private reconnectTimer: NodeJS.Timeout | null = null;
+  private reconnectAttempts = 0;
+  private readonly MAX_RECONNECT_ATTEMPTS = 5;
+  private readonly RECONNECT_DELAY_MS     = 3000;
+
+  private deviceId?: string;
 
   constructor(private readonly vadMode: VadMode = VadMode.AGGRESSIVE) {
     super();
-    this.vadProcessor = new VadProcessor(vadMode);
+    this.vadProcessor    = new VadProcessor(vadMode);
     this.vadStateMachine = new VadStateMachine(VOICE_START_FRAMES, SILENCE_END_FRAMES);
   }
 
   start(deviceId?: string): void {
     if (this.isRunning) return;
-    this.isRunning = true;
-
-    const micConfig: Record<string, string | boolean> = {
-      rate: String(SAMPLE_RATE),
-      channels: '1',
-      encoding: 'signed-integer',
-      bitwidth: '16',
-      endian: 'little',
-      fileType: 'raw',
-    };
-
-    if (deviceId) {
-      micConfig.device = deviceId;
-    }
-
-    try {
-      this.micInstance = mic(micConfig);
-      this.micStream = (this.micInstance as { getAudioStream: () => NodeJS.ReadableStream }).getAudioStream();
-    } catch (err) {
-      this.emit('event', {
-        type: 'error',
-        error: new Error(`マイク初期化エラー: ${String(err)}`),
-      } satisfies RecorderEvent);
-      return;
-    }
-
-    this.micStream!.on('data', (chunk: Buffer) => {
-      this.handleChunk(chunk).catch((err: Error) => {
-        this.emit('event', { type: 'error', error: err } satisfies RecorderEvent);
-      });
-    });
-
-    this.micStream!.on('error', (err: Error) => {
-      this.emit('event', { type: 'error', error: err } satisfies RecorderEvent);
-    });
-
-    (this.micInstance as { start: () => void }).start();
+    this.deviceId   = deviceId;
+    this.isRunning  = true;
+    this.reconnectAttempts = 0;
+    this.startMic();
   }
 
   stop(): void {
     if (!this.isRunning) return;
-    this.isRunning = false;
+    this.isRunning = false; // 先にフラグを立てて再接続ループを止める
 
-    // 録音中だった場合はセッションを終了
+    this.clearReconnectTimer();
+
+    // 録音中セッションを強制終了
     if (this.activeBuffer && this.sessionStart) {
       this.finalizeSession();
     }
 
-    try {
-      (this.micInstance as { stop: () => void }).stop();
-    } catch {
-      // 無視
-    }
-
+    this.destroyMic();
     this.vadProcessor.destroy();
     this.vadStateMachine.reset();
-    this.preRollBuffer = [];
-    this.micStream = null;
+    this.clearPreRoll();
+  }
+
+  // ===== プライベート =====
+
+  private startMic(): void {
+    const config = getMicConfig(SAMPLE_RATE, this.deviceId);
+
+    try {
+      this.micInstance = mic(config);
+      this.micStream   = (this.micInstance as { getAudioStream(): NodeJS.ReadableStream }).getAudioStream();
+    } catch (err) {
+      this.handleMicError(new Error(`マイク初期化失敗: ${String(err)}`));
+      return;
+    }
+
+    this.micStream!.on('data', (chunk: Buffer) => {
+      this.handleChunk(chunk).catch((err: unknown) => {
+        logger.error(`[Recorder] チャンク処理エラー: ${String(err)}`);
+      });
+    });
+
+    this.micStream!.on('error', (err: Error) => {
+      this.handleMicError(err);
+    });
+
+    (this.micInstance as { start(): void }).start();
+    this.reconnectAttempts = 0;
+    logger.info('[Recorder] マイク開始');
+  }
+
+  private destroyMic(): void {
+    try {
+      (this.micInstance as { stop(): void })?.stop();
+    } catch { /* ignore */ }
+    this.micStream   = null;
+    this.micInstance = null;
+  }
+
+  private handleMicError(err: Error): void {
+    logger.error(`[Recorder] マイクエラー: ${err.message}`);
+    this.emit('event', { type: 'error', error: err } satisfies RecorderEvent);
+
+    if (!this.isRunning) return;
+
+    this.destroyMic();
+    this.vadProcessor.reset();
+    this.vadStateMachine.reset();
+
+    // 録音中セッションを破棄
+    this.activeBuffer?.clear();
+    this.activeBuffer = null;
+    this.sessionStart = null;
+    this.clearPreRoll();
+
+    if (this.reconnectAttempts < this.MAX_RECONNECT_ATTEMPTS) {
+      this.reconnectAttempts++;
+      this.emit('event', { type: 'reconnecting', attempt: this.reconnectAttempts } satisfies RecorderEvent);
+      logger.warn(`[Recorder] 再接続試行 ${this.reconnectAttempts}/${this.MAX_RECONNECT_ATTEMPTS} (${this.RECONNECT_DELAY_MS}ms 後)`);
+
+      this.reconnectTimer = setTimeout(() => {
+        this.reconnectTimer = null;
+        if (this.isRunning) this.startMic();
+      }, this.RECONNECT_DELAY_MS * this.reconnectAttempts); // 指数バックオフ
+    } else {
+      logger.error(`[Recorder] 最大再接続回数に達しました。停止します。`);
+      this.isRunning = false;
+    }
+  }
+
+  private clearReconnectTimer(): void {
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = null;
+    }
+  }
+
+  private clearPreRoll(): void {
+    // 全参照を null で置き換えて GC を促す
+    this.preRoll = [];
   }
 
   private async handleChunk(chunk: Buffer): Promise<void> {
-    // 音量レベルを計算（デバッグ用）
-    const db = this.calculateDb(chunk);
+    if (!this.isRunning) return;
+
+    // 音量レベル（ピーク dB）
+    const db = this.rmsDb(chunk);
     this.emit('event', { type: 'level', db } satisfies RecorderEvent);
 
-    // プリロールバッファを更新（常に最新 N フレームを保持）
-    this.preRollBuffer.push(chunk);
-    while (this.preRollBuffer.length > this.PRE_ROLL_FRAMES) {
-      this.preRollBuffer.shift();
+    // プリロールバッファ更新（最大 PRE_ROLL_FRAMES 件）
+    this.preRoll.push(chunk);
+    if (this.preRoll.length > this.PRE_ROLL_FRAMES) {
+      this.preRoll.shift(); // 古い参照を削除
     }
 
     // VAD 処理
     const events = await this.vadProcessor.processChunk(chunk);
 
-    for (const event of events) {
-      const state = this.vadStateMachine.update(event.result);
+    for (const evt of events) {
+      const state = this.vadStateMachine.update(evt.result);
 
       if (state.started) {
         this.onVoiceStart();
       } else if (state.stopped) {
         this.onVoiceEnd();
-        return; // セッション終了後は処理を止める
+        return;
       }
     }
 
-    // 録音中なら蓄積
-    if (this.activeBuffer) {
-      this.activeBuffer.push(chunk);
-    }
+    // 録音中ならバッファに追加
+    this.activeBuffer?.push(chunk);
   }
 
   private onVoiceStart(): void {
     this.sessionStart = new Date();
     this.activeBuffer = new BoundedBuffer();
 
-    // プリロールを最初に追加（音声開始前の音声も含める）
-    for (const preChunk of this.preRollBuffer) {
-      this.activeBuffer.push(preChunk);
+    // プリロール（音声開始前のデータを先頭に追加）
+    for (const b of this.preRoll) {
+      this.activeBuffer.push(b);
     }
-    this.preRollBuffer = [];
+    this.clearPreRoll();
 
     this.emit('event', { type: 'voice_start' } satisfies RecorderEvent);
   }
@@ -161,12 +227,13 @@ export class VoiceRecorder extends EventEmitter {
   private finalizeSession(): void {
     if (!this.activeBuffer || !this.sessionStart) return;
 
-    const pcmBuffer = this.activeBuffer.concat();
+    const pcmBuffer       = this.activeBuffer.concat();
     const durationSeconds = pcmToSeconds(pcmBuffer.length);
+    const startedAt       = this.sessionStart;
 
+    // バッファを先にクリアしてメモリを解放
     this.activeBuffer.clear();
     this.activeBuffer = null;
-    const startedAt = this.sessionStart;
     this.sessionStart = null;
 
     if (durationSeconds < MIN_RECORD_SECONDS) {
@@ -180,17 +247,14 @@ export class VoiceRecorder extends EventEmitter {
     } satisfies RecorderEvent);
   }
 
-  /**
-   * PCM バッファのピーク dB を計算
-   */
-  private calculateDb(chunk: Buffer): number {
-    let sumSquares = 0;
-    const samples = chunk.length / 2;
+  private rmsDb(chunk: Buffer): number {
+    let sum = 0;
+    const n = chunk.length / 2;
     for (let i = 0; i < chunk.length; i += 2) {
-      const sample = chunk.readInt16LE(i) / 32768;
-      sumSquares += sample * sample;
+      const s = chunk.readInt16LE(i) / 32768;
+      sum += s * s;
     }
-    const rms = Math.sqrt(sumSquares / samples);
-    return rms > 0 ? 20 * Math.log10(rms) : -Infinity;
+    const rms = Math.sqrt(sum / n);
+    return rms > 0 ? 20 * Math.log10(rms) : -100;
   }
 }

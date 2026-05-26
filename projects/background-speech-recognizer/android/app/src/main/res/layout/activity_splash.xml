@@ -8,7 +8,6 @@
     android:padding="32dp"
     android:background="?attr/colorSurface">
 
-    <!-- アイコン -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,11 +15,10 @@
         android:textSize="72sp"
         android:layout_marginBottom="24dp" />
 
-    <!-- アプリ名 -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Whisper 文字起こし"
+        android:text="@string/app_name"
         android:textAppearance="?attr/textAppearanceHeadlineMedium"
         android:textColor="?attr/colorOnSurface"
         android:layout_marginBottom="8dp" />
@@ -33,7 +31,6 @@
         android:textColor="?attr/colorOnSurfaceVariant"
         android:layout_marginBottom="48dp" />
 
-    <!-- ローディング -->
     <ProgressBar
         android:id="@+id/progress_splash"
         android:layout_width="48dp"
@@ -48,15 +45,14 @@
         android:textAppearance="?attr/textAppearanceBodyMedium"
         android:textColor="?attr/colorOnSurfaceVariant" />
 
-    <!-- エラーメッセージ -->
     <TextView
         android:id="@+id/text_splash_error"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:padding="16dp"
-        android:background="@color/md_theme_primary_container"
-        android:textColor="@color/md_theme_on_primary_container"
+        android:background="@color/md_theme_error_container"
+        android:textColor="@color/md_theme_on_error_container"
         android:textAppearance="?attr/textAppearanceBodySmall"
         android:visibility="gone" />
 

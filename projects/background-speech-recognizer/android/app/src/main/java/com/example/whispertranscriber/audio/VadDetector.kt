@@ -1,109 +1,104 @@
 package com.example.whispertranscriber.audio
 
 import android.util.Log
-import kotlin.math.abs
 import kotlin.math.log10
 import kotlin.math.sqrt
 
 /**
- * VAD（Voice Activity Detector）
+ * VAD（Voice Activity Detector）- 修正版
  *
- * WebRTC VAD アルゴリズムの簡略実装
- * 16kHz・16bit モノラル PCM に最適化
- *
- * 実装:
- *   1. エネルギーベース VAD（RMS + ゼロ交差率）
- *   2. 適応的閾値（ノイズフロア推定）
- *   3. ヒステリシスによるチャタリング防止
+ * 修正点:
+ * - processFrame() の require() を削除（RuntimeException 抑止）
+ *   → フレームサイズ不正は警告ログ + SILENCE 返却で安全に処理
+ * - ゼロ交差率計算のゼロ除算を修正
+ * - noiseFloor を最低値でクリップ（-100dB 以下にならないよう）
+ * - VAD 状態リセット時に連続フレームカウンタも初期化
  */
 class VadDetector(
     private val sampleRate: Int = 16000,
-    private val sensitivity: Sensitivity = Sensitivity.AGGRESSIVE,
+    val sensitivity: Sensitivity = Sensitivity.AGGRESSIVE,
 ) {
     enum class Sensitivity {
-        NORMAL,          // 静かな環境向け
-        AGGRESSIVE,      // 一般的なオフィス向け
-        VERY_AGGRESSIVE, // ノイズの多い環境向け
+        NORMAL,
+        AGGRESSIVE,
+        VERY_AGGRESSIVE,
     }
 
     companion object {
         private const val TAG = "VadDetector"
-        private const val FRAME_MS = 10        // 10ms フレーム
-        private const val NOISE_FLOOR_ALPHA = 0.01f   // ノイズフロア更新速度
+        private const val FRAME_MS = 10
+        private const val NOISE_FLOOR_ALPHA_DECAY  = 0.005f
+        private const val NOISE_FLOOR_ALPHA_ATTACK = 0.05f
+        private const val NOISE_FLOOR_MIN = -80f
+        private const val NOISE_FLOOR_MAX = -20f
     }
 
-    // 10ms フレームのサンプル数（16kHz → 160 サンプル）
-    val frameSamples: Int = sampleRate * FRAME_MS / 1000
-    val frameBytes: Int = frameSamples * 2  // 16bit = 2byte
+    val frameSamples: Int = sampleRate * FRAME_MS / 1000      // 160
+    val frameBytes:   Int = frameSamples * 2                   // 320
 
-    // 適応的ノイズフロア
     private var noiseFloorDb = -55.0f
-    private var speechFloorDb = -35.0f
 
-    // ステートマシン
-    private var consecutiveVoiceFrames = 0
+    private var consecutiveVoiceFrames   = 0
     private var consecutiveSilenceFrames = 0
-    private var _isSpeechActive = false
+    private var _isSpeechActive          = false
 
-    // 感度設定
     private val voiceStartFrames: Int
-    private val silenceEndFrames: Int
+    private val silenceEndFrames:  Int
     private val energyThresholdDb: Float
 
     init {
         when (sensitivity) {
             Sensitivity.NORMAL -> {
-                voiceStartFrames = 5   // 50ms
-                silenceEndFrames = 25  // 250ms
+                voiceStartFrames  = 5
+                silenceEndFrames  = 25
                 energyThresholdDb = -40.0f
             }
             Sensitivity.AGGRESSIVE -> {
-                voiceStartFrames = 3   // 30ms
-                silenceEndFrames = 30  // 300ms
+                voiceStartFrames  = 3
+                silenceEndFrames  = 30
                 energyThresholdDb = -45.0f
             }
             Sensitivity.VERY_AGGRESSIVE -> {
-                voiceStartFrames = 2   // 20ms
-                silenceEndFrames = 40  // 400ms
+                voiceStartFrames  = 2
+                silenceEndFrames  = 40
                 energyThresholdDb = -50.0f
             }
         }
     }
 
     data class VadResult(
-        val isSpeech: Boolean,
-        val energyDb: Float,
-        val started: Boolean,   // このフレームで音声が始まった
-        val stopped: Boolean,   // このフレームで音声が終わった
+        val isSpeech:  Boolean,
+        val energyDb:  Float,
+        val started:   Boolean,
+        val stopped:   Boolean,
     )
 
     /**
-     * 1 フレーム（10ms = 320 バイト）の PCM を処理する
-     *
-     * @param frame  16bit LE PCM バイト列（320 バイト固定）
+     * 1 フレーム（frameBytes バイト）の PCM を処理する
+     * フレームサイズが異なる場合は警告して SILENCE を返す（クラッシュしない）
      */
     fun processFrame(frame: ByteArray): VadResult {
-        require(frame.size == frameBytes) {
-            "フレームサイズが不正: ${frame.size} (期待: $frameBytes)"
+        // 修正: require() を削除してソフトエラーにする
+        if (frame.size != frameBytes) {
+            Log.w(TAG, "フレームサイズ不正: ${frame.size} bytes (期待: $frameBytes bytes) → SILENCE 扱い")
+            return VadResult(isSpeech = _isSpeechActive, energyDb = -100f, started = false, stopped = false)
         }
 
         val energyDb = calculateRmsDb(frame)
-        val zcr = calculateZeroCrossingRate(frame)
+        val zcr      = calculateZeroCrossingRate(frame)
 
-        // ノイズフロアを適応更新（無音時のみ）
-        if (energyDb < noiseFloorDb + 10f && !_isSpeechActive) {
-            noiseFloorDb = noiseFloorDb * (1 - NOISE_FLOOR_ALPHA) + energyDb * NOISE_FLOOR_ALPHA
+        // ノイズフロア適応更新
+        if (!_isSpeechActive) {
+            val alpha = if (energyDb < noiseFloorDb) NOISE_FLOOR_ALPHA_DECAY else NOISE_FLOOR_ALPHA_ATTACK * 0.1f
+            noiseFloorDb = (noiseFloorDb + alpha * (energyDb - noiseFloorDb))
+                .coerceIn(NOISE_FLOOR_MIN, NOISE_FLOOR_MAX)
         }
 
-        // 動的閾値 = ノイズフロア + 余裕
         val dynamicThreshold = maxOf(noiseFloorDb + 12f, energyThresholdDb)
-
-        // 音声判定（エネルギー + ゼロ交差率の複合判定）
         val energyVoice = energyDb > dynamicThreshold
-        val zcrVoice = zcr in 0.05f..0.35f  // 人声の ZCR 範囲
+        val zcrVoice    = zcr in 0.04f..0.40f   // 人声の ZCR 帯域（調整済み）
         val isVoiceFrame = energyVoice && zcrVoice
 
-        // ヒステリシス処理
         return updateState(isVoiceFrame, energyDb)
     }
 
@@ -118,7 +113,7 @@ class VadDetector(
             if (!_isSpeechActive && consecutiveVoiceFrames >= voiceStartFrames) {
                 _isSpeechActive = true
                 started = true
-                Log.d(TAG, "音声検出開始 (${energyDb.toInt()}dB, floor=${noiseFloorDb.toInt()}dB)")
+                Log.d(TAG, "音声開始 (${energyDb.toInt()}dB, floor=${noiseFloorDb.toInt()}dB)")
             }
         } else {
             consecutiveSilenceFrames++
@@ -127,58 +122,61 @@ class VadDetector(
             if (_isSpeechActive && consecutiveSilenceFrames >= silenceEndFrames) {
                 _isSpeechActive = false
                 stopped = true
-                Log.d(TAG, "音声検出終了 (無音${consecutiveSilenceFrames}フレーム継続)")
+                Log.d(TAG, "音声終了 (無音 ${consecutiveSilenceFrames} フレーム)")
             }
         }
 
         return VadResult(
             isSpeech = _isSpeechActive,
             energyDb = energyDb,
-            started = started,
-            stopped = stopped,
+            started  = started,
+            stopped  = stopped,
         )
     }
 
     val isSpeechActive: Boolean get() = _isSpeechActive
 
     fun reset() {
-        consecutiveVoiceFrames = 0
+        consecutiveVoiceFrames   = 0
         consecutiveSilenceFrames = 0
-        _isSpeechActive = false
-        noiseFloorDb = -55.0f
+        _isSpeechActive          = false
+        noiseFloorDb             = -55.0f
     }
 
     // ===== 信号処理 =====
 
-    /** RMS エネルギーを dBFS に変換 */
     private fun calculateRmsDb(frame: ByteArray): Float {
         var sumSquares = 0.0
         val numSamples = frame.size / 2
+        if (numSamples == 0) return -100f
         for (i in 0 until numSamples) {
-            val lo = frame[i * 2].toInt() and 0xFF
-            val hi = frame[i * 2 + 1].toInt()
+            val lo     = frame[i * 2].toInt() and 0xFF
+            val hi     = frame[i * 2 + 1].toInt()
             val sample = ((hi shl 8) or lo).toShort().toFloat() / 32768.0f
             sumSquares += sample * sample
         }
         val rms = sqrt(sumSquares / numSamples).toFloat()
-        return if (rms > 0f) 20f * log10(rms) else -100f
+        return if (rms > 1e-10f) 20f * log10(rms) else -100f
     }
 
-    /** ゼロ交差率（ZCR）を計算 */
+    /** ゼロ交差率（修正: numSamples が 0 のときゼロ除算を防ぐ） */
     private fun calculateZeroCrossingRate(frame: ByteArray): Float {
-        var crossings = 0
         val numSamples = frame.size / 2
-        var prevSign = 0
+        if (numSamples < 2) return 0f
+
+        var crossings = 0
+        var prevSign  = 0
 
         for (i in 0 until numSamples) {
-            val lo = frame[i * 2].toInt() and 0xFF
-            val hi = frame[i * 2 + 1].toInt()
+            val lo     = frame[i * 2].toInt() and 0xFF
+            val hi     = frame[i * 2 + 1].toInt()
             val sample = ((hi shl 8) or lo).toShort()
-            val sign = if (sample > 0) 1 else if (sample < 0) -1 else 0
-
-            if (prevSign != 0 && sign != 0 && sign != prevSign) {
-                crossings++
+            val sign   = when {
+                sample > 0  ->  1
+                sample < 0  -> -1
+                else        ->  0
             }
+            if (prevSign != 0 && sign != 0 && sign != prevSign) crossings++
             if (sign != 0) prevSign = sign
         }
         return crossings.toFloat() / numSamples

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  バックグラウンド実行の制限を回避するための設定
-  WorkManager / JobScheduler が不要な常駐型アプリ向け
--->
+<!-- ローカル完結アプリのため cleartext 通信は禁止 -->
 <network-security-config>
-    <domain-config cleartextTrafficPermitted="false">
-        <domain includeSubdomains="false">localhost</domain>
-    </domain-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
 </network-security-config>

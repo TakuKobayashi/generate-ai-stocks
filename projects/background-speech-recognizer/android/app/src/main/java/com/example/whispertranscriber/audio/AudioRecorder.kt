@@ -6,132 +6,167 @@ import android.media.MediaRecorder
 import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import java.io.ByteArrayOutputStream
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * AudioRecord + VadDetector を統合した録音クラス
- * VAD で音声区間のみを検出し、コールバックで通知する
+ * AudioRecord + VadDetector 統合録音クラス - 修正版
+ *
+ * 修正点:
+ * - stop() で AudioRecord の状態を確認してから stop()/release() を呼ぶ
+ *   （IllegalStateException 防止）
+ * - ByteArrayOutputStream の代わりに ArrayList<ByteArray> を使用
+ *   （大量の中間コピー GC 圧迫を解消）
+ * - isRunning を AtomicBoolean で管理（スレッドセーフ）
+ * - preRollBuffer を固定サイズ配列で管理（リーク防止）
+ * - audioRecord への複数スレッドアクセスを synchronized で保護
  */
 class AudioRecorder(
     private val sampleRate: Int = 16000,
     private val vadSensitivity: VadDetector.Sensitivity = VadDetector.Sensitivity.AGGRESSIVE,
 ) {
-
     companion object {
         private const val TAG = "AudioRecorder"
-        private const val CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO
-        private const val AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT
-
-        // 最小/最大録音時間
         private const val MIN_RECORDING_SEC = 1.0f
         private const val MAX_RECORDING_SEC = 60.0f
     }
 
     // 録音状態
     sealed class RecordingState {
-        object Idle : RecordingState()
+        object Idle      : RecordingState()
         object Listening : RecordingState()
         object Recording : RecordingState()
         data class Error(val message: String) : RecordingState()
     }
 
-    // 録音セッション
     data class RecordingSession(
-        val pcmData: ByteArray,
+        val pcmData:         ByteArray,
         val durationSeconds: Float,
-        val timestamp: Long = System.currentTimeMillis(),
+        val timestamp:       Long = System.currentTimeMillis(),
     )
 
-    // コールバック
-    var onVoiceStart: (() -> Unit)? = null
-    var onVoiceEnd: ((session: RecordingSession) -> Unit)? = null
-    var onTooShort: ((durationSeconds: Float) -> Unit)? = null
-    var onLevelUpdate: ((db: Float) -> Unit)? = null
-    var onError: ((message: String) -> Unit)? = null
-
-    private var audioRecord: AudioRecord? = null
-    private var recordingThread: Thread? = null
-    private val vad = VadDetector(sampleRate, vadSensitivity)
+    // コールバック（メインスレッドから呼ばれることを想定していない — Service 内部で使用）
+    var onVoiceStart:   (() -> Unit)?                     = null
+    var onVoiceEnd:     ((session: RecordingSession) -> Unit)? = null
+    var onTooShort:     ((durationSeconds: Float) -> Unit)? = null
+    var onLevelUpdate:  ((db: Float) -> Unit)?            = null
+    var onError:        ((message: String) -> Unit)?      = null
 
     private val _state = MutableStateFlow<RecordingState>(RecordingState.Idle)
     val state: StateFlow<RecordingState> = _state
 
-    @Volatile
-    private var isRunning = false
+    private var audioRecord:     AudioRecord? = null
+    private var captureThread:   Thread?      = null
+    private val isRunning        = AtomicBoolean(false)
+    private val audioRecordLock  = Object()
+    private val vad              = VadDetector(sampleRate, vadSensitivity)
 
-    // 録音バッファ
-    private var sessionBuffer: ByteArrayOutputStream? = null
-    private var sessionStartTime = 0L
+    // セッションバッファ（ByteArrayOutputStream → ArrayList に変更）
+    private var sessionChunks:    ArrayList<ByteArray>? = null
+    private var sessionStartTime: Long = 0L
 
-    // プリロールバッファ（音声開始直前の音声を含めるため）
-    private val preRollMaxFrames = 15  // 150ms
-    private val preRollBuffer = ArrayDeque<ByteArray>()
+    // プリロール（固定サイズキュー）
+    private val preRollMaxFrames = 15
+    private val preRollQueue     = ArrayDeque<ByteArray>(preRollMaxFrames + 1)
 
-    /**
-     * 監視開始
-     * @throws SecurityException マイクパーミッションがない場合
-     */
     @Throws(SecurityException::class)
     fun start() {
-        if (isRunning) return
+        if (!isRunning.compareAndSet(false, true)) return
 
-        val minBufferSize = AudioRecord.getMinBufferSize(sampleRate, CHANNEL_CONFIG, AUDIO_FORMAT)
-        val bufferSize = maxOf(minBufferSize * 4, vad.frameBytes * 8)
-
-        audioRecord = AudioRecord(
-            MediaRecorder.AudioSource.VOICE_RECOGNITION,
+        val minBufSize = AudioRecord.getMinBufferSize(
             sampleRate,
-            CHANNEL_CONFIG,
-            AUDIO_FORMAT,
-            bufferSize,
+            AudioFormat.CHANNEL_IN_MONO,
+            AudioFormat.ENCODING_PCM_16BIT,
         )
-
-        if (audioRecord?.state != AudioRecord.STATE_INITIALIZED) {
-            val msg = "AudioRecord の初期化失敗"
+        if (minBufSize == AudioRecord.ERROR || minBufSize == AudioRecord.ERROR_BAD_VALUE) {
+            val msg = "AudioRecord: getMinBufferSize 失敗 ($minBufSize)"
             Log.e(TAG, msg)
             _state.value = RecordingState.Error(msg)
             onError?.invoke(msg)
+            isRunning.set(false)
             return
         }
 
-        isRunning = true
-        audioRecord?.startRecording()
+        val bufferSize = maxOf(minBufSize * 4, vad.frameBytes * 8)
+
+        synchronized(audioRecordLock) {
+            audioRecord = AudioRecord(
+                MediaRecorder.AudioSource.VOICE_RECOGNITION,
+                sampleRate,
+                AudioFormat.CHANNEL_IN_MONO,
+                AudioFormat.ENCODING_PCM_16BIT,
+                bufferSize,
+            )
+
+            if (audioRecord?.state != AudioRecord.STATE_INITIALIZED) {
+                val msg = "AudioRecord 初期化失敗"
+                Log.e(TAG, msg)
+                audioRecord?.release()
+                audioRecord = null
+                _state.value = RecordingState.Error(msg)
+                onError?.invoke(msg)
+                isRunning.set(false)
+                return
+            }
+
+            // 修正: startRecording() 前に状態確認
+            try {
+                audioRecord?.startRecording()
+            } catch (e: IllegalStateException) {
+                val msg = "AudioRecord.startRecording() 失敗: ${e.message}"
+                Log.e(TAG, msg)
+                audioRecord?.release()
+                audioRecord = null
+                _state.value = RecordingState.Error(msg)
+                onError?.invoke(msg)
+                isRunning.set(false)
+                return
+            }
+        }
+
         _state.value = RecordingState.Listening
         vad.reset()
 
-        recordingThread = Thread({ captureLoop() }, "AudioCapture").apply {
-            priority = Thread.MAX_PRIORITY
-            isDaemon = true
+        captureThread = Thread(::captureLoop, "AudioCapture").apply {
+            priority  = Thread.MAX_PRIORITY
+            isDaemon  = true
             start()
         }
 
         Log.i(TAG, "録音監視開始")
     }
 
-    /**
-     * 監視停止
-     */
     fun stop() {
-        isRunning = false
+        if (!isRunning.compareAndSet(true, false)) return
 
-        // 録音中だった場合はセッションを強制終了
-        sessionBuffer?.let { buf ->
-            if (buf.size() > 0) {
-                finalizeSession(buf.toByteArray())
+        // 録音中セッションを強制終了
+        finalizeSessionIfActive()
+
+        captureThread?.join(2000)
+        captureThread = null
+
+        synchronized(audioRecordLock) {
+            val ar = audioRecord
+            audioRecord = null
+            if (ar != null) {
+                // 修正: 状態を確認してから stop() → release()
+                try {
+                    if (ar.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
+                        ar.stop()
+                    }
+                } catch (e: IllegalStateException) {
+                    Log.w(TAG, "AudioRecord.stop() 失敗: ${e.message}")
+                } finally {
+                    try {
+                        ar.release()
+                    } catch (e: Exception) {
+                        Log.w(TAG, "AudioRecord.release() 失敗: ${e.message}")
+                    }
+                }
             }
         }
 
-        recordingThread?.join(2000)
-        recordingThread = null
-
-        audioRecord?.apply {
-            stop()
-            release()
-        }
-        audioRecord = null
-        sessionBuffer = null
-        preRollBuffer.clear()
-
+        vad.reset()
+        preRollQueue.clear()
         _state.value = RecordingState.Idle
         Log.i(TAG, "録音監視停止")
     }
@@ -139,17 +174,22 @@ class AudioRecorder(
     // ===== 録音ループ =====
 
     private fun captureLoop() {
-        val readBuffer = ByteArray(vad.frameBytes)
+        val readBuf = ByteArray(vad.frameBytes)
 
-        while (isRunning) {
-            val read = audioRecord?.read(readBuffer, 0, vad.frameBytes) ?: break
-            if (read <= 0) continue
-
-            val frame = if (read == vad.frameBytes) readBuffer.clone()
-                        else readBuffer.copyOf(read)
+        while (isRunning.get()) {
+            val read = synchronized(audioRecordLock) {
+                audioRecord?.read(readBuf, 0, vad.frameBytes) ?: -1
+            }
+            when {
+                read <= 0  -> continue
+                read < vad.frameBytes -> {
+                    // 半端なデータは VAD に渡さず捨てる
+                    continue
+                }
+            }
 
             try {
-                processFrame(frame)
+                processFrame(readBuf.copyOf(read))
             } catch (e: Exception) {
                 Log.e(TAG, "フレーム処理エラー: ${e.message}")
             }
@@ -158,62 +198,66 @@ class AudioRecorder(
 
     private fun processFrame(frame: ByteArray) {
         val result = vad.processFrame(frame)
-
-        // 音量レベルを通知
         onLevelUpdate?.invoke(result.energyDb)
 
-        // プリロールバッファ更新
+        // プリロール更新
         if (!result.isSpeech) {
-            preRollBuffer.addLast(frame.clone())
-            if (preRollBuffer.size > preRollMaxFrames) {
-                preRollBuffer.removeFirst()
-            }
+            preRollQueue.addLast(frame.clone())
+            while (preRollQueue.size > preRollMaxFrames) preRollQueue.removeFirst()
         }
 
         when {
             result.started -> {
-                // 録音開始
-                sessionBuffer = ByteArrayOutputStream().apply {
-                    // プリロールを先頭に書き込む
-                    preRollBuffer.forEach { write(it) }
-                    write(frame)
+                // 修正: ArrayList で chunk を管理（中間コピーなし）
+                sessionChunks = ArrayList<ByteArray>().also { list ->
+                    preRollQueue.forEach { list.add(it) }
+                    list.add(frame.clone())
                 }
-                preRollBuffer.clear()
+                preRollQueue.clear()
                 sessionStartTime = System.currentTimeMillis()
                 _state.value = RecordingState.Recording
                 onVoiceStart?.invoke()
-                Log.d(TAG, "セッション開始")
             }
 
             result.stopped -> {
-                // 録音終了
-                sessionBuffer?.write(frame)
-                val pcm = sessionBuffer?.toByteArray() ?: ByteArray(0)
-                sessionBuffer = null
+                sessionChunks?.add(frame.clone())
+                finalizeSessionIfActive()
                 _state.value = RecordingState.Listening
-                finalizeSession(pcm)
             }
 
             result.isSpeech -> {
-                // 録音中フレームを蓄積
-                sessionBuffer?.write(frame)
+                sessionChunks?.add(frame.clone())
 
                 // 最大録音時間チェック
                 val elapsed = (System.currentTimeMillis() - sessionStartTime) / 1000f
                 if (elapsed >= MAX_RECORDING_SEC) {
-                    Log.w(TAG, "最大録音時間に達したため強制終了")
-                    val pcm = sessionBuffer?.toByteArray() ?: ByteArray(0)
-                    sessionBuffer = null
+                    Log.w(TAG, "最大録音時間超過 (${elapsed}s) → 強制終了")
+                    finalizeSessionIfActive()
                     _state.value = RecordingState.Listening
                     vad.reset()
-                    finalizeSession(pcm)
                 }
             }
         }
     }
 
-    private fun finalizeSession(pcm: ByteArray) {
-        val durationSec = pcm.size.toFloat() / (sampleRate * 2)  // 16bit = 2byte
+    private fun finalizeSessionIfActive() {
+        val chunks = sessionChunks ?: return
+        sessionChunks = null
+
+        if (chunks.isEmpty()) return
+
+        // 修正: チャンクを一度だけ結合（中間コピー削減）
+        val totalBytes = chunks.sumOf { it.size }
+        val pcm = ByteArray(totalBytes)
+        var offset = 0
+        for (chunk in chunks) {
+            chunk.copyInto(pcm, offset)
+            offset += chunk.size
+        }
+        // chunks の参照を切る（GC 対象化）
+        chunks.clear()
+
+        val durationSec = pcm.size.toFloat() / (sampleRate * 2)
 
         if (durationSec < MIN_RECORDING_SEC) {
             Log.d(TAG, "短すぎてスキップ: ${durationSec}s")

@@ -10,6 +10,10 @@
         <item name="colorSurfaceVariant">@color/md_theme_surface_variant</item>
         <item name="colorOnSurfaceVariant">@color/md_theme_on_surface_variant</item>
         <item name="colorOutlineVariant">@color/md_theme_outline_variant</item>
+        <item name="colorError">@color/md_theme_error</item>
+        <item name="colorOnError">@color/md_theme_on_error</item>
+        <item name="colorErrorContainer">@color/md_theme_error_container</item>
+        <item name="colorOnErrorContainer">@color/md_theme_on_error_container</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

@@ -33,7 +33,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- 状態アイコン + テキスト -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -53,7 +52,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="停止中"
+                    android:text="@string/status_idle"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
                     android:textColor="?attr/colorOnSurface" />
 
@@ -74,7 +73,7 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- 最新文字起こし結果 -->
+    <!-- 最新文字起こし結果カード -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -100,7 +99,7 @@
                 android:id="@+id/text_latest_transcription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ここに文字起こし結果が表示されます"
+                android:text="@string/latest_transcription_hint"
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textColor="?attr/colorOnPrimaryContainer"
                 android:minLines="2" />
@@ -113,7 +112,7 @@
         android:id="@+id/button_start_stop"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:text="開始"
+        android:text="@string/start"
         android:textSize="16sp"
         app:cornerRadius="28dp"
         android:layout_marginBottom="20dp" />
@@ -132,7 +131,7 @@
         android:id="@+id/text_empty_history"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="まだ文字起こしがありません"
+        android:text="@string/empty_history"
         android:textAppearance="?attr/textAppearanceBodyMedium"
         android:textColor="?attr/colorOnSurfaceVariant"
         android:gravity="center"
