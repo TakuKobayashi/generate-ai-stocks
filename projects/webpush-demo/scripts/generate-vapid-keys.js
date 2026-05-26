@@ -8,12 +8,12 @@ function generateVAPIDKeys() {
     namedCurve: 'prime256v1',
     publicKeyEncoding: {
       type: 'spki',
-      format: 'der'
+      format: 'der',
     },
     privateKeyEncoding: {
       type: 'pkcs8',
-      format: 'der'
-    }
+      format: 'der',
+    },
   });
 
   const publicKeyBase64 = urlBase64Encode(publicKey);
@@ -40,11 +40,7 @@ function generateVAPIDKeys() {
 }
 
 function urlBase64Encode(buffer) {
-  return buffer
-    .toString('base64')
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/, '');
+  return buffer.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
 generateVAPIDKeys();

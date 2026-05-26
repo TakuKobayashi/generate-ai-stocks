@@ -5,14 +5,16 @@ export default function Home() {
   const [subscription, setSubscription] = useState<PushSubscription | null>(null);
   const [fcmToken, setFcmToken] = useState<string | null>(null);
   const [isSupported, setIsSupported] = useState(false);
-  const [messages, setMessages] = useState<Array<{ 
-    id: number; 
-    message: string; 
-    data: any; 
-    timestamp: number;
-    mode: string;
-    type: 'standard' | 'fcm';
-  }>>([]);
+  const [messages, setMessages] = useState<
+    Array<{
+      id: number;
+      message: string;
+      data: any;
+      timestamp: number;
+      mode: string;
+      type: 'standard' | 'fcm';
+    }>
+  >([]);
   const [messageText, setMessageText] = useState('');
   const [dataJson, setDataJson] = useState('{"count": 1, "status": "active"}');
   const [status, setStatus] = useState('');
@@ -48,14 +50,14 @@ export default function Home() {
             data: event.data.payload.data,
             timestamp: event.data.payload.timestamp,
             mode: notificationMode,
-            type: 'standard' as const
+            type: 'standard' as const,
           };
           setMessages((prev) => [newMessage, ...prev]);
           setStatus('✅ 新しいデータを受信しました! (Standard Web Push)');
-          
+
           // 音声フィードバック（オプション）
           playNotificationSound();
-          
+
           setTimeout(() => setStatus(''), 3000);
         } else if (event.data.type === 'FCM_PUSH_DATA') {
           const newMessage = {
@@ -64,14 +66,14 @@ export default function Home() {
             data: event.data.payload.data,
             timestamp: event.data.payload.timestamp,
             mode: notificationMode,
-            type: 'fcm' as const
+            type: 'fcm' as const,
           };
           setMessages((prev) => [newMessage, ...prev]);
           setStatus('✅ 新しいデータを受信しました! (FCM)');
-          
+
           // 音声フィードバック（オプション）
           playNotificationSound();
-          
+
           setTimeout(() => setStatus(''), 3000);
         }
       });
@@ -93,14 +95,14 @@ export default function Home() {
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
-      
+
       oscillator.connect(gainNode);
       gainNode.connect(audioContext.destination);
-      
+
       oscillator.frequency.value = 800;
       oscillator.type = 'sine';
       gainNode.gain.value = 0.1;
-      
+
       oscillator.start();
       setTimeout(() => oscillator.stop(), 100);
     } catch (e) {
@@ -113,7 +115,7 @@ export default function Home() {
       setStatus('⏳ 通知の許可を求めています...');
       const permission = await Notification.requestPermission();
       setPermissionState(permission);
-      
+
       if (permission === 'granted') {
         setStatus('✅ 通知が許可されました!');
         setTimeout(() => setStatus(''), 3000);
@@ -136,36 +138,36 @@ export default function Home() {
       }
 
       setStatus('⏳ 購読処理中...');
-      
+
       const registration = await navigator.serviceWorker.ready;
-      
+
       // VAPID公開鍵を取得
       const response = await fetch('/api/vapid-public-key');
       if (!response.ok) {
         throw new Error('Failed to fetch VAPID key');
       }
-      const data = await response.json() as { publicKey: string };
+      const data = (await response.json()) as { publicKey: string };
       const publicKey = data.publicKey;
-      
+
       // プッシュ通知を購読
       const sub = await registration.pushManager.subscribe({
         userVisibleOnly: true, // ブラウザの要件に従う
-        applicationServerKey: urlBase64ToUint8Array(publicKey)
+        applicationServerKey: urlBase64ToUint8Array(publicKey),
       });
-      
+
       // サーバーに購読情報を送信
       const subscribeResponse = await fetch('/api/subscribe', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(sub)
+        body: JSON.stringify(sub),
       });
 
       if (!subscribeResponse.ok) {
         throw new Error('Failed to save subscription');
       }
-      
+
       setSubscription(sub);
       setStatus('✅ プッシュ通知を購読しました!');
       setTimeout(() => setStatus(''), 3000);
@@ -191,21 +193,23 @@ export default function Home() {
   };
 
   const resetPermission = () => {
-    setStatus('ℹ️ ブラウザのアドレスバー左側の🔒をクリックして、通知の設定をリセットしてください。その後ページをリロードしてください。');
+    setStatus(
+      'ℹ️ ブラウザのアドレスバー左側の🔒をクリックして、通知の設定をリセットしてください。その後ページをリロードしてください。'
+    );
   };
 
   const toggleNotificationMode = async (mode: 'silent' | 'notify') => {
     setNotificationMode(mode);
-    
+
     // Service Workerにモードを通知
     if ('serviceWorker' in navigator) {
       const registration = await navigator.serviceWorker.ready;
       registration.active?.postMessage({
         type: 'SET_NOTIFICATION_MODE',
-        mode: mode
+        mode: mode,
       });
     }
-    
+
     setStatus(`🔔 モードを${mode === 'silent' ? 'サイレント' : '通知あり'}に変更しました`);
     setTimeout(() => setStatus(''), 3000);
   };
@@ -213,30 +217,30 @@ export default function Home() {
   const sendTestPush = async () => {
     try {
       setStatus('⏳ プッシュ送信中...');
-      
+
       let data;
       try {
         data = JSON.parse(dataJson);
       } catch {
         data = { raw: dataJson };
       }
-      
+
       const response = await fetch('/api/send-push', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           message: messageText || 'テストメッセージ',
-          data: data
-        })
+          data: data,
+        }),
       });
 
       if (!response.ok) {
         throw new Error('Push send failed');
       }
-      
-      const result = await response.json() as { sent: number; total: number };
+
+      const result = (await response.json()) as { sent: number; total: number };
       setStatus(`✅ ${result.sent}件のデバイスに送信しました (Standard Web Push)`);
       setTimeout(() => setStatus(''), 3000);
     } catch (error) {
@@ -248,46 +252,46 @@ export default function Home() {
   const initializeFCM = async () => {
     try {
       setStatus('⏳ FCMを初期化中...');
-      
+
       // 動的にFirebase SDKをロード
       const { initializeApp } = await import('firebase/app');
       const { getMessaging, getToken, onMessage } = await import('firebase/messaging');
-      
+
       // Firebase設定（実際の設定に置き換えてください）
       const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-        projectId: "YOUR_PROJECT_ID",
-        storageBucket: "YOUR_PROJECT_ID.appspot.com",
-        messagingSenderId: "YOUR_SENDER_ID",
-        appId: "YOUR_APP_ID"
+        apiKey: 'YOUR_API_KEY',
+        authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
+        projectId: 'YOUR_PROJECT_ID',
+        storageBucket: 'YOUR_PROJECT_ID.appspot.com',
+        messagingSenderId: 'YOUR_SENDER_ID',
+        appId: 'YOUR_APP_ID',
       };
-      
+
       const app = initializeApp(firebaseConfig);
       const messaging = getMessaging(app);
-      
+
       // FCMトークンを取得
       const token = await getToken(messaging, {
-        vapidKey: 'YOUR_VAPID_KEY' // Firebase ConsoleのCloud Messaging設定から取得
+        vapidKey: 'YOUR_VAPID_KEY', // Firebase ConsoleのCloud Messaging設定から取得
       });
-      
+
       if (token) {
         console.log('FCM Token:', token);
         setFcmToken(token);
-        
+
         // トークンをサーバーに保存
         const response = await fetch('/api/fcm/subscribe', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ token })
+          body: JSON.stringify({ token }),
         });
-        
+
         if (!response.ok) {
           throw new Error('Failed to save FCM token');
         }
-        
+
         // フォアグラウンドメッセージを受信
         onMessage(messaging, (payload) => {
           console.log('FCM message received:', payload);
@@ -297,14 +301,14 @@ export default function Home() {
             data: payload.data?.data ? JSON.parse(payload.data.data) : {},
             timestamp: parseInt(payload.data?.timestamp || Date.now().toString()),
             mode: notificationMode,
-            type: 'fcm' as const
+            type: 'fcm' as const,
           };
           setMessages((prev) => [newMessage, ...prev]);
           setStatus('✅ 新しいデータを受信しました! (FCM)');
           playNotificationSound();
           setTimeout(() => setStatus(''), 3000);
         });
-        
+
         setStatus('✅ FCMトークンを取得しました!');
         setTimeout(() => setStatus(''), 3000);
       } else {
@@ -319,30 +323,30 @@ export default function Home() {
   const sendFCMPush = async () => {
     try {
       setStatus('⏳ FCMプッシュ送信中...');
-      
+
       let data;
       try {
         data = JSON.parse(dataJson);
       } catch {
         data = { raw: dataJson };
       }
-      
+
       const response = await fetch('/api/fcm/send-push', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           message: messageText || 'テストメッセージ (FCM)',
-          data: data
-        })
+          data: data,
+        }),
       });
 
       if (!response.ok) {
         throw new Error('FCM push send failed');
       }
-      
-      const result = await response.json() as { sent: number; total: number };
+
+      const result = (await response.json()) as { sent: number; total: number };
       setStatus(`✅ ${result.sent}件のデバイスに送信しました (FCM)`);
       setTimeout(() => setStatus(''), 3000);
     } catch (error) {
@@ -352,10 +356,8 @@ export default function Home() {
   };
 
   const urlBase64ToUint8Array = (base64String: string) => {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
-      .replace(/\-/g, '+')
-      .replace(/_/g, '/');
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);
     for (let i = 0; i < rawData.length; ++i) {
@@ -382,26 +384,27 @@ export default function Home() {
         <p className={styles.subtitle}>サーバーからリアルタイムでデータを受信</p>
       </div>
 
-      {status && (
-        <div className={styles.status}>
-          {status}
-        </div>
-      )}
+      {status && <div className={styles.status}>{status}</div>}
 
       <div className={styles.grid}>
         <div className={styles.card}>
           <h2>🔐 通知の許可</h2>
           <div className={styles.permissionInfo}>
-            <p className={
-              permissionState === 'granted' ? styles.permissionGranted :
-              permissionState === 'denied' ? styles.permissionDenied :
-              styles.permissionDefault
-            }>
-              状態: {
-                permissionState === 'granted' ? '✓ 許可済み' :
-                permissionState === 'denied' ? '✗ 拒否済み' :
-                '? 未設定'
+            <p
+              className={
+                permissionState === 'granted'
+                  ? styles.permissionGranted
+                  : permissionState === 'denied'
+                    ? styles.permissionDenied
+                    : styles.permissionDefault
               }
+            >
+              状態:{' '}
+              {permissionState === 'granted'
+                ? '✓ 許可済み'
+                : permissionState === 'denied'
+                  ? '✗ 拒否済み'
+                  : '? 未設定'}
             </p>
           </div>
           <div className={styles.buttonGroup}>
@@ -425,8 +428,8 @@ export default function Home() {
           </div>
           <div className={styles.buttonGroup}>
             {!subscription ? (
-              <button 
-                className={styles.primaryButton} 
+              <button
+                className={styles.primaryButton}
                 onClick={subscribeToPush}
                 disabled={permissionState !== 'granted'}
               >
@@ -448,38 +451,40 @@ export default function Home() {
             </p>
           </div>
           <div className={styles.buttonGroup}>
-            <button 
-              className={styles.primaryButton} 
+            <button
+              className={styles.primaryButton}
               onClick={initializeFCM}
               disabled={permissionState !== 'granted'}
             >
               FCMを初期化
             </button>
           </div>
-          <p className={styles.modeDescription}>
-            Firebase Cloud Messagingを使用したプッシュ通知
-          </p>
+          <p className={styles.modeDescription}>Firebase Cloud Messagingを使用したプッシュ通知</p>
         </div>
 
         <div className={styles.card}>
           <h2>🔔 通知モード</h2>
           <div className={styles.modeToggle}>
             <button
-              className={notificationMode === 'silent' ? styles.modeButtonActive : styles.modeButton}
+              className={
+                notificationMode === 'silent' ? styles.modeButtonActive : styles.modeButton
+              }
               onClick={() => toggleNotificationMode('silent')}
             >
               🔕 サイレント
             </button>
             <button
-              className={notificationMode === 'notify' ? styles.modeButtonActive : styles.modeButton}
+              className={
+                notificationMode === 'notify' ? styles.modeButtonActive : styles.modeButton
+              }
               onClick={() => toggleNotificationMode('notify')}
             >
               🔔 通知あり
             </button>
           </div>
           <p className={styles.modeDescription}>
-            {notificationMode === 'silent' 
-              ? 'データのみ受信、通知は表示されません' 
+            {notificationMode === 'silent'
+              ? 'データのみ受信、通知は表示されません'
               : 'データ受信時に通知が表示されます'}
           </p>
         </div>
@@ -552,10 +557,18 @@ export default function Home() {
                     {new Date(msg.timestamp).toLocaleString('ja-JP')}
                   </span>
                   <div className={styles.badgeGroup}>
-                    <span className={msg.type === 'fcm' ? styles.typeBadgeFcm : styles.typeBadgeStandard}>
+                    <span
+                      className={
+                        msg.type === 'fcm' ? styles.typeBadgeFcm : styles.typeBadgeStandard
+                      }
+                    >
                       {msg.type === 'fcm' ? '🔥 FCM' : '📡 Standard'}
                     </span>
-                    <span className={msg.mode === 'silent' ? styles.modeBadgeSilent : styles.modeBadgeNotify}>
+                    <span
+                      className={
+                        msg.mode === 'silent' ? styles.modeBadgeSilent : styles.modeBadgeNotify
+                      }
+                    >
                       {msg.mode === 'silent' ? '🔕 サイレント' : '🔔 通知あり'}
                     </span>
                   </div>
@@ -564,9 +577,7 @@ export default function Home() {
                   <p className={styles.messageText}>{msg.message}</p>
                   <div className={styles.dataSection}>
                     <h4>受信データ:</h4>
-                    <pre className={styles.messageData}>
-                      {JSON.stringify(msg.data, null, 2)}
-                    </pre>
+                    <pre className={styles.messageData}>{JSON.stringify(msg.data, null, 2)}</pre>
                   </div>
                 </div>
               </div>

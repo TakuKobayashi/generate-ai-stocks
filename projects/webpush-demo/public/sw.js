@@ -11,7 +11,7 @@ self.addEventListener('message', (event) => {
 
 self.addEventListener('push', (event) => {
   console.log('Push event received');
-  
+
   if (!event.data) {
     console.log('No data in push event');
     return;
@@ -20,19 +20,21 @@ self.addEventListener('push', (event) => {
   try {
     const payload = event.data.json();
     console.log('Received push data:', payload);
-    
+
     // クライアントにデータを送信
-    const sendToClients = self.clients.matchAll({ 
-      type: 'window', 
-      includeUncontrolled: true 
-    }).then((clients) => {
-      clients.forEach((client) => {
-        client.postMessage({
-          type: 'PUSH_DATA',
-          payload: payload
+    const sendToClients = self.clients
+      .matchAll({
+        type: 'window',
+        includeUncontrolled: true,
+      })
+      .then((clients) => {
+        clients.forEach((client) => {
+          client.postMessage({
+            type: 'PUSH_DATA',
+            payload: payload,
+          });
         });
       });
-    });
 
     if (notificationMode === 'notify') {
       // 通知を表示する
@@ -43,14 +45,11 @@ self.addEventListener('push', (event) => {
         badge: '/badge-72.png',
         tag: 'push-notification',
         data: payload,
-        requireInteraction: false
+        requireInteraction: false,
       };
-      
+
       event.waitUntil(
-        Promise.all([
-          sendToClients,
-          self.registration.showNotification(title, options)
-        ])
+        Promise.all([sendToClients, self.registration.showNotification(title, options)])
       );
     } else {
       // サイレントモード: 通知を表示せずデータのみ配信
@@ -64,7 +63,7 @@ self.addEventListener('push', (event) => {
 self.addEventListener('notificationclick', (event) => {
   console.log('Notification clicked');
   event.notification.close();
-  
+
   event.waitUntil(
     self.clients.matchAll({ type: 'window' }).then((clients) => {
       // 既に開いているウィンドウがあればフォーカス

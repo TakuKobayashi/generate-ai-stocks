@@ -27,12 +27,12 @@
 
 ```javascript
 const firebaseConfig = {
-  apiKey: "AIzaSy...",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abc..."
+  apiKey: 'AIzaSy...',
+  authDomain: 'your-project.firebaseapp.com',
+  projectId: 'your-project',
+  storageBucket: 'your-project.appspot.com',
+  messagingSenderId: '123456789',
+  appId: '1:123456789:web:abc...',
 };
 ```
 
@@ -49,41 +49,44 @@ const firebaseConfig = {
 ### 1. Firebase設定ファイルを更新
 
 `src/config/firebase.ts`:
+
 ```typescript
 export const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: 'YOUR_API_KEY',
+  authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
+  projectId: 'YOUR_PROJECT_ID',
+  storageBucket: 'YOUR_PROJECT_ID.appspot.com',
+  messagingSenderId: 'YOUR_SENDER_ID',
+  appId: 'YOUR_APP_ID',
 };
 ```
 
 ### 2. Service Worker を更新
 
 `public/firebase-messaging-sw.js`:
+
 ```javascript
 firebase.initializeApp({
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: 'YOUR_API_KEY',
+  authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
+  projectId: 'YOUR_PROJECT_ID',
+  storageBucket: 'YOUR_PROJECT_ID.appspot.com',
+  messagingSenderId: 'YOUR_SENDER_ID',
+  appId: 'YOUR_APP_ID',
 });
 ```
 
 ### 3. フロントエンドのFCM初期化コードを更新
 
 `src/pages/index.tsx`の`initializeFCM`関数内:
+
 ```typescript
 const firebaseConfig = {
   // 上記と同じ設定
 };
 
 const token = await getToken(messaging, {
-  vapidKey: 'YOUR_FIREBASE_VAPID_KEY' // Webプッシュ証明書の鍵
+  vapidKey: 'YOUR_FIREBASE_VAPID_KEY', // Webプッシュ証明書の鍵
 });
 ```
 
@@ -97,6 +100,7 @@ wrangler kv:namespace create "FCM_SUBSCRIPTIONS" --preview
 ```
 
 出力例:
+
 ```
 { binding = "FCM_SUBSCRIPTIONS", id = "abc123..." }
 { binding = "FCM_SUBSCRIPTIONS", preview_id = "def456..." }
@@ -148,26 +152,31 @@ npm run worker:deploy
 #### FCM初期化エラー
 
 **エラー**: `Firebase: Error (auth/invalid-api-key)`
+
 - **原因**: API Keyが間違っている
 - **解決**: `firebaseConfig`のapiKeyを確認
 
 **エラー**: `Messaging: We are unable to register the default service worker`
+
 - **原因**: Service Workerのパスが間違っている
 - **解決**: `public/firebase-messaging-sw.js`が存在することを確認
 
 #### トークン取得エラー
 
 **エラー**: `Messaging: A problem occurred while subscribing the user to FCM`
+
 - **原因**: VAPID鍵が間違っている
 - **解決**: Firebase ConsoleのWebプッシュ証明書の鍵を再確認
 
 #### プッシュ送信エラー
 
 **エラー**: `FCM error: 401 - Unauthorized`
+
 - **原因**: Server Keyが間違っている
 - **解決**: `wrangler.json`のFCM_SERVER_KEYを確認
 
 **エラー**: `FCM error: 404 - Not Found`
+
 - **原因**: トークンが無効または期限切れ
 - **解決**: FCMを再初期化してトークンを再取得
 
@@ -180,11 +189,13 @@ npm run worker:deploy
 ## 🎯 Standard Web Push vs FCM
 
 ### Standard Web Push
+
 - ✅ 追加の依存関係なし
 - ✅ 軽量
 - ❌ ブラウザ依存の制限あり
 
 ### FCM
+
 - ✅ Googleインフラで信頼性が高い
 - ✅ 豊富な機能（トピック、グループなど）
 - ✅ iOS対応（将来的に）
