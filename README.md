@@ -160,6 +160,68 @@ Launch / Spin-out
 
 ---
 
+## Repository Lifecycle
+
+Projects in this repository typically follow this lifecycle:
+
+1. Create a new project under `projects/`
+2. Develop and validate the idea
+3. Publish it as an independent repository when it becomes mature
+4. Reconnect it as a Git Submodule
+5. Continue managing it from this repository
+
+This approach allows centralized discovery while keeping each project independent.
+
+### Converting a Project into an Independent Repository
+
+Create a new repository and push the project:
+
+    cd projects/my-project
+
+    git init
+    git add .
+    git commit -m "Initial commit"
+
+    git branch -M main
+
+    git remote add origin https://github.com/<user>/my-project.git
+
+    git push -u origin main
+
+Remove the local directory from the parent repository:
+
+    git rm -r projects/my-project
+
+    git commit -m "Remove local project"
+
+Add it back as a Git Submodule:
+
+    git submodule add https://github.com/<user>/my-project.git projects/my-project
+
+    git commit -m "Add submodule"
+
+### Clone Repository with Submodules
+
+    git clone --recursive <repository-url>
+
+### Initialize Submodules After Clone
+
+    git submodule update --init --recursive
+
+### Update All Submodules
+
+    git submodule update --remote
+
+### Remove a Submodule
+
+    git submodule deinit -f projects/my-project
+
+    git rm -f projects/my-project
+
+    rm -rf .git/modules/projects/my-project
+
+---
+
 ## Vision
 
 generate-ai-stocks evolves into a development asset platform that accelerates turning ideas into reality first, then into refined, launchable products.
