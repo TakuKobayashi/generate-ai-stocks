@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import * as path from 'path';
 
 export const SAMPLE_RATE      = 16000;
 export const CHANNELS         = 1;
@@ -13,7 +12,16 @@ export const VAD_FRAME_BYTES   = VAD_FRAME_SAMPLES * BYTES_PER_SAMPLE; // 320
 
 // 録音設定
 export const MIN_RECORD_SECONDS  = 1.0;
-export const MAX_RECORD_SECONDS  = 60.0;
+/**
+ * 1 セグメントの最大秒数。voice_end まで沈黙がない長い発話は、
+ * この秒数ごとにチャンク分割して Queue に流す（完全非同期パイプラインのため）。
+ */
+export const MAX_SEGMENT_SECONDS = parseInt(process.env.MAX_SEGMENT_SECONDS ?? '30');
+/**
+ * セグメント分割時のオーバーラップ秒数。前セグメントの末尾を次セグメントの先頭に
+ * 重ねて文脈ロスを防ぐ。
+ */
+export const SEGMENT_OVERLAP_SECONDS = parseFloat(process.env.SEGMENT_OVERLAP_SECONDS ?? '0.3');
 export const SILENCE_TIMEOUT_MS  = 1500;
 export const VOICE_START_FRAMES  = 3;
 export const SILENCE_END_FRAMES  = 30;
@@ -70,26 +78,20 @@ export function pcmToSeconds(byteLength: number): number {
 }
 
 /**
- * メモリリーク対策済みの有界バッファ
+ * メモリリーク対策済みの追記専用バッファ
  *
- * 修正点:
+ * 旧 BoundedBuffer は MAX_RECORD_SECONDS を超えると古いチャンクをドロップしていたが、
+ * 長時間録音セグメント分割パイプラインでは「上限到達時に切り出して Queue に流す」
+ * 運用に変わったため、ここではドロップせず単純に蓄積する。
+ *
  * - clear() 時に chunks 配列要素を null で上書きして GC を確実に促す
  * - concat 後に内部配列を圧縮して断片化を防ぐ
  */
 export class BoundedBuffer {
   private chunks: (Buffer | null)[] = [];
   private totalBytes = 0;
-  private readonly maxBytes: number;
-
-  constructor(maxSeconds = MAX_RECORD_SECONDS) {
-    this.maxBytes = maxSeconds * SAMPLE_RATE * CHANNELS * BYTES_PER_SAMPLE;
-  }
 
   push(chunk: Buffer): void {
-    while (this.chunks.length > 0 && this.totalBytes + chunk.length > this.maxBytes) {
-      const removed = this.chunks.shift();
-      if (removed) this.totalBytes -= removed.length;
-    }
     this.chunks.push(chunk);
     this.totalBytes += chunk.length;
   }
@@ -99,10 +101,20 @@ export class BoundedBuffer {
     return Buffer.concat(valid);
   }
 
+  /**
+   * 末尾 tailBytes バイト分だけを別 BoundedBuffer として返し、内部から取り出す。
+   * セグメント分割時のオーバーラップ再構築に使用する。
+   */
+  splitTail(tailBytes: number): Buffer {
+    if (tailBytes <= 0 || this.totalBytes === 0) return Buffer.alloc(0);
+    const full = this.concat();
+    return full.length <= tailBytes ? full : full.slice(full.length - tailBytes);
+  }
+
   get byteLength(): number { return this.totalBytes; }
+  get durationSeconds(): number { return pcmToSeconds(this.totalBytes); }
 
   clear(): void {
-    // 全 Buffer 参照を明示的に切る → GC が Buffer をより早く回収できる
     for (let i = 0; i < this.chunks.length; i++) {
       this.chunks[i] = null;
     }

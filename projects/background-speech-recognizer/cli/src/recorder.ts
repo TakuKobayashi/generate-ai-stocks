@@ -2,13 +2,16 @@ import { EventEmitter } from 'events';
 import {
   BoundedBuffer,
   SAMPLE_RATE,
-  VAD_FRAME_BYTES,
+  CHANNELS,
+  BYTES_PER_SAMPLE,
   MIN_RECORD_SECONDS,
+  MAX_SEGMENT_SECONDS,
+  SEGMENT_OVERLAP_SECONDS,
   VOICE_START_FRAMES,
   SILENCE_END_FRAMES,
   pcmToSeconds,
 } from './utils';
-import { VadProcessor, VadStateMachine, VadResult, VadMode } from './vad';
+import { VadProcessor, VadStateMachine, VadMode } from './vad';
 import { getMicConfig } from './platform';
 import { logger } from './logger';
 
@@ -19,15 +22,20 @@ export interface RecordingSession {
   pcmBuffer: Buffer;
   startedAt: Date;
   durationSeconds: number;
+  /** 通し番号（同一発話内のセグメントを識別） */
+  segmentIndex: number;
+  /** true ならこのセグメントの後も発話が続く（中間セグメント） */
+  continued: boolean;
 }
 
 export type RecorderEvent =
   | { type: 'voice_start' }
-  | { type: 'voice_end';    session: RecordingSession }
-  | { type: 'too_short';    durationSeconds: number }
-  | { type: 'error';        error: Error }
-  | { type: 'level';        db: number }
-  | { type: 'reconnecting'; attempt: number };
+  | { type: 'voice_segment'; session: RecordingSession }  // 長時間発話の中間切り出し
+  | { type: 'voice_end';     session: RecordingSession }  // 沈黙検出による最終セグメント
+  | { type: 'too_short';     durationSeconds: number }
+  | { type: 'error';         error: Error }
+  | { type: 'level';         db: number }
+  | { type: 'reconnecting';  attempt: number };
 
 /**
  * マイク入力監視 + VAD 統合レコーダー
@@ -50,6 +58,9 @@ export class VoiceRecorder extends EventEmitter {
   // 録音バッファ
   private activeBuffer:   BoundedBuffer | null = null;
   private sessionStart:   Date | null = null;
+  private segmentIndex = 0;
+  private readonly maxSegmentBytes: number;
+  private readonly overlapBytes: number;
 
   // プリロールバッファ（固定サイズ循環）
   private readonly PRE_ROLL_FRAMES = 15; // 150ms
@@ -66,10 +77,12 @@ export class VoiceRecorder extends EventEmitter {
 
   private deviceId?: string;
 
-  constructor(private readonly vadMode: VadMode = VadMode.AGGRESSIVE) {
+  constructor(vadMode: VadMode = VadMode.AGGRESSIVE) {
     super();
     this.vadProcessor    = new VadProcessor(vadMode);
     this.vadStateMachine = new VadStateMachine(VOICE_START_FRAMES, SILENCE_END_FRAMES);
+    this.maxSegmentBytes = MAX_SEGMENT_SECONDS * SAMPLE_RATE * CHANNELS * BYTES_PER_SAMPLE;
+    this.overlapBytes    = Math.max(0, Math.floor(SEGMENT_OVERLAP_SECONDS * SAMPLE_RATE * CHANNELS * BYTES_PER_SAMPLE));
   }
 
   start(deviceId?: string): void {
@@ -88,7 +101,7 @@ export class VoiceRecorder extends EventEmitter {
 
     // 録音中セッションを強制終了
     if (this.activeBuffer && this.sessionStart) {
-      this.finalizeSession();
+      this.flushSegment(false);
     }
 
     this.destroyMic();
@@ -203,13 +216,19 @@ export class VoiceRecorder extends EventEmitter {
       }
     }
 
-    // 録音中ならバッファに追加
-    this.activeBuffer?.push(chunk);
+    // 録音中ならバッファに追加 → セグメント上限到達なら切り出す
+    if (this.activeBuffer) {
+      this.activeBuffer.push(chunk);
+      if (this.activeBuffer.byteLength >= this.maxSegmentBytes) {
+        this.flushSegment(true);
+      }
+    }
   }
 
   private onVoiceStart(): void {
     this.sessionStart = new Date();
     this.activeBuffer = new BoundedBuffer();
+    this.segmentIndex = 0;
 
     // プリロール（音声開始前のデータを先頭に追加）
     for (const b of this.preRoll) {
@@ -221,29 +240,55 @@ export class VoiceRecorder extends EventEmitter {
   }
 
   private onVoiceEnd(): void {
-    this.finalizeSession();
+    this.flushSegment(false);
   }
 
-  private finalizeSession(): void {
+  /**
+   * 現在の activeBuffer をセグメントとして emit する。
+   * @param continued true なら中間セグメント (録音継続)、false なら最終セグメント (voice_end)
+   */
+  private flushSegment(continued: boolean): void {
     if (!this.activeBuffer || !this.sessionStart) return;
 
     const pcmBuffer       = this.activeBuffer.concat();
     const durationSeconds = pcmToSeconds(pcmBuffer.length);
     const startedAt       = this.sessionStart;
+    const idx             = this.segmentIndex++;
 
-    // バッファを先にクリアしてメモリを解放
+    // バッファクリア (continued の場合はオーバーラップを次バッファに繰り越す)
+    let overlapTail: Buffer | null = null;
+    if (continued && this.overlapBytes > 0) {
+      overlapTail = this.activeBuffer.splitTail(this.overlapBytes);
+    }
     this.activeBuffer.clear();
-    this.activeBuffer = null;
-    this.sessionStart = null;
 
-    if (durationSeconds < MIN_RECORD_SECONDS) {
+    if (continued) {
+      // 次セグメント用バッファを準備
+      this.activeBuffer = new BoundedBuffer();
+      if (overlapTail && overlapTail.length > 0) {
+        this.activeBuffer.push(overlapTail);
+      }
+      this.sessionStart = new Date();
+    } else {
+      this.activeBuffer = null;
+      this.sessionStart = null;
+    }
+
+    if (durationSeconds < MIN_RECORD_SECONDS && !continued && idx === 0) {
       this.emit('event', { type: 'too_short', durationSeconds } satisfies RecorderEvent);
       return;
     }
 
+    const session: RecordingSession = {
+      pcmBuffer,
+      startedAt,
+      durationSeconds,
+      segmentIndex: idx,
+      continued,
+    };
     this.emit('event', {
-      type: 'voice_end',
-      session: { pcmBuffer, startedAt, durationSeconds },
+      type: continued ? 'voice_segment' : 'voice_end',
+      session,
     } satisfies RecorderEvent);
   }
 

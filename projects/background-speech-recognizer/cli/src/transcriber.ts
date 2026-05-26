@@ -1,9 +1,8 @@
 import { spawn, ChildProcess } from 'child_process';
 import * as fs from 'fs';
 import * as os from 'os';
-import * as path from 'path';
-import { makeTmpPath, safeUnlink, tmpRegistry, writeWav } from './utils';
-import { killProcess, IS_WINDOWS } from './platform';
+import { tmpRegistry, writeWav } from './utils';
+import { killProcess, IS_WINDOWS, makeTmpPath, safeUnlink } from './platform';
 import { logger } from './logger';
 
 export interface TranscribeOptions {
