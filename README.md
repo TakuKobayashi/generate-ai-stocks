@@ -72,7 +72,6 @@ Samples / infrastructure experiments / reusable technical foundations
 | Project | Description | status |
 | ------- | ----------- | ------ |
 | [app-studio](./projects/app-studio/) | Next.js app studio site to introduce mobile apps and build promotion pages。 | incubating |
-| [chat-app](./projects/chat-app/) | Sample chat application built with PartyKit for learning real-time communication, WebSocket architecture, and free hosting possibilities across multiple platforms. | incubating |
 | [daily-report-cli](./projects/daily-report-cli/) | CLI tool for automatically generating engineer daily reports, designed for workflow automation, GitHub Actions, and operational reporting pipelines. | incubating |
 | [doc-scanner-unified](./projects/doc-scanner-unified/) | Unified CLI and web-based document scanning project that converts images into text for OCR workflows, document digitization, and automation. | incubating |
 | [email-auto-reply](./projects/email-auto-reply/) | Tool project for automatically generating email replies, supporting productivity improvement, response drafting, and communication automation. | incubating |

@@ -73,7 +73,6 @@ CLI / GitHub Actions / 自動化基盤
 | プロジェクト | 説明 | status |
 | ------------ | ---- | ------ |
 | [app-studio](./projects/app-studio/) | モバイルアプリの紹介やプロモーションページを構築するためのNext.js製アプリスタジオサイト。 | incubating |
-| [chat-app](./projects/chat-app/) | PartyKitを活用し、リアルタイム通信・WebSocket構成・無料運用可能性を学ぶためのマルチプラットフォーム対応チャットアプリサンプル。 | incubating |
 | [daily-report-cli](./projects/daily-report-cli/) | エンジニア向け日報を自動生成するCLIツール。GitHub Actionsや業務自動化パイプラインでの活用を想定。 | incubating |
 | [doc-scanner-unified](./projects/doc-scanner-unified/) | 画像から文字起こしを行うOCR対応のCLI / Web統合ドキュメントスキャンプロジェクト。文書電子化や自動化用途を想定。 | incubating |
 | [email-auto-reply](./projects/email-auto-reply/) | メール返信文を自動生成するツールプロジェクト。返信下書きや業務効率化、自動応答基盤として活用可能。 | incubating |
