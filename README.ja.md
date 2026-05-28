@@ -76,7 +76,6 @@ CLI / GitHub Actions / 自動化基盤
 | [daily-report-cli](./projects/daily-report-cli/) | エンジニア向け日報を自動生成するCLIツール。GitHub Actionsや業務自動化パイプラインでの活用を想定。 | incubating |
 | [doc-scanner-unified](./projects/doc-scanner-unified/) | 画像から文字起こしを行うOCR対応のCLI / Web統合ドキュメントスキャンプロジェクト。文書電子化や自動化用途を想定。 | incubating |
 | [email-auto-reply](./projects/email-auto-reply/) | メール返信文を自動生成するツールプロジェクト。返信下書きや業務効率化、自動応答基盤として活用可能。 | incubating |
-| [gather-app](./projects/gather-app/) | Gather風バーチャルワークスペースサービス。PartyKitとLiveKitを用いたWebSocket / WebRTC構成やオンライン空間設計を検証。 | incubating |
 | [github-leak-detector](./projects/github-leak-detector/) | GitHub上でのソースコード流出や機密情報漏洩を検出するセキュリティ監視ツール。 | incubating |
 | [nomikai](./projects/nomikai/) | 急な飲み会やカジュアルな集まりに人を誘う・募集する・通知するためのソーシャルアプリ / Webサービス。 | incubating |
 | [PackingListApp](./projects/PackingListApp/) | 旅行や出張の持ち物リストを作成し、予定ごとのチェックリストとして管理できるAndroidネイティブアプリ。 | incubating |
