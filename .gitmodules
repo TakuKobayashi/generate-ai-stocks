@@ -10,3 +10,6 @@
 [submodule "projects/research-examples"]
 	path = projects/research-examples
 	url = git@github.com:TakuKobayashi/research-examples.git
+[submodule "projects/background-speech-recognizer"]
+	path = projects/background-speech-recognizer
+	url = git@github.com:TakuKobayashi/background-speech-recognizer.git
