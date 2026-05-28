@@ -7,6 +7,6 @@
 [submodule "projects/passport-nft"]
 	path = projects/passport-nft
 	url = git@github.com:TakuHackathons/HackSonic202603-passport-nft.git
-[submodule "background-speech-recognizer"]
-	path = background-speech-recognizer
-	url = git@github.com:TakuKobayashi/background-speech-recognizer.git
+[submodule "projects/research-examples"]
+	path = projects/research-examples
+	url = git@github.com:TakuKobayashi/research-examples.git
