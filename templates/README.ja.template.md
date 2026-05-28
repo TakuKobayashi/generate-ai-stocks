@@ -126,6 +126,86 @@ npm run projects:status
 
 ---
 
+## リポジトリ運用方針
+
+このリポジトリでは、まず `projects/` 配下でプロジェクトを管理します。
+
+ある程度形になり、独立したリポジトリとして運用したくなった場合は GitHub 上で別リポジトリとして切り出します。
+
+その後、Git Submodule として再度取り込むことで、
+
+- プロジェクトごとの独立運用
+- リポジトリの一覧管理
+- portfolio自動生成
+
+を両立しています。
+
+運用イメージ:
+
+    projects/
+    ├── project-a
+    ├── project-b
+    └── project-c
+
+↓
+
+    projects/
+    ├── project-a (Submodule)
+    ├── project-b (Submodule)
+    └── project-c
+
+### プロジェクトを独立リポジトリ化する
+
+まず対象ディレクトリへ移動します。
+
+    cd projects/my-project
+
+GitHubで新規リポジトリを作成後、pushします。
+
+    git init
+    git add .
+    git commit -m "Initial commit"
+
+    git branch -M main
+
+    git remote add origin https://github.com/<user>/my-project.git
+
+    git push -u origin main
+
+親リポジトリ側からディレクトリを削除します。
+
+    git rm -r projects/my-project
+
+    git commit -m "Remove local project"
+
+その後 Git Submodule として再登録します。
+
+    git submodule add https://github.com/<user>/my-project.git projects/my-project
+
+    git commit -m "Add submodule"
+
+### Submodule込みでcloneする
+
+    git clone --recursive <repository-url>
+
+### 後からSubmoduleを取得する
+
+    git submodule update --init --recursive
+
+### 全Submoduleを最新化する
+
+    git submodule update --remote
+
+### 誤って追加したSubmoduleを削除する
+
+    git submodule deinit -f projects/my-project
+
+    git rm -f projects/my-project
+
+    rm -rf .git/modules/projects/my-project
+
+---
+
 ## 最終ビジョン
 
 generate-ai-stocks は、  
