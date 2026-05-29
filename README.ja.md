@@ -70,17 +70,18 @@ CLI / GitHub Actions / 自動化基盤
 
 ## プロジェクト一覧
 
-| プロジェクト | 説明 | status |
-| ------------ | ---- | ------ |
-| [app-studio](./projects/app-studio/) | モバイルアプリの紹介やプロモーションページを構築するためのNext.js製アプリスタジオサイト。 | incubating |
-| [daily-report-cli](./projects/daily-report-cli/) | エンジニア向け日報を自動生成するCLIツール。GitHub Actionsや業務自動化パイプラインでの活用を想定。 | incubating |
-| [doc-scanner-unified](./projects/doc-scanner-unified/) | 画像から文字起こしを行うOCR対応のCLI / Web統合ドキュメントスキャンプロジェクト。文書電子化や自動化用途を想定。 | incubating |
-| [email-auto-reply](./projects/email-auto-reply/) | メール返信文を自動生成するツールプロジェクト。返信下書きや業務効率化、自動応答基盤として活用可能。 | incubating |
-| [github-leak-detector](./projects/github-leak-detector/) | GitHub上でのソースコード流出や機密情報漏洩を検出するセキュリティ監視ツール。 | incubating |
-| [nomikai](./projects/nomikai/) | 急な飲み会やカジュアルな集まりに人を誘う・募集する・通知するためのソーシャルアプリ / Webサービス。 | incubating |
-| [PackingListApp](./projects/PackingListApp/) | 旅行や出張の持ち物リストを作成し、予定ごとのチェックリストとして管理できるAndroidネイティブアプリ。 | incubating |
-| [recstudio](./projects/recstudio/) | バックエンド不要でブラウザ上のみで画面録画と動画保存を実現するWebアプリケーション。 | incubating |
-| [stamp-rally](./projects/stamp-rally/) | スタンプラリーを作成・共有・参加できるサービス。イベント、観光、地域活性化用途を想定。 | incubating |
+| プロジェクト                                             | 説明                                                                                                                                           | status     |
+| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| [app-studio](./projects/app-studio/)                     | モバイルアプリの紹介やプロモーションページを構築するためのNext.js製アプリスタジオサイト。                                                      | incubating |
+| [ar-editor-preview](./projects/ar-editor-preview/)       | ARCore/ARKitの実機ARデータをLiveKitとProtocol BuffersでUnity Editorへ送信し、Unity上でARプレビューを行うためのマルチプラットフォーム開発環境。 | incubating |
+| [daily-report-cli](./projects/daily-report-cli/)         | エンジニア向け日報を自動生成するCLIツール。GitHub Actionsや業務自動化パイプラインでの活用を想定。                                              | incubating |
+| [doc-scanner-unified](./projects/doc-scanner-unified/)   | 画像から文字起こしを行うOCR対応のCLI / Web統合ドキュメントスキャンプロジェクト。文書電子化や自動化用途を想定。                                 | incubating |
+| [email-auto-reply](./projects/email-auto-reply/)         | メール返信文を自動生成するツールプロジェクト。返信下書きや業務効率化、自動応答基盤として活用可能。                                             | incubating |
+| [github-leak-detector](./projects/github-leak-detector/) | GitHub上でのソースコード流出や機密情報漏洩を検出するセキュリティ監視ツール。                                                                   | incubating |
+| [nomikai](./projects/nomikai/)                           | 急な飲み会やカジュアルな集まりに人を誘う・募集する・通知するためのソーシャルアプリ / Webサービス。                                             | incubating |
+| [PackingListApp](./projects/PackingListApp/)             | 旅行や出張の持ち物リストを作成し、予定ごとのチェックリストとして管理できるAndroidネイティブアプリ。                                            | incubating |
+| [recstudio](./projects/recstudio/)                       | バックエンド不要でブラウザ上のみで画面録画と動画保存を実現するWebアプリケーション。                                                            | incubating |
+| [stamp-rally](./projects/stamp-rally/)                   | スタンプラリーを作成・共有・参加できるサービス。イベント、観光、地域活性化用途を想定。                                                         | incubating |
 
 ---
 
