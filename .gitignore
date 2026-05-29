@@ -7,9 +7,6 @@ coverage
 
 docker/libretranslate
 
-README.md
-README.ja.md
-
 portfolio/*.json
 portfolio/*.yml
 portfolio/*.yaml

@@ -1,0 +1,14 @@
+name: ar-editor-preview
+slug: ar-editor-preview
+description:
+description_ja: ARCore/ARKitの実機ARデータをLiveKitとProtocol BuffersでUnity Editorへ送信し、Unity上でARプレビューを行うためのマルチプラットフォーム開発環境。
+translation_locked: false
+status: incubating
+repo:
+tags:
+  - AR
+  - Unity
+  - ARCore
+  - ARKit
+  - LiveKit
+  - Protocol Buffers
