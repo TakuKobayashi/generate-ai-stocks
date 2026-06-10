@@ -1,0 +1,9 @@
+# Wrangler
+.wrangler/
+worker-configuration.d.ts
+
+# Build
+dist/
+
+# D1 local database
+.d1/

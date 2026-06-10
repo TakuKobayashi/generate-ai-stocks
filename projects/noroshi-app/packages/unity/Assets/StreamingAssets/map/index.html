@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Noroshi Map</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body, #map { width: 100%; height: 100%; background: #1a1a2e; }
+  .leaflet-control-attribution { display: none; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  var map = L.map('map', { zoomControl: true, attributionControl: false });
+  var marker = null;
+
+  // タイル: OpenStreetMap
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19
+  }).addTo(map);
+
+  // カスタムマーカーアイコン (炎のシンボル)
+  var fireIcon = L.divIcon({
+    html: '<div style="font-size:32px;line-height:1;">🔥</div>',
+    className: '',
+    iconSize: [36, 36],
+    iconAnchor: [18, 36]
+  });
+
+  // 初期位置: 東京
+  map.setView([35.681236, 139.767125], 15);
+
+  // 地図タップ → ピン設定 & Unity へ通知
+  map.on('click', function(e) {
+    var lat = e.latlng.lat;
+    var lon = e.latlng.lng;
+    setMarker(lat, lon);
+
+    // 逆ジオコーディング (Nominatim)
+    fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lon + '&format=json', {
+      headers: { 'User-Agent': 'NoroshiApp/1.0' }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var address = data.display_name || '';
+      var encoded = encodeURIComponent(address);
+      // UniWebViewのURL schemeでUnityに通知
+      window.location.href = 'noroshi://select?lat=' + lat + '&lon=' + lon + '&address=' + encoded;
+    })
+    .catch(function() {
+      window.location.href = 'noroshi://select?lat=' + lat + '&lon=' + lon + '&address=';
+    });
+  });
+
+  // Unity から呼び出し: 地図を移動
+  function moveMap(lat, lon) {
+    map.setView([lat, lon], map.getZoom());
+    setMarker(lat, lon);
+  }
+
+  // Unity から呼び出し: マーカーを立てる
+  function setMarker(lat, lon) {
+    if (marker) { map.removeLayer(marker); }
+    marker = L.marker([lat, lon], { icon: fireIcon }).addTo(map);
+  }
+</script>
+</body>
+</html>

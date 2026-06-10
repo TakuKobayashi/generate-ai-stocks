@@ -1,0 +1,35 @@
+# Unity generated
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]em[Pp]rofiler/
+[Rr]ecordings/
+
+# Asset meta files (コミット対象)
+# *.meta はコミットする（削除しないこと）
+
+# VS / Rider 生成ファイル
+.vs/
+.idea/
+*.csproj
+*.sln
+*.unityproj
+
+# Crash reports
+sysinfo.txt
+crashlytics-build.properties
+
+# Firebase (機密情報)
+Assets/google-services.json
+Assets/GoogleService-Info.plist
+
+# UniWebView ライセンスファイル（購入者固有のため除外）
+Assets/UniWebView/Editor/UniWebViewLicense.txt
+
+# OS
+.DS_Store
+Thumbs.db

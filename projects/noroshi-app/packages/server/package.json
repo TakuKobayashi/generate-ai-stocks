@@ -1,0 +1,23 @@
+{
+  "name": "@noroshi/server",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "wrangler d1 execute noroshi-db --local --file=./drizzle/0000_initial.sql"
+  },
+  "dependencies": {
+    "hono": "^4.7.11",
+    "drizzle-orm": "^0.38.3",
+    "ngeohash": "^0.6.3",
+    "@noroshi/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241127.0",
+    "wrangler": "^3.96.0",
+    "drizzle-kit": "^0.31.2",
+    "typescript": "^5.7.2"
+  }
+}

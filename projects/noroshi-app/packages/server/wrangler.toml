@@ -1,0 +1,11 @@
+name = "noroshi-server"
+main = "src/index.ts"
+compatibility_date = "2024-05-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "noroshi-db"
+database_id = "your-database-id"
+
+[vars]
+FCM_SERVER_KEY = ""
