@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_item_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="6dp"
+    android:background="@drawable/widget_item_background">
+    <TextView
+        android:id="@+id/clipboard_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="12sp"
+        android:textColor="#212121"
+        android:maxLines="1"
+        android:ellipsize="end"/>
+    <TextView
+        android:id="@+id/usage_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:textColor="#1976D2"
+        android:layout_marginStart="8dp"/>
+</LinearLayout>

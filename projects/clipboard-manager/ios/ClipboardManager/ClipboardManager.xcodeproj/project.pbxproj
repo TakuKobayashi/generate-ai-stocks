@@ -1,0 +1,475 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B001001 /* ClipboardManagerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001001; };
+		B001002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001002; };
+		B001003 /* PremiumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001003; };
+		B001004 /* ClipboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001004; };
+		B001005 /* ClipboardDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001005; };
+		B001006 /* ClipboardMonitorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001006; };
+		B001007 /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001007; };
+		B001008 /* AdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001008; };
+		B001009 /* ClipboardItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001009; };
+		B002001 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A002001; };
+		B002002 /* ClipboardItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001009; };
+		B003001 /* ClipboardWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A003001; };
+		B003002 /* ClipboardItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001009; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A001001 /* ClipboardManagerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardManagerApp.swift; name = ClipboardManagerApp.swift; sourceTree = "<group>"; };
+		A001002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; name = ContentView.swift; sourceTree = "<group>"; };
+		A001003 /* PremiumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumView.swift; name = PremiumView.swift; sourceTree = "<group>"; };
+		A001004 /* ClipboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardViewModel.swift; name = ClipboardViewModel.swift; sourceTree = "<group>"; };
+		A001005 /* ClipboardDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardDataManager.swift; name = ClipboardDataManager.swift; sourceTree = "<group>"; };
+		A001006 /* ClipboardMonitorService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardMonitorService.swift; name = ClipboardMonitorService.swift; sourceTree = "<group>"; };
+		A001007 /* StoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; name = StoreManager.swift; sourceTree = "<group>"; };
+		A001008 /* AdBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdBannerView.swift; name = AdBannerView.swift; sourceTree = "<group>"; };
+		A001009 /* ClipboardItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardItem.swift; sourceTree = "<group>"; };
+		A001010 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A002001 /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
+		A002002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A003001 /* ClipboardWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardWidget.swift; sourceTree = "<group>"; };
+		A003002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		PROD001 /* ClipboardManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClipboardManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		PROD002 /* ClipboardKeyboard.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ClipboardKeyboard.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		PROD003 /* ClipboardWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ClipboardWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FB001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		GRP000 /* root */ = {
+			isa = PBXGroup;
+			children = (
+				GRP001 /* ClipboardManager */,
+				GRP002 /* ClipboardKeyboard */,
+				GRP003 /* ClipboardWidget */,
+				GRP004 /* Shared */,
+				GRP999 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		GRP999 /* Products */ = {
+			isa = PBXGroup;
+			children = (PROD001, PROD002, PROD003);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		GRP001 /* ClipboardManager */ = {
+			isa = PBXGroup;
+			children = (
+				A001001 /* ClipboardManagerApp.swift */,
+				GRP001S /* Sources */,
+				GRP001R /* Resources */,
+			);
+			path = ClipboardManager;
+			sourceTree = "<group>";
+		};
+		GRP001S /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				GRP001SV /* Views */,
+				GRP001SVM /* ViewModels */,
+				GRP001SS /* Services */,
+				GRP001SM /* Monetization */,
+			);
+			name = Sources;
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		GRP001SV /* Views */ = {
+			isa = PBXGroup;
+			children = (A001002, A001003);
+			name = Views; path = Views; sourceTree = "<group>";
+		};
+		GRP001SVM /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (A001004);
+			name = ViewModels; path = ViewModels; sourceTree = "<group>";
+		};
+		GRP001SS /* Services */ = {
+			isa = PBXGroup;
+			children = (A001005, A001006);
+			name = Services; path = Services; sourceTree = "<group>";
+		};
+		GRP001SM /* Monetization */ = {
+			isa = PBXGroup;
+			children = (A001007, A001008);
+			name = Monetization; path = Monetization; sourceTree = "<group>";
+		};
+		GRP001R /* Resources */ = {
+			isa = PBXGroup;
+			children = (A001010);
+			name = Resources; path = Resources; sourceTree = "<group>";
+		};
+		GRP002 /* ClipboardKeyboard */ = {
+			isa = PBXGroup;
+			children = (A002001, A002002);
+			path = ClipboardKeyboard;
+			sourceTree = "<group>";
+		};
+		GRP003 /* ClipboardWidget */ = {
+			isa = PBXGroup;
+			children = (A003001, A003002);
+			path = ClipboardWidget;
+			sourceTree = "<group>";
+		};
+		GRP004 /* Shared */ = {
+			isa = PBXGroup;
+			children = (A001009);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		TGT001 /* ClipboardManager */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BCL001;
+			buildPhases = (SRC001, FB001, RES001);
+			buildRules = ();
+			dependencies = (DEP001, DEP002);
+			name = ClipboardManager;
+			productName = ClipboardManager;
+			productReference = PROD001;
+			productType = "com.apple.product-type.application";
+		};
+		TGT002 /* ClipboardKeyboard */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BCL002;
+			buildPhases = (SRC002, FB002);
+			buildRules = ();
+			dependencies = ();
+			name = ClipboardKeyboard;
+			productName = ClipboardKeyboard;
+			productReference = PROD002;
+			productType = "com.apple.product-type.app-extension";
+		};
+		TGT003 /* ClipboardWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BCL003;
+			buildPhases = (SRC003, FB003);
+			buildRules = ();
+			dependencies = ();
+			name = ClipboardWidget;
+			productName = ClipboardWidget;
+			productReference = PROD003;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		PROJ001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1530;
+				LastUpgradeCheck = 1530;
+				TargetAttributes = {
+					TGT001 = { CreatedOnToolsVersion = 15.3; };
+					TGT002 = { CreatedOnToolsVersion = 15.3; };
+					TGT003 = { CreatedOnToolsVersion = 15.3; };
+				};
+			};
+			buildConfigurationList = BCL000;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = ja;
+			hasScannedForEncodings = 0;
+			knownRegions = (ja, en, Base);
+			mainGroup = GRP000;
+			productRefGroup = GRP999;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (TGT001, TGT002, TGT003);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		RES001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		SRC001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (B001001, B001002, B001003, B001004, B001005, B001006, B001007, B001008, B001009);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		SRC002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (B002001, B002002);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		SRC003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (B003001, B003002);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXContainerItemProxy section */
+		CIP001 = {
+			isa = PBXContainerItemProxy;
+			containerPortal = PROJ001;
+			proxyType = 1;
+			remoteGlobalIDString = TGT002;
+			remoteInfo = ClipboardKeyboard;
+		};
+		CIP002 = {
+			isa = PBXContainerItemProxy;
+			containerPortal = PROJ001;
+			proxyType = 1;
+			remoteGlobalIDString = TGT003;
+			remoteInfo = ClipboardWidget;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		DEP001 = {
+			isa = PBXTargetDependency;
+			target = TGT002;
+			targetProxy = CIP001;
+		};
+		DEP002 = {
+			isa = PBXTargetDependency;
+			target = TGT003;
+			targetProxy = CIP002;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		/* Project */
+		CFG000D = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("DEBUG=1", "$(inherited)");
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		CFG000R = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_OPTIMIZATION_LEVEL = s;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		/* Main App */
+		CFG001D = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ClipboardManager/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks");
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.clipboardmanager";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CFG001R = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ClipboardManager/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks");
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.clipboardmanager";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		/* Keyboard Extension */
+		CFG002D = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = ClipboardKeyboard/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/../../Frameworks", "@executable_path/Frameworks");
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.clipboardmanager.keyboard";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CFG002R = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = ClipboardKeyboard/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/../../Frameworks", "@executable_path/Frameworks");
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.clipboardmanager.keyboard";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		/* Widget Extension */
+		CFG003D = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = ClipboardWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/../../Frameworks", "@executable_path/Frameworks");
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.clipboardmanager.widget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CFG003R = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = ClipboardWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/../../Frameworks", "@executable_path/Frameworks");
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.clipboardmanager.widget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BCL000 = {
+			isa = XCConfigurationList;
+			buildConfigurations = (CFG000D, CFG000R);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BCL001 = {
+			isa = XCConfigurationList;
+			buildConfigurations = (CFG001D, CFG001R);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BCL002 = {
+			isa = XCConfigurationList;
+			buildConfigurations = (CFG002D, CFG002R);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BCL003 = {
+			isa = XCConfigurationList;
+			buildConfigurations = (CFG003D, CFG003R);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+	};
+	rootObject = PROJ001;
+}

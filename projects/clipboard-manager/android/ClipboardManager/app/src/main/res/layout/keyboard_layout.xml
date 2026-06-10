@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#E8E8E8">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/clipboard_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:visibility="gone"
+        android:background="#FFFFFF"
+        android:padding="8dp"
+        android:clipToPadding="false" />
+
+    <android.inputmethodservice.KeyboardView
+        android:id="@+id/keyboard_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:keyBackground="@drawable/key_background"
+        android:keyTextColor="#212121"
+        android:keyTextSize="18sp" />
+</LinearLayout>

@@ -1,0 +1,64 @@
+{
+  "identifier" : "com.example.clipboardmanager.storekit",
+  "nonRenewingSubscriptions" : [],
+  "products" : [],
+  "settings" : {
+    "_applicationInternalID" : "1234567890",
+    "_failTransactionsEnabled" : false,
+    "_locale" : "ja_JP",
+    "_storefront" : "JPN",
+    "_storeKitErrors" : [
+      { "current" : null, "enabled" : false, "name" : "Load Products" },
+      { "current" : null, "enabled" : false, "name" : "Purchase" },
+      { "current" : null, "enabled" : false, "name" : "Verification" },
+      { "current" : null, "enabled" : false, "name" : "App Store Sync" },
+      { "current" : null, "enabled" : false, "name" : "Restore Purchases" }
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "premium_group_01",
+      "localizations" : [
+        { "description" : "プレミアム機能へのアクセス", "displayName" : "プレミアム", "locale" : "ja_JP" }
+      ],
+      "name" : "Premium",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [],
+          "codeOffers" : [],
+          "displayPrice" : "300",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "monthly_premium_01",
+          "introductoryOffer" : null,
+          "localizations" : [
+            { "description" : "月額プレミアムプラン（広告なし・無制限履歴）", "displayName" : "月額プラン", "locale" : "ja_JP" }
+          ],
+          "productID" : "com.example.clipboardmanager.premium.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Premium Monthly",
+          "subscriptionGroupID" : "premium_group_01",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [],
+          "codeOffers" : [],
+          "displayPrice" : "2400",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "yearly_premium_01",
+          "introductoryOffer" : null,
+          "localizations" : [
+            { "description" : "年額プレミアムプラン（2ヶ月分お得）", "displayName" : "年額プラン", "locale" : "ja_JP" }
+          ],
+          "productID" : "com.example.clipboardmanager.premium.yearly",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Premium Yearly",
+          "subscriptionGroupID" : "premium_group_01",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : { "major" : 2, "minor" : 0 }
+}

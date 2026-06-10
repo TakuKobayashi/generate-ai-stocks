@@ -1,0 +1,2 @@
+-keep class com.example.clipboardmanager.** { *; }
+-keepattributes *Annotation*
