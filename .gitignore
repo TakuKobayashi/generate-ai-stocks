@@ -10,3 +10,5 @@ docker/libretranslate
 portfolio/*.json
 portfolio/*.yml
 portfolio/*.yaml
+.opencode
+.aider*
