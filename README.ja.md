@@ -74,6 +74,7 @@ CLI / GitHub Actions / 自動化基盤
 | ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
 | [app-studio](./projects/app-studio/)                                     | モバイルアプリの紹介やプロモーションページを構築するためのNext.js製アプリスタジオサイト。                                                      | incubating |
 | [ar-editor-preview](./projects/ar-editor-preview/)                       | ARCore/ARKitの実機ARデータをLiveKitとProtocol BuffersでUnity Editorへ送信し、Unity上でARプレビューを行うためのマルチプラットフォーム開発環境。 | incubating |
+| [ar-recorder](./projects/ar-recorder/)                                   |                                                                                                                                                | incubating |
 | [auto-product-video-generator](./projects/auto-product-video-generator/) |                                                                                                                                                | incubating |
 | [daily-report-cli](./projects/daily-report-cli/)                         | エンジニア向け日報を自動生成するCLIツール。GitHub Actionsや業務自動化パイプラインでの活用を想定。                                              | incubating |
 | [doc-scanner-unified](./projects/doc-scanner-unified/)                   | 画像から文字起こしを行うOCR対応のCLI / Web統合ドキュメントスキャンプロジェクト。文書電子化や自動化用途を想定。                                 | incubating |
