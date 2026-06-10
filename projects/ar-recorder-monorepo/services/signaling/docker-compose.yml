@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  signaling:
+    build: .
+    container_name: ar-recorder-signaling
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env
+    networks:
+      - ar-net
+
+networks:
+  ar-net:
+    external: true      # livekit の docker-compose が作成したネットワークを共用

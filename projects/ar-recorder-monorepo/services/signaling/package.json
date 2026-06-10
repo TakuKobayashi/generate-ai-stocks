@@ -1,0 +1,22 @@
+{
+  "name": "ar-recorder-signaling",
+  "version": "1.0.0",
+  "description": "Custom signaling server for AR Recorder WebRTC (LiveKit token issuer)",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "docker:build": "docker build -t ar-recorder-signaling .",
+    "docker:run": "docker run -p 4000:4000 --env-file .env ar-recorder-signaling"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "livekit-server-sdk": "^1.2.7",
+    "ws": "^8.16.0",
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

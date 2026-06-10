@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  livekit:
+    image: livekit/livekit-server:latest
+    container_name: ar-recorder-livekit
+    restart: unless-stopped
+    ports:
+      - "7880:7880"       # HTTP / WebSocket（Unity SDK 接続先）
+      - "7881:7881"       # RTC TCP フォールバック
+      - "7882:7882/udp"   # RTC UDP（メイン通信）
+    volumes:
+      - ./livekit.yaml:/livekit.yaml:ro
+    command: --config /livekit.yaml
+    networks:
+      - ar-net
+
+  # 開発用ダッシュボード（オプション）
+  livekit-agent-playground:
+    image: livekit/agent-playground:latest
+    container_name: ar-recorder-playground
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - LIVEKIT_URL=ws://livekit:7880
+      - LIVEKIT_API_KEY=devkey
+      - LIVEKIT_API_SECRET=secret
+    depends_on:
+      - livekit
+    networks:
+      - ar-net
+    profiles:
+      - playground    # docker compose --profile playground up で起動
+
+networks:
+  ar-net:
+    driver: bridge
