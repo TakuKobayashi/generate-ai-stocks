@@ -84,6 +84,7 @@ CLI / GitHub Actions / 自動化基盤
 | [github-leak-detector](./projects/github-leak-detector/)                 | GitHub上でのソースコード流出や機密情報漏洩を検出するセキュリティ監視ツール。                                                                   | incubating |
 | [nomikai](./projects/nomikai/)                                           | 急な飲み会やカジュアルな集まりに人を誘う・募集する・通知するためのソーシャルアプリ / Webサービス。                                             | incubating |
 | [noroshi-app](./projects/noroshi-app/)                                   |                                                                                                                                                | incubating |
+| [offline-chat-app](./projects/offline-chat-app/)                         |                                                                                                                                                | incubating |
 | [PackingListApp](./projects/PackingListApp/)                             | 旅行や出張の持ち物リストを作成し、予定ごとのチェックリストとして管理できるAndroidネイティブアプリ。                                            | incubating |
 | [recstudio](./projects/recstudio/)                                       | バックエンド不要でブラウザ上のみで画面録画と動画保存を実現するWebアプリケーション。                                                            | incubating |
 | [stamp-rally](./projects/stamp-rally/)                                   | スタンプラリーを作成・共有・参加できるサービス。イベント、観光、地域活性化用途を想定。                                                         | incubating |
