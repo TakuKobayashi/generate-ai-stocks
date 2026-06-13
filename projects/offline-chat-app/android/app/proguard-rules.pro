@@ -1,0 +1,2 @@
+-keep class com.google.android.gms.nearby.** { *; }
+-keep class com.offlinechat.data.models.** { *; }

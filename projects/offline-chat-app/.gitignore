@@ -1,0 +1,41 @@
+# ===== Common =====
+.DS_Store
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# ===== Android =====
+android/.gradle/
+android/local.properties
+android/build/
+android/app/build/
+android/captures/
+android/.externalNativeBuild/
+android/.cxx/
+android/**/*.iml
+android/.idea/
+*.apk
+*.aab
+*.ap_
+google-services.json
+
+# ===== iOS =====
+ios/DerivedData/
+ios/build/
+ios/*.xcodeproj/xcuserdata/
+ios/*.xcworkspace/xcuserdata/
+ios/*.xcworkspace/contents.xcworkspacedata
+ios/.build/
+ios/.swiftpm/
+ios/Pods/
+ios/Podfile.lock
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# ===== Keys / Secrets =====
+*.env
+.env.*
+secrets/

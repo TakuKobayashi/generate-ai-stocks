@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">OfflineChat</string>
+    <string name="nearby_users">近くの人</string>
+    <string name="chat_rooms">チャット</string>
+    <string name="settings">設定</string>
+    <string name="send">送信</string>
+    <string name="message_hint">メッセージを入力</string>
+    <string name="no_nearby_users">近くにユーザーが見つかりません</string>
+    <string name="new_badge">NEW</string>
+    <string name="channel_name">チャットメッセージ</string>
+    <string name="channel_description">新しいメッセージの通知</string>
+    <string name="notification_channel_id">chat_messages</string>
+</resources>
