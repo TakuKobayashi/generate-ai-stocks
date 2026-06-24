@@ -13,3 +13,6 @@
 [submodule "projects/background-speech-recognizer"]
 	path = projects/background-speech-recognizer
 	url = git@github.com:TakuKobayashi/background-speech-recognizer.git
+[submodule "projects/tappunpages"]
+	path = projects/tappunpages
+	url = git@github.com:TakuKobayashi/tappunpages.git
