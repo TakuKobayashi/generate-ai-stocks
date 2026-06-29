@@ -16,3 +16,6 @@
 [submodule "projects/tappunpages"]
 	path = projects/tappunpages
 	url = git@github.com:TakuKobayashi/tappunpages.git
+[submodule "projects/tappun-app-studio"]
+	path = projects/tappun-app-studio
+	url = git@github.com:TakuKobayashi/tappun-app-studio.git

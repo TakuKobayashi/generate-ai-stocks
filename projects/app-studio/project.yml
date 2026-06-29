@@ -1,8 +1,0 @@
-name: app-studio
-slug: app-studio
-description: Next.js app studio site to introduce mobile apps and build promotion pages。
-description_ja: モバイルアプリの紹介やプロモーションページを構築するためのNext.js製アプリスタジオサイト。
-translation_locked: false
-status: incubating
-repo: ''
-tags: []

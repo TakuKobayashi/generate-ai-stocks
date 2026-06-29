@@ -1,7 +1,0 @@
-# robots.txt for Pixel Studio
-
-User-agent: *
-Allow: /
-
-# Sitemaps
-Sitemap: https://pixelstudio.app/sitemap.xml
