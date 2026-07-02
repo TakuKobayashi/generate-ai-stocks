@@ -1,0 +1,15 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+  <!-- Focus brackets -->
+  <path android:fillColor="#00000000" android:strokeColor="#00E5FF" android:strokeWidth="2"
+        android:pathData="M7,7L7,4L4,4M17,7L17,4L20,4M7,17L7,20L4,20M17,17L17,20L20,20"/>
+  <!-- Center dot -->
+  <path android:fillColor="#00E5FF" android:pathData="M12,12m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0"/>
+  <!-- Motion wave lines -->
+  <path android:fillColor="#00000000" android:strokeColor="#00E5FF" android:strokeWidth="1.2"
+        android:strokeAlpha="0.7"
+        android:pathData="M3,12 Q5,10 7,12 Q9,14 11,12"/>
+  <path android:fillColor="#00000000" android:strokeColor="#00E5FF" android:strokeWidth="1.2"
+        android:strokeAlpha="0.7"
+        android:pathData="M13,12 Q15,10 17,12 Q19,14 21,12"/>
+</vector>
