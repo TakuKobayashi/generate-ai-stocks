@@ -19,3 +19,6 @@
 [submodule "projects/tappun-app-studio"]
 	path = projects/tappun-app-studio
 	url = git@github.com:TakuKobayashi/tappun-app-studio.git
+[submodule "projects/medicine-manager-app"]
+	path = projects/medicine-manager-app
+	url = git@github.com:TakuKobayashi/medicine-manager-app.git
