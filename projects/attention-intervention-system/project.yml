@@ -1,0 +1,8 @@
+name: attention-intervention-system
+slug: attention-intervention-system
+description:
+description_ja: ロック画面や通知に目標を表示し、スマートフォンを見るたびに目標を思い出せるアプリ
+translation_locked: false
+status: incubating
+repo:
+tags:
