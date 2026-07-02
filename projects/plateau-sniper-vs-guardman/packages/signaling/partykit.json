@@ -1,0 +1,5 @@
+{
+  "name": "plateau-sniper-signaling",
+  "main": "src/server.ts",
+  "compatibilityDate": "2024-12-30"
+}

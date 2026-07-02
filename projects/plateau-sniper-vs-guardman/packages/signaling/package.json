@@ -1,0 +1,17 @@
+{
+  "name": "@plateau-sniper/signaling",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev":       "partykit dev",
+    "deploy":    "partykit deploy",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@plateau-sniper/shared": "workspace:*",
+    "partykit": "^0.0.107"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

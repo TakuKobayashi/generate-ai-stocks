@@ -1,0 +1,19 @@
+{
+  "name": "plateau-sniper",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev:server":    "pnpm --filter @plateau-sniper/server dev",
+    "dev:signaling": "pnpm --filter @plateau-sniper/signaling dev",
+    "dev:web":       "pnpm --filter @plateau-sniper/web dev",
+    "dev":           "pnpm run dev:signaling & pnpm run dev:server & pnpm run dev:web",
+    "deploy:server":    "pnpm --filter @plateau-sniper/server deploy",
+    "deploy:signaling": "pnpm --filter @plateau-sniper/signaling deploy",
+    "build:shared":  "pnpm --filter @plateau-sniper/shared build",
+    "typecheck":     "pnpm -r typecheck"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}
