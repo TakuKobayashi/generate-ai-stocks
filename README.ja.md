@@ -82,6 +82,7 @@ CLI / GitHub Actions / 自動化基盤
 | [doc-scanner-unified](./projects/doc-scanner-unified/)                     | 画像から文字起こしを行うOCR対応のCLI / Web統合ドキュメントスキャンプロジェクト。文書電子化や自動化用途を想定。                                 | incubating |
 | [email-auto-reply](./projects/email-auto-reply/)                           | メール返信文を自動生成するツールプロジェクト。返信下書きや業務効率化、自動応答基盤として活用可能。                                             | incubating |
 | [github-leak-detector](./projects/github-leak-detector/)                   | GitHub上でのソースコード流出や機密情報漏洩を検出するセキュリティ監視ツール。                                                                   | incubating |
+| [heart-linker-app](./projects/heart-linker-app/)                           | アカウント登録不要で使える名刺交換アプリ。QR / Nearby(Bluetooth+Wi-Fi) / NFC の3方式で連絡先を交換できる。                                     | incubating |
 | [nomikai](./projects/nomikai/)                                             | 急な飲み会やカジュアルな集まりに人を誘う・募集する・通知するためのソーシャルアプリ / Webサービス。                                             | incubating |
 | [noroshi-app](./projects/noroshi-app/)                                     |                                                                                                                                                | incubating |
 | [offline-chat-app](./projects/offline-chat-app/)                           |                                                                                                                                                | incubating |

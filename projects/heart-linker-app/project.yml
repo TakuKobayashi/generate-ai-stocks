@@ -1,8 +1,8 @@
 name: heart-linker-app
 slug: heart-linker-app
-description:
+description: Business card exchange app that can be used without account registration. QR / Nearby(Bluetooth+Wi-Fi) / NFC。
 description_ja: アカウント登録不要で使える名刺交換アプリ。QR / Nearby(Bluetooth+Wi-Fi) / NFC の3方式で連絡先を交換できる。
 translation_locked: false
 status: incubating
-repo:
-tags:
+repo: null
+tags: null
