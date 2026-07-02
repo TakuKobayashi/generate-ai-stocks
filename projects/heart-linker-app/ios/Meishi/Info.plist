@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>NSCameraUsageDescription</key>
+    <string>QRコードを読み取って名刺データを受信するためにカメラを使用します。</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>プロフィールのアイコン画像を選択するために写真ライブラリを使用します。</string>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>近くのデバイスと名刺を交換するためにローカルネットワークを使用します。</string>
+    <key>NFCReaderUsageDescription</key>
+    <string>NFCタップで相手のデバイスに接続するためにNFCを使用します。</string>
+    <key>com.apple.developer.networking.multipath</key>
+    <true/>
+    <key>UILaunchScreen</key>
+    <dict/>
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
+</dict>
+</plist>

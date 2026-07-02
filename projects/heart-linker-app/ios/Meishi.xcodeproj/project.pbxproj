@@ -1,0 +1,350 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		98887FC1BA0E8D0017005270 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B27AD3F086B54C6E11AD61 /* Database.swift */; };
+		61ECF0519C94CA868E290FDE /* MeishiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030EC0A309CCD7CC31ED1F5B /* MeishiApp.swift */; };
+		0753953EBC4197B178A31D7A /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2287E292D8BD86137E72342 /* Contact.swift */; };
+		CF0F7C608DEB9D0E78FFEF9C /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5397CEE52F1A3C23C74258CA /* Profile.swift */; };
+		6FCEE0D188EF48025850FB1B /* ProfileDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0FD2636DE4E5BB869458216 /* ProfileDraft.swift */; };
+		BABA0F332C9D3553F0CE0525 /* SnsAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D90948200C746F0A128A3A /* SnsAccount.swift */; };
+		29564F0A110D1249452358BD /* SnsType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69998C7AB1B02B4901639E3 /* SnsType.swift */; };
+		2B40DD661B18F5325C700EFB /* NearbyTransferManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5065C024A9B55495DD25F469 /* NearbyTransferManager.swift */; };
+		0FFAB391E8D89C820490728E /* NfcManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1FE0ABF8052ED1EB527CE8 /* NfcManager.swift */; };
+		B7FECB2B1B970CBFFD19A93F /* CardPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07631727B87AC781E46DC360 /* CardPayload.swift */; };
+		FC1DAD429A7D83C2F6A481FA /* ImageUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5E96FE33DE088B82269855 /* ImageUtil.swift */; };
+		C1B48A1787614BE2061A6898 /* MessagePackCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 192BFB5ABEF312A4DA929858 /* MessagePackCoder.swift */; };
+		24E1507B25D60DFCEEE5E29E /* QrCodeUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6A5B089DB3B8FEAB9CA317 /* QrCodeUtil.swift */; };
+		116B0541615B0FD2528C387A /* ContactDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2943D590265E2C5AA17586 /* ContactDetailView.swift */; };
+		A449862C809096C77CFB3D6D /* ContactListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E84D01537858D77A9539C75 /* ContactListView.swift */; };
+		4B8C00CC36D5A1D562E9F4D8 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F314769FC5F02515AAEE9FF2 /* EditProfileView.swift */; };
+		36E1791E13654BD703257CE2 /* QrScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66301C18E0007C88815F6AF5 /* QrScannerView.swift */; };
+		143C902BFEAC79C6725846DB /* ReceiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFD4C027EF01033433A9D082 /* ReceiveView.swift */; };
+		E190AA1BA03D3321D92EBB1F /* SendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9706D05731834BF5F0CA1F3 /* SendView.swift */; };
+		5CAF343ADB6E96B47588A48F /* SnsPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F1DF467C2CADC31268BB212 /* SnsPickerView.swift */; };
+		95F893ABF8DE2704294E63B9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAF2B6E40B5FA95F9E67EABC /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		81B27AD3F086B54C6E11AD61 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
+		030EC0A309CCD7CC31ED1F5B /* MeishiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeishiApp.swift; sourceTree = "<group>"; };
+		D2287E292D8BD86137E72342 /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
+		5397CEE52F1A3C23C74258CA /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		C0FD2636DE4E5BB869458216 /* ProfileDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDraft.swift; sourceTree = "<group>"; };
+		C3D90948200C746F0A128A3A /* SnsAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnsAccount.swift; sourceTree = "<group>"; };
+		C69998C7AB1B02B4901639E3 /* SnsType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnsType.swift; sourceTree = "<group>"; };
+		5065C024A9B55495DD25F469 /* NearbyTransferManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyTransferManager.swift; sourceTree = "<group>"; };
+		AE1FE0ABF8052ED1EB527CE8 /* NfcManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NfcManager.swift; sourceTree = "<group>"; };
+		07631727B87AC781E46DC360 /* CardPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardPayload.swift; sourceTree = "<group>"; };
+		2E5E96FE33DE088B82269855 /* ImageUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUtil.swift; sourceTree = "<group>"; };
+		192BFB5ABEF312A4DA929858 /* MessagePackCoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagePackCoder.swift; sourceTree = "<group>"; };
+		DF6A5B089DB3B8FEAB9CA317 /* QrCodeUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrCodeUtil.swift; sourceTree = "<group>"; };
+		CD2943D590265E2C5AA17586 /* ContactDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactDetailView.swift; sourceTree = "<group>"; };
+		7E84D01537858D77A9539C75 /* ContactListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactListView.swift; sourceTree = "<group>"; };
+		F314769FC5F02515AAEE9FF2 /* EditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
+		66301C18E0007C88815F6AF5 /* QrScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrScannerView.swift; sourceTree = "<group>"; };
+		EFD4C027EF01033433A9D082 /* ReceiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveView.swift; sourceTree = "<group>"; };
+		A9706D05731834BF5F0CA1F3 /* SendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendView.swift; sourceTree = "<group>"; };
+		5F1DF467C2CADC31268BB212 /* SnsPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnsPickerView.swift; sourceTree = "<group>"; };
+		DAF2B6E40B5FA95F9E67EABC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3A4ACAF51B6F30322F52F1E3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1E91DFB616C81E27E1E913B3 /* Meishi.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Meishi.entitlements; sourceTree = "<group>"; };
+		73AD16181FDDB7427288C6BD /* Meishi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Meishi.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0A85897F1A32FE9B91C081CD = {
+			isa = PBXGroup;
+			children = (
+				9100825DB8293A0917638225 /* Meishi */,
+				B88D7E26791946AEFDCC8BB7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B88D7E26791946AEFDCC8BB7 = {
+			isa = PBXGroup;
+			children = (
+				73AD16181FDDB7427288C6BD /* Meishi.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9100825DB8293A0917638225 = {
+			isa = PBXGroup;
+			children = (
+				030EC0A309CCD7CC31ED1F5B /* MeishiApp.swift */,
+				679FAE54C38E964FFFC8AA5F /* DB */,
+				A4C2A37E76047A91E5C0296C /* Models */,
+				507B4317C0933471DC6BDAD2 /* Util */,
+				5370D8F466BA501FE2EE7A42 /* Transfer */,
+				C376D4D9BF34E56D9B2FBC3F /* Views */,
+				DAF2B6E40B5FA95F9E67EABC /* Assets.xcassets */,
+				3A4ACAF51B6F30322F52F1E3 /* Info.plist */,
+				1E91DFB616C81E27E1E913B3 /* Meishi.entitlements */,
+			);
+			name = Meishi;
+			path = Meishi;
+			sourceTree = "<group>";
+		};
+		679FAE54C38E964FFFC8AA5F = {
+			isa = PBXGroup;
+			children = (
+				81B27AD3F086B54C6E11AD61 /* Database.swift */,
+			);
+			name = DB;
+			path = DB;
+			sourceTree = "<group>";
+		};
+		A4C2A37E76047A91E5C0296C = {
+			isa = PBXGroup;
+			children = (
+				D2287E292D8BD86137E72342 /* Contact.swift */,
+				5397CEE52F1A3C23C74258CA /* Profile.swift */,
+				C0FD2636DE4E5BB869458216 /* ProfileDraft.swift */,
+				C3D90948200C746F0A128A3A /* SnsAccount.swift */,
+				C69998C7AB1B02B4901639E3 /* SnsType.swift */,
+			);
+			name = Models;
+			path = Models;
+			sourceTree = "<group>";
+		};
+		507B4317C0933471DC6BDAD2 = {
+			isa = PBXGroup;
+			children = (
+				07631727B87AC781E46DC360 /* CardPayload.swift */,
+				2E5E96FE33DE088B82269855 /* ImageUtil.swift */,
+				192BFB5ABEF312A4DA929858 /* MessagePackCoder.swift */,
+				DF6A5B089DB3B8FEAB9CA317 /* QrCodeUtil.swift */,
+			);
+			name = Util;
+			path = Util;
+			sourceTree = "<group>";
+		};
+		5370D8F466BA501FE2EE7A42 = {
+			isa = PBXGroup;
+			children = (
+				5065C024A9B55495DD25F469 /* NearbyTransferManager.swift */,
+				AE1FE0ABF8052ED1EB527CE8 /* NfcManager.swift */,
+			);
+			name = Transfer;
+			path = Transfer;
+			sourceTree = "<group>";
+		};
+		C376D4D9BF34E56D9B2FBC3F = {
+			isa = PBXGroup;
+			children = (
+				CD2943D590265E2C5AA17586 /* ContactDetailView.swift */,
+				7E84D01537858D77A9539C75 /* ContactListView.swift */,
+				F314769FC5F02515AAEE9FF2 /* EditProfileView.swift */,
+				66301C18E0007C88815F6AF5 /* QrScannerView.swift */,
+				EFD4C027EF01033433A9D082 /* ReceiveView.swift */,
+				A9706D05731834BF5F0CA1F3 /* SendView.swift */,
+				5F1DF467C2CADC31268BB212 /* SnsPickerView.swift */,
+			);
+			name = Views;
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A9E872B0C4F3AB11D258C39F = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A2892AFC2D88060C0AA91373 = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				95F893ABF8DE2704294E63B9 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7EE609159AC086BAB15FF998 = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				98887FC1BA0E8D0017005270 /* Database.swift in Sources */,
+				61ECF0519C94CA868E290FDE /* MeishiApp.swift in Sources */,
+				0753953EBC4197B178A31D7A /* Contact.swift in Sources */,
+				CF0F7C608DEB9D0E78FFEF9C /* Profile.swift in Sources */,
+				6FCEE0D188EF48025850FB1B /* ProfileDraft.swift in Sources */,
+				BABA0F332C9D3553F0CE0525 /* SnsAccount.swift in Sources */,
+				29564F0A110D1249452358BD /* SnsType.swift in Sources */,
+				2B40DD661B18F5325C700EFB /* NearbyTransferManager.swift in Sources */,
+				0FFAB391E8D89C820490728E /* NfcManager.swift in Sources */,
+				B7FECB2B1B970CBFFD19A93F /* CardPayload.swift in Sources */,
+				FC1DAD429A7D83C2F6A481FA /* ImageUtil.swift in Sources */,
+				C1B48A1787614BE2061A6898 /* MessagePackCoder.swift in Sources */,
+				24E1507B25D60DFCEEE5E29E /* QrCodeUtil.swift in Sources */,
+				116B0541615B0FD2528C387A /* ContactDetailView.swift in Sources */,
+				A449862C809096C77CFB3D6D /* ContactListView.swift in Sources */,
+				4B8C00CC36D5A1D562E9F4D8 /* EditProfileView.swift in Sources */,
+				36E1791E13654BD703257CE2 /* QrScannerView.swift in Sources */,
+				143C902BFEAC79C6725846DB /* ReceiveView.swift in Sources */,
+				E190AA1BA03D3321D92EBB1F /* SendView.swift in Sources */,
+				5CAF343ADB6E96B47588A48F /* SnsPickerView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		0A1D1B958922F39EFB59FFBA /* Meishi */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 31861A472394DC878610E06C /* Build configuration list for PBXNativeTarget "Meishi" */;
+			buildPhases = (
+				7EE609159AC086BAB15FF998 /* Sources */,
+				A9E872B0C4F3AB11D258C39F /* Frameworks */,
+				A2892AFC2D88060C0AA91373 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Meishi;
+			productName = Meishi;
+			productReference = 73AD16181FDDB7427288C6BD /* Meishi.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1781F676DEDF5767F3243DB0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					0A1D1B958922F39EFB59FFBA = {
+						CreatedOnToolsVersion = 15.4;
+					};
+				};
+			};
+			buildConfigurationList = 9BC49302108270CF4519CDBE /* Build configuration list for PBXProject "Meishi" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = ja;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				ja,
+				Base,
+			);
+			mainGroup = 0A85897F1A32FE9B91C081CD;
+			productRefGroup = B88D7E26791946AEFDCC8BB7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0A1D1B958922F39EFB59FFBA /* Meishi */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		642436854D86EF337D2CEE9D /* 642436854D86EF337D2CEE9D */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				SWIFT_VERSION = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+			};
+			name = 642436854D86EF337D2CEE9D;
+		};
+		00F007E16B7B8DF31EA0226B /* 00F007E16B7B8DF31EA0226B */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				SWIFT_VERSION = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+			};
+			name = 00F007E16B7B8DF31EA0226B;
+		};
+		37A72370ED58F3DA5611E01C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSTIC_ASSET_CATALOG_COMPILER_OPTIMIZATION = space;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Meishi/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meishi.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				CODE_SIGN_ENTITLEMENTS = Meishi/Meishi.entitlements;
+			};
+			name = Debug;
+		};
+		44C732A3BAC66107F8E923F6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSTIC_ASSET_CATALOG_COMPILER_OPTIMIZATION = space;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Meishi/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meishi.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				CODE_SIGN_ENTITLEMENTS = Meishi/Meishi.entitlements;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9BC49302108270CF4519CDBE /* Build configuration list for PBXProject "Meishi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				642436854D86EF337D2CEE9D /* Debug */,
+				00F007E16B7B8DF31EA0226B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		31861A472394DC878610E06C /* Build configuration list for PBXNativeTarget "Meishi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37A72370ED58F3DA5611E01C /* Debug */,
+				44C732A3BAC66107F8E923F6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+	};
+	rootObject = 1781F676DEDF5767F3243DB0 /* Project object */;
+}
