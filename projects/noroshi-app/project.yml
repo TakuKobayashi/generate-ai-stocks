@@ -1,0 +1,7 @@
+name: noroshi-app
+slug: noroshi-app
+description: 
+description_ja: 位置情報ベースのAR狼煙アプリ。指定した地点で狼煙を上げ、ARカメラでその方向をのぞくと実際に狼煙が見えるアプリです。
+status: incubating
+repo: ''
+tags: []

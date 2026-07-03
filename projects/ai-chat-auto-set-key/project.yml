@@ -1,0 +1,8 @@
+name: ai-chat-auto-set-key
+slug: ai-chat-auto-set-key
+description:
+description_ja: GitHubリポジトリのREADMEに記載されたMarkdownテーブルを毎日自動取得してCloudflare KVに保存し、そのデータをコンテキストとして使えるChatGPTライクなチャットUIを提供するシステムです。
+translation_locked: false
+status: incubating
+repo: null
+tags:

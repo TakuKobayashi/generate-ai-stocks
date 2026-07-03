@@ -1,0 +1,8 @@
+name: offline-chat-app
+slug: offline-chat-app
+description: 
+description_ja: WiFi不要でNearby Connections / MultipeerConnectivity を使ったオフラインチャットアプリ。
+translation_locked: false
+status: incubating
+repo: ''
+tags: []

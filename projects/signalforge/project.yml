@@ -1,0 +1,7 @@
+name: signalforge
+slug: signalforge
+description: 
+description_ja: 日々のエンジニアリング業務から情報を収集し、実際に行った作業内容を把握した上で、プラットフォームに最適なコンテンツへと変換するツール。
+status: incubating
+repo:
+tags:

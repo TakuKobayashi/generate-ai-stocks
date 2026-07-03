@@ -1,0 +1,8 @@
+name: ar-recorder
+slug: ar-recorder
+description:
+description_ja: ARCore/ARKit 対応の AR 画面記録・共有ライブラリのモノリポジトリです。
+translation_locked: false
+status: incubating
+repo: null
+tags: null
