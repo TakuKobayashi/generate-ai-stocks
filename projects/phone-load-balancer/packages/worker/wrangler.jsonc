@@ -1,0 +1,43 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "phone-load-balancer",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-06-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Static assets (Next.js SSG output)
+  "assets": {
+    "directory": "./assets",
+    "binding": "ASSETS"
+  },
+
+  // D1 Database
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "phone-lb-db",
+      "database_id": "YOUR_D1_DATABASE_ID"
+    }
+  ],
+
+  // Durable Objects for call queue management
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "CALL_QUEUE",
+        "class_name": "CallQueueDO"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_classes": ["CallQueueDO"]
+    }
+  ],
+
+  // Environment variables (set via wrangler secret for production)
+  "vars": {
+    "ENVIRONMENT": "production"
+  }
+}

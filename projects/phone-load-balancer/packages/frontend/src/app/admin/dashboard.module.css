@@ -1,0 +1,193 @@
+.page {
+  max-width: 1100px;
+}
+
+.pageTitle {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 2rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.statCard {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.statCard[data-color="success"] {
+  border-color: rgba(16, 185, 129, 0.3);
+}
+.statCard[data-color="warning"] {
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.statIcon {
+  font-size: 1.5rem;
+}
+
+.statValue {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.section {
+  margin-bottom: 2.5rem;
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.badge {
+  background: var(--navy-700);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  padding: 0.15em 0.6em;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+}
+
+.callTable {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  padding: 0.75rem 1.25rem;
+  background: var(--navy-800);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  padding: 0.875rem 1.25rem;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.875rem;
+  align-items: center;
+}
+
+.tableRow:hover {
+  background: var(--border-subtle);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--teal-300);
+}
+
+.timeStr {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 0.2em 0.7em;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--navy-700);
+  color: var(--text-secondary);
+}
+
+.statusBadge[data-status="ringing"] {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--amber-400);
+}
+.statusBadge[data-status="connected"] {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--success);
+}
+.statusBadge[data-status="queued"] {
+  background: rgba(99, 102, 241, 0.15);
+  color: #a5b4fc;
+}
+
+.outcomeBadge {
+  display: inline-block;
+  padding: 0.2em 0.7em;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--navy-700);
+  color: var(--text-secondary);
+}
+
+.outcomeBadge[data-outcome="connected"] {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--success);
+}
+.outcomeBadge[data-outcome="unknown_number"],
+.outcomeBadge[data-outcome="no_forward_numbers"] {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+}
+
+.emptyState {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 2.5rem;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.loading {
+  padding: 4rem;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tableHeader,
+  .tableRow {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tableHeader span:nth-child(n+3),
+  .tableRow span:nth-child(n+3) {
+    display: none;
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "phone-load-balancer",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter frontend dev",
+    "build": "pnpm --filter frontend build",
+    "deploy": "pnpm run build && pnpm --filter worker deploy",
+    "db:generate": "pnpm --filter worker db:generate",
+    "db:migrate": "pnpm --filter worker db:migrate",
+    "db:migrate:local": "pnpm --filter worker db:migrate:local"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

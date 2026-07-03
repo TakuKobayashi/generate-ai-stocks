@@ -1,0 +1,78 @@
+/* Phone Load Balancer - Design System */
+/* Palette: deep navy + electric teal + warm off-white + amber accent */
+
+:root {
+  --navy-950: #060d1a;
+  --navy-900: #0a1628;
+  --navy-800: #0f2144;
+  --navy-700: #1a3260;
+  --navy-600: #1e3a8a;
+  --teal-500: #0ea5c2;
+  --teal-400: #22d3ee;
+  --teal-300: #67e8f9;
+  --amber-500: #f59e0b;
+  --amber-400: #fbbf24;
+  --off-white: #f0f4f8;
+  --muted: #94a3b8;
+  --surface: #111827;
+  --surface-raised: #1f2937;
+  --border: #1e3a8a33;
+  --border-subtle: #ffffff10;
+  --text-primary: #f0f4f8;
+  --text-secondary: #94a3b8;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--navy-950);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--teal-400);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+input, select, textarea {
+  font-family: var(--font-body);
+}
+
+/* Utility classes */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
