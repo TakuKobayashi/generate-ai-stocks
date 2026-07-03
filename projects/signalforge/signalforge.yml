@@ -1,0 +1,44 @@
+# SignalForge Configuration
+# Developer Branding Infrastructure
+
+profile:
+  name: Taku Kobayashi
+  role: Product Engineer
+  bio: Building in public. Indie dev working on AI tools and VTuber tech.
+
+sources:
+  localGit:
+    repos:
+      - /Users/taku/projects/my-project
+      - /Users/taku/projects/another-project
+    daysBack: 7
+
+publish:
+  languages:
+    - jp
+    - en
+
+targets:
+  - linkedin
+  - x
+  - note
+  - qiita
+
+media:
+  enabled: true
+  mode: search
+  # pexelsApiKey: your_pexels_key  # or set PEXELS_API_KEY env var
+
+draft:
+  variants: 3
+
+ai:
+  provider: gemini  # groq | gemini
+  # model: gemini-1.5-flash
+
+sanitize:
+  enabled: true
+  # Additional patterns to redact (supports regex):
+  # patterns:
+  #   - "MyClientName"
+  #   - "InternalCodename"

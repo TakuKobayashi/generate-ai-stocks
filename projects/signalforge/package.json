@@ -1,0 +1,32 @@
+{
+  "name": "signalforge",
+  "version": "0.1.0",
+  "description": "AI-powered work log → multi-SNS draft automation CLI. Developer Branding Infrastructure.",
+  "type": "module",
+  "bin": {
+    "signalforge": "./src/index.ts"
+  },
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.7",
+    "inquirer": "^12.3.0",
+    "js-yaml": "^4.1.0",
+    "ora": "^8.1.1",
+    "simple-git": "^3.27.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^9.0.7",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.10.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}
