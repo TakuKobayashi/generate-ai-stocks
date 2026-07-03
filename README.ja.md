@@ -89,8 +89,10 @@ CLI / GitHub Actions / 自動化基盤
 | [noroshi-app](./projects/noroshi-app/)                                     |                                                                                                                                                | incubating |
 | [offline-chat-app](./projects/offline-chat-app/)                           |                                                                                                                                                | incubating |
 | [PackingListApp](./projects/PackingListApp/)                               | 旅行や出張の持ち物リストを作成し、予定ごとのチェックリストとして管理できるAndroidネイティブアプリ。                                            | incubating |
+| [phone-load-balancer](./projects/phone-load-balancer/)                     |                                                                                                                                                | incubating |
 | [plateau-sniper-vs-guardman](./projects/plateau-sniper-vs-guardman/)       |                                                                                                                                                | incubating |
 | [recstudio](./projects/recstudio/)                                         | バックエンド不要でブラウザ上のみで画面録画と動画保存を実現するWebアプリケーション。                                                            | incubating |
+| [signalforge](./projects/signalforge/)                                     |                                                                                                                                                | incubating |
 | [stamp-rally](./projects/stamp-rally/)                                     | スタンプラリーを作成・共有・参加できるサービス。イベント、観光、地域活性化用途を想定。                                                         | incubating |
 
 ---

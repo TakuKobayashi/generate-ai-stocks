@@ -88,8 +88,10 @@ Samples / infrastructure experiments / reusable technical foundations
 | [noroshi-app](./projects/noroshi-app/)                                     |                                                                                                                                                      | incubating |
 | [offline-chat-app](./projects/offline-chat-app/)                           |                                                                                                                                                      | incubating |
 | [PackingListApp](./projects/PackingListApp/)                               | Android native app that can create travel and business travel belonging lists and manage them as scheduled checklists。                              | incubating |
+| [phone-load-balancer](./projects/phone-load-balancer/)                     |                                                                                                                                                      | incubating |
 | [plateau-sniper-vs-guardman](./projects/plateau-sniper-vs-guardman/)       |                                                                                                                                                      | incubating |
 | [recstudio](./projects/recstudio/)                                         | Browser-based screen recording web application that records and saves video files entirely client-side without backend infrastructure.               | incubating |
+| [signalforge](./projects/signalforge/)                                     |                                                                                                                                                      | incubating |
 | [stamp-rally](./projects/stamp-rally/)                                     | Service platform for creating, sharing, and participating in digital stamp rally experiences for events, tourism, and community engagement.          | incubating |
 
 ---
