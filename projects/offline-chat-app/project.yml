@@ -1,6 +1,6 @@
 name: offline-chat-app
 slug: offline-chat-app
-description: 
+description: An offline chat app using Nearby Connections / MultipeerConnectivity without WiFi。
 description_ja: WiFi不要でNearby Connections / MultipeerConnectivity を使ったオフラインチャットアプリ。
 translation_locked: false
 status: incubating

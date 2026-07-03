@@ -1,6 +1,6 @@
 name: noroshi-app
 slug: noroshi-app
-description: 
+description: AR WOLF SMOKE APP BASED ON LOCATION INFORMATION. THIS IS AN APP THAT RAISES THE WOLF SMOKE AT THE SPECIFIED POINT, AND YOU CAN SEE THE WOLF SMOKE ACTUALLY BY LOOKING AT THE DIRECTION OF THE AR CAMERA。
 description_ja: 位置情報ベースのAR狼煙アプリ。指定した地点で狼煙を上げ、ARカメラでその方向をのぞくと実際に狼煙が見えるアプリです。
 status: incubating
 repo: ''

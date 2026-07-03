@@ -1,6 +1,6 @@
 name: phone-load-balancer
 slug: phone-load-balancer
-description: 
+description: Vonage Voice API + Cloudテナントre Workers + D1 + Hono + Next.js。
 description_ja: Vonage Voice API + Cloudflare Workers + D1 + Hono + Next.js で構築したマルチテナント対応電話ロードバランサーです。
 translation_locked: false
 status: incubating
