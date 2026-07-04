@@ -13,24 +13,63 @@ type Project = {
   tags?: string[];
 };
 
-const ENDPOINTS = [
-  'http://localhost:5000/translate',
-  'https://translate.argosopentech.com/translate',
-  'https://translate.astian.org/translate',
-];
+const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
+const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'qwen3:4b';
 
-async function requestTranslate(endpoint: string, text: string): Promise<string> {
-  const res = await fetch(endpoint, {
+function buildPrompt(text: string) {
+  return [
+    'Translate the following Japanese project description into natural, concise English for a GitHub README project table.',
+    'Return only JSON with this exact shape: {"translation":"..."}',
+    'Do not add explanations, markdown, quotes around the whole response, or extra fields.',
+    'Preserve product names, repository names, technical terms, and numbers.',
+    '',
+    `Japanese: ${text}`,
+  ].join('\n');
+}
+
+function parseTranslation(raw: string): string {
+  const cleaned = raw
+    .replace(/<think>[\s\S]*?<\/think>/gi, '')
+    .replace(/^```(?:json)?\s*/i, '')
+    .replace(/\s*```$/i, '')
+    .trim();
+
+  try {
+    const data = JSON.parse(cleaned) as {
+      translation?: unknown;
+    };
+
+    if (typeof data.translation === 'string' && data.translation.trim()) {
+      return data.translation.trim();
+    }
+  } catch {
+    // Fall through to a plain-text response so a useful translation is not discarded.
+  }
+
+  if (!cleaned) {
+    throw new Error('Missing translation');
+  }
+
+  return cleaned;
+}
+
+async function translateText(text: string): Promise<string> {
+  const res = await fetch(`${OLLAMA_HOST}/api/generate`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
     },
     body: JSON.stringify({
-      q: text,
-      source: 'ja',
-      target: 'en',
-      format: 'text',
+      model: OLLAMA_MODEL,
+      prompt: buildPrompt(text),
+      stream: false,
+      format: 'json',
+      options: {
+        temperature: 0.1,
+        top_p: 0.9,
+        num_predict: 160,
+      },
     }),
   });
 
@@ -41,7 +80,7 @@ async function requestTranslate(endpoint: string, text: string): Promise<string>
   }
 
   let data: {
-    translatedText?: string;
+    response?: string;
   };
 
   try {
@@ -50,29 +89,11 @@ async function requestTranslate(endpoint: string, text: string): Promise<string>
     throw new Error(`Invalid JSON: ${raw.slice(0, 200)}`);
   }
 
-  if (!data.translatedText) {
-    throw new Error('Missing translatedText');
+  if (!data.response) {
+    throw new Error('Missing response');
   }
 
-  return data.translatedText.trim();
-}
-
-async function translateText(text: string): Promise<string> {
-  let lastError: unknown;
-
-  for (const endpoint of ENDPOINTS) {
-    try {
-      console.log(`Trying: ${endpoint}`);
-
-      return await requestTranslate(endpoint, text);
-    } catch (err) {
-      lastError = err;
-
-      console.warn(`Failed: ${endpoint}`);
-    }
-  }
-
-  throw lastError;
+  return parseTranslation(data.response);
 }
 
 export async function translateProjects() {
@@ -87,6 +108,8 @@ export async function translateProjects() {
       if (data.translation_locked || data.description || !data.description_ja) {
         continue;
       }
+
+      console.log(`Translating with ${OLLAMA_MODEL}: ${file}`);
 
       data.description = await translateText(data.description_ja);
 

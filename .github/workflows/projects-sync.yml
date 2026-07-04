@@ -7,7 +7,6 @@ on:
       - 'scripts/**'
       - 'templates/**'
       - 'portfolio/**'
-      - 'docker-compose.yml'
       - 'package.json'
       - 'pnpm-lock.yaml'
       - '.gitmodules'
@@ -25,6 +24,8 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    env:
+      OLLAMA_MODEL: qwen3:4b
 
     steps:
       - name: Checkout repository
@@ -54,39 +55,43 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile=false
 
-      - name: Cache LibreTranslate data
+      # =========================
+      # Ollama setup
+      # =========================
+      - name: Cache Ollama models
         uses: actions/cache@v6
         with:
-          path: docker/libretranslate
-          key: ${{ runner.os }}-libretranslate-data-${{ hashFiles('docker-compose.yml') }}
+          path: ~/.ollama/models
+          key: ${{ runner.os }}-ollama-qwen3-4b-v1
           restore-keys: |
-            ${{ runner.os }}-libretranslate-data-
+            ${{ runner.os }}-ollama-qwen3-4b-
 
-      # =========================
-      # LibreTranslate (Docker)
-      # =========================
-      - name: Ensure Docker Compose exists
-        run: docker compose version
+      - name: Install Ollama
+        run: curl -fsSL https://ollama.com/install.sh | sh
 
-      - name: Start LibreTranslate
+      - name: Start Ollama
         run: |
-          mkdir -p docker/libretranslate
-          docker compose up -d
+          ollama serve > /tmp/ollama.log 2>&1 &
 
-      - name: Wait for LibreTranslate health
+      - name: Wait for Ollama
         run: |
           for i in {1..60}; do
-            if curl -fs http://localhost:5000/languages > /dev/null; then
-              echo "LibreTranslate is ready"
+            if curl -fs http://localhost:11434/api/tags > /dev/null; then
+              echo "Ollama is ready"
               exit 0
             fi
-            echo "Waiting for LibreTranslate..."
-            sleep 5
+            echo "Waiting for Ollama..."
+            sleep 2
           done
 
-          echo "LibreTranslate failed to start"
-          docker compose logs
+          echo "Ollama failed to start"
+          cat /tmp/ollama.log
           exit 1
+
+      - name: Install translation model
+        run: |
+          ollama pull "$OLLAMA_MODEL"
+          ollama list
 
       # =========================
       # Sync pipeline
@@ -118,10 +123,6 @@ jobs:
       # =========================
       # Debug on failure
       # =========================
-      - name: Debug LibreTranslate logs on failure
+      - name: Debug Ollama logs on failure
         if: failure()
-        run: docker compose logs
-
-      - name: Stop LibreTranslate
-        if: always()
-        run: docker compose down
+        run: cat /tmp/ollama.log
