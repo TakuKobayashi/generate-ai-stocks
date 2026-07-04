@@ -1,8 +1,16 @@
 name: plateau-sniper-vs-guardman
 slug: plateau-sniper-vs-guardman
-description:
-description_ja: スナイパー vs ボディガード 警備シミュレーション
+description: A multiplayer sniper vs. bodyguard simulation game built with Unity, Next.js, and WebRTC for real-time interaction.
+description_ja: UnityとNext.jsで構築された、リアルタイムのインタラクションを可能にするスナイパー対ボディガードのシミュレーションゲームです。
 translation_locked: false
 status: incubating
 repo: ''
-tags: []
+tags:
+  - unity
+  - nextjs
+  - webrtc
+  - websockets
+  - typescript
+  - game
+  - simulation
+  - partykit

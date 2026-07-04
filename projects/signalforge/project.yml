@@ -1,7 +1,16 @@
 name: signalforge
 slug: signalforge
-description:
-description_ja: 日々のエンジニアリング業務から情報を収集し、実際に行った作業内容を把握した上で、プラットフォームに最適なコンテンツへと変換するツール。
+description: SignalForge transforms engineering activity logs into professional content for platforms like LinkedIn and X, automating the creation of developer branding materials.
+description_ja: SignalForgeは、エンジニアの作業ログを収集し、LinkedInやXなどのプラットフォーム向けにプロフェッショナルなコンテンツを作成するツールです。開発者自身のブランド構築を自動化します。
+translation_locked: false
 status: incubating
-repo: null
-tags: null
+repo: ''
+tags:
+  - developer tooling
+  - ai
+  - automation
+  - content creation
+  - branding
+  - cli
+  - typescript
+  - git

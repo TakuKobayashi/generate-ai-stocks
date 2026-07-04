@@ -1,8 +1,16 @@
 name: ai-chat-auto-set-key
 slug: ai-chat-auto-set-key
-description:
-description_ja: GitHubリポジトリのREADMEに記載されたMarkdownテーブルを毎日自動取得してCloudflare KVに保存し、そのデータをコンテキストとして使えるChatGPTライクなチャットUIを提供するシステムです。
+description: Automatically scrapes GitHub README tables, stores them in Cloudflare KV, and provides a ChatGPT-like chat UI using the data as context.
+description_ja: GitHubのリポジトリのREADMEテーブルを毎日自動的に取得し、Cloudflare KVに保存して、そのデータをコンテキストとして利用できるChatGPTのようなチャットUIを提供します。
 translation_locked: false
 status: incubating
-repo: null
-tags: null
+repo: ''
+tags:
+  - cloudflare
+  - workers
+  - github
+  - openai
+  - typescript
+  - chat
+  - kv
+  - nextjs

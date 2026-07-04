@@ -1,8 +1,16 @@
 name: attention-intervention-system
 slug: attention-intervention-system
-description:
-description_ja: ロック画面や通知に目標を表示し、スマートフォンを見るたびに目標を思い出せるアプリ
+description: Android application utilizing Compose, Hilt, and Room for data persistence, likely focused on user interaction or a specific task.
+description_ja: Compose、Hilt、Room を使用した Android アプリケーションで、ユーザーインタラクションや特定のタスクに焦点を当てている可能性があります。
 translation_locked: false
 status: incubating
-repo: null
-tags: null
+repo: ''
+tags:
+  - android
+  - compose
+  - hilt
+  - room
+  - kotlin
+  - data
+  - development
+  - ktx

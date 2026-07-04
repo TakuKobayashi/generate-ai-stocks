@@ -1,7 +1,15 @@
 name: noroshi-app
 slug: noroshi-app
-description:
-description_ja: 位置情報ベースのAR狼煙アプリ。指定した地点で狼煙を上げ、ARカメラでその方向をのぞくと実際に狼煙が見えるアプリです。
+description: AR application that displays virtual smoke signals at specified locations, viewable through an AR camera.
+description_ja: 指定した場所に狼煙を出現させ、ARカメラを通して見ると実際に狼煙が見える位置情報ベースのARアプリです。
+translation_locked: false
 status: incubating
 repo: ''
-tags: []
+tags:
+  - ar
+  - unity
+  - cloudflare
+  - drizzle
+  - geohash
+  - location
+  - firebase

@@ -1,8 +1,16 @@
 name: heart-linker-app
 slug: heart-linker-app
-description:
-description_ja: アカウント登録不要で使える名刺交換アプリ。QR / Nearby(Bluetooth+Wi-Fi) / NFC の3方式で連絡先を交換できる。
+description: Cross-platform contact exchange app for iOS and Android, supporting QR code, Nearby (Android only), and NFC transfer methods without requiring an account.
+description_ja: アカウント登録なしで利用できる、QRコード、Nearby（Androidのみ）、NFCによる連絡先交換をサポートするクロスプラットフォームの名刺帳アプリです。
 translation_locked: false
 status: incubating
-repo: null
-tags: null
+repo: ''
+tags:
+  - kotlin
+  - swift
+  - ios
+  - android
+  - nfc
+  - qr-code
+  - nearby
+  - contact-exchange

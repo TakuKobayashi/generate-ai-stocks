@@ -1,8 +1,16 @@
 name: offline-chat-app
 slug: offline-chat-app
-description:
-description_ja: WiFi不要でNearby Connections / MultipeerConnectivity を使ったオフラインチャットアプリ。
+description: Develops an offline chat application for Android and iOS using Nearby Connections/Multipeer Connectivity, enabling peer-to-peer communication without internet access.
+description_ja: WiFiなどのインターネット接続がなくても、Nearby ConnectionsやMultipeerConnectivityを使ってAndroidとiOSでオフラインチャットができるアプリを開発します。
 translation_locked: false
 status: incubating
 repo: ''
-tags: []
+tags:
+  - android
+  - ios
+  - kotlin
+  - swift
+  - multipeer
+  - offline
+  - chat
+  - nearby

@@ -1,8 +1,16 @@
 name: ar-recorder
 slug: ar-recorder
-description:
-description_ja: ARCore/ARKit 対応の AR 画面記録・共有ライブラリのモノリポジトリです。
+description: Monorepo for recording and sharing AR experiences using ARCore/ARKit, with Unity integration and LiveKit streaming capabilities.
+description_ja: ARCore/ARKitに対応したAR画面の録画・共有ライブラリをUnityで利用するためのモノレポです。LiveKitによるライブストリーミング機能も備えています。
 translation_locked: false
 status: incubating
-repo: null
-tags: null
+repo: ''
+tags:
+  - ar
+  - unity
+  - livekit
+  - webrtc
+  - recording
+  - streaming
+  - monorepo
+  - rtc

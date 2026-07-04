@@ -1,8 +1,15 @@
 name: PackingListApp
 slug: PackingListApp
-description:
-description_ja: 旅行や出張の持ち物リストを作成し、予定ごとのチェックリストとして管理できるAndroidネイティブアプリ。
+description: A simple Android application for creating and managing packing lists for travel or other occasions.
+description_ja: 旅行やその他の機会のために、荷造りリストを作成・管理できるシンプルなAndroidアプリです。
 translation_locked: false
 status: incubating
 repo: ''
-tags: []
+tags:
+  - android
+  - packinglist
+  - travel
+  - utility
+  - kotlin
+  - app
+  - checklist

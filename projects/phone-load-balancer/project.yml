@@ -1,8 +1,16 @@
 name: phone-load-balancer
 slug: phone-load-balancer
-description:
-description_ja: Vonage Voice API + Cloudflare Workers + D1 + Hono + Next.js で構築したマルチテナント対応電話ロードバランサーです。
+description: Multi-tenant phone load balancer built with Vonage Voice API, Cloudflare Workers, D1, Hono, and Next.js for routing calls based on tenant configuration and priority.
+description_ja: Vonage Voice API、Cloudflare Workers、D1、Hono、Next.js を使用して構築された、テナント構成と優先度に基づいて通話ルーティングを行うマルチテナント対応の電話ロードバランサーです。
 translation_locked: false
 status: incubating
 repo: ''
-tags: []
+tags:
+  - cloudflare
+  - workers
+  - d1
+  - hono
+  - nextjs
+  - vonage
+  - typescript
+  - loadbalancer

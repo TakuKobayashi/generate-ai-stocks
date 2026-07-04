@@ -1,8 +1,15 @@
 name: clipboard-manager
 slug: clipboard-manager
-description:
-description_ja: クリップボードマネージャーアプリ
+description: Cross-platform clipboard manager with Android and iOS apps, including keyboard and widget functionality, and monetization options like AdMob and in-app subscriptions.
+description_ja: AndroidとiOSの両方に対応したクリップボードマネージャーで、キーボードやウィジェット機能、AdMobやサブスクリプションによる収益化オプションを備えています。
 translation_locked: false
 status: incubating
 repo: ''
-tags: []
+tags:
+  - clipboard
+  - android
+  - ios
+  - swift
+  - kotlin
+  - monorepo
+  - mobile
