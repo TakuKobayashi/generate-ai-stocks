@@ -14,7 +14,7 @@ function buildTable(projects: Project[], lang: 'en' | 'ja') {
 
   return projects
     .map((p) => {
-      const desc = lang === 'ja' ? p.description_ja || p.description || '' : p.description || p.description_ja || '';
+      const desc = lang === 'ja' ? p.description_ja || p.description || '' : p.description || '';
 
       return `| [${p.slug}](./projects/${p.slug}/) | ${desc} | ${p.status || 'incubating'} |`;
     })

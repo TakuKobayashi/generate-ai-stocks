@@ -107,6 +107,7 @@ export async function translateProjects(options: TranslateProjectsOptions = {}) 
     ollamaModel: options.ollamaModel || DEFAULT_OLLAMA_MODEL,
   };
   const files = await fg('projects/*/project.yml');
+  const failures: string[] = [];
 
   for (const file of files) {
     try {
@@ -133,6 +134,11 @@ export async function translateProjects(options: TranslateProjectsOptions = {}) 
       console.log(`Translated: ${file}`);
     } catch (err) {
       console.error(`Failed translating ${file}:`, err);
+      failures.push(file);
     }
+  }
+
+  if (failures.length > 0) {
+    throw new Error(`Failed to translate ${failures.length} project.yml file(s): ${failures.join(', ')}`);
   }
 }
