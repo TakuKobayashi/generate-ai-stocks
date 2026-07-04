@@ -28,3 +28,6 @@
 [submodule "projects/ai-agent-demo-genarator"]
 	path = projects/ai-agent-demo-genarator
 	url = git@github.com:TakuKobayashi/ai-agent-demo-genarator.git
+[submodule "projects/phantomcat-landing"]
+	path = projects/phantomcat-landing
+	url = git@github.com:TakuKobayashi/phantomcat-landing.git
