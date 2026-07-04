@@ -114,7 +114,12 @@ async function pathExists(filePath: string) {
 }
 
 async function readIfExists(filePath: string, maxChars: number) {
-  if (!(await pathExists(filePath))) return '';
+  try {
+    const stats = await fs.stat(filePath);
+    if (!stats.isFile()) return '';
+  } catch {
+    return '';
+  }
 
   const raw = await fs.readFile(filePath, 'utf8');
   return raw.slice(0, maxChars);
@@ -146,11 +151,23 @@ async function getProjectTree(projectDir: string) {
 
 async function getGitRemote(projectDir: string) {
   const gitFile = path.join(projectDir, '.git');
-  const content = await readIfExists(gitFile, 500);
-  const match = content.match(/gitdir:\s*(.+)/i);
-  if (!match) return '';
+  let gitDir = gitFile;
 
-  const gitDir = path.resolve(projectDir, match[1].trim());
+  const content = await readIfExists(gitFile, 500);
+  if (content) {
+    const match = content.match(/gitdir:\s*(.+)/i);
+    if (!match) return '';
+
+    gitDir = path.resolve(projectDir, match[1].trim());
+  } else {
+    try {
+      const stats = await fs.stat(gitFile);
+      if (!stats.isDirectory()) return '';
+    } catch {
+      return '';
+    }
+  }
+
   const config = await readIfExists(path.join(gitDir, 'config'), 2000);
   const urlMatch = config.match(/\[remote "origin"\][\s\S]*?\n\s*url\s*=\s*(.+)/);
 
