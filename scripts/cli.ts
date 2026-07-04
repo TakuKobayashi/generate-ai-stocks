@@ -9,31 +9,44 @@ import { pushSubmodules } from './push-submodules';
 
 const program = new Command();
 
-program
-  .command('add')
-  .requiredOption('--name <name>')
-  .option('--description <description>', '')
+type TranslateOptions = {
+  ollamaUrl?: string;
+  ollamaModel?: string;
+};
+
+function addTranslateOptions(command: Command) {
+  return command
+    .option('--ollama-url <url>', 'Ollama server URL', 'http://localhost:11434')
+    .option('--ollama-model <model>', 'Ollama model to use for translation', 'qwen3:4b');
+}
+
+function toTranslateOptions(opts: TranslateOptions) {
+  return {
+    ollamaUrl: opts.ollamaUrl,
+    ollamaModel: opts.ollamaModel,
+  };
+}
+
+addTranslateOptions(program.command('add').requiredOption('--name <name>').option('--description <description>', ''))
   .description('Add new project')
   .action(async (opts) => {
     await addProject(opts.name, opts.description);
 
-    await translateProjects();
+    await translateProjects(toTranslateOptions(opts));
     await syncPortfolio();
     await syncReadme();
   });
 
-program
-  .command('translate')
+addTranslateOptions(program.command('translate'))
   .description('Auto translate project.yml descriptions')
-  .action(async () => {
-    await translateProjects();
+  .action(async (opts) => {
+    await translateProjects(toTranslateOptions(opts));
   });
 
-program
-  .command('sync')
+addTranslateOptions(program.command('sync'))
   .description('Translate + Sync portfolio + README')
-  .action(async () => {
-    await translateProjects();
+  .action(async (opts) => {
+    await translateProjects(toTranslateOptions(opts));
     await syncPortfolio();
     await syncReadme();
   });

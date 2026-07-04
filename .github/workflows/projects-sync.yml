@@ -24,8 +24,6 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     timeout-minutes: 45
-    env:
-      OLLAMA_MODEL: qwen3:4b
 
     steps:
       - name: Checkout repository
@@ -90,7 +88,7 @@ jobs:
 
       - name: Install translation model
         run: |
-          ollama pull "$OLLAMA_MODEL"
+          ollama pull qwen3:4b
           ollama list
 
       # =========================
@@ -100,7 +98,7 @@ jobs:
         run: pnpm run projects:validate
 
       - name: Sync projects
-        run: pnpm run projects:sync
+        run: pnpm run projects:sync -- --ollama-url http://localhost:11434 --ollama-model qwen3:4b
 
       - name: Format repository
         run: pnpm run format

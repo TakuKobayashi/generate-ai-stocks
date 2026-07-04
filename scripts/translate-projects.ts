@@ -13,8 +13,13 @@ type Project = {
   tags?: string[];
 };
 
-const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'qwen3:4b';
+export type TranslateProjectsOptions = {
+  ollamaUrl?: string;
+  ollamaModel?: string;
+};
+
+const DEFAULT_OLLAMA_URL = 'http://localhost:11434';
+const DEFAULT_OLLAMA_MODEL = 'qwen3:4b';
 
 function buildPrompt(text: string) {
   return [
@@ -53,15 +58,15 @@ function parseTranslation(raw: string): string {
   return cleaned;
 }
 
-async function translateText(text: string): Promise<string> {
-  const res = await fetch(`${OLLAMA_HOST}/api/generate`, {
+async function translateText(text: string, options: Required<TranslateProjectsOptions>): Promise<string> {
+  const res = await fetch(`${options.ollamaUrl}/api/generate`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
     },
     body: JSON.stringify({
-      model: OLLAMA_MODEL,
+      model: options.ollamaModel,
       prompt: buildPrompt(text),
       stream: false,
       format: 'json',
@@ -96,7 +101,11 @@ async function translateText(text: string): Promise<string> {
   return parseTranslation(data.response);
 }
 
-export async function translateProjects() {
+export async function translateProjects(options: TranslateProjectsOptions = {}) {
+  const resolvedOptions = {
+    ollamaUrl: options.ollamaUrl || DEFAULT_OLLAMA_URL,
+    ollamaModel: options.ollamaModel || DEFAULT_OLLAMA_MODEL,
+  };
   const files = await fg('projects/*/project.yml');
 
   for (const file of files) {
@@ -109,9 +118,9 @@ export async function translateProjects() {
         continue;
       }
 
-      console.log(`Translating with ${OLLAMA_MODEL}: ${file}`);
+      console.log(`Translating with ${resolvedOptions.ollamaModel}: ${file}`);
 
-      data.description = await translateText(data.description_ja);
+      data.description = await translateText(data.description_ja, resolvedOptions);
 
       await fs.writeFile(
         file,
