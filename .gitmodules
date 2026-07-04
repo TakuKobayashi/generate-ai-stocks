@@ -22,3 +22,9 @@
 [submodule "projects/medicine-manager-app"]
 	path = projects/medicine-manager-app
 	url = git@github.com:TakuKobayashi/medicine-manager-app.git
+[submodule "projects/auto-product-video-generator"]
+	path = projects/auto-product-video-generator
+	url = git@github.com:TakuKobayashi/auto-product-video-generator.git
+[submodule "projects/ai-agent-demo-genarator"]
+	path = projects/ai-agent-demo-genarator
+	url = git@github.com:TakuKobayashi/ai-agent-demo-genarator.git
