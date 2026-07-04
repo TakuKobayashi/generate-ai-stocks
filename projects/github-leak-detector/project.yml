@@ -1,6 +1,6 @@
 name: github-leak-detector
 slug: github-leak-detector
-description: Security-oriented tool for detecting leaked source code or sensitive information exposure across GitHub repositories.
+description:
 description_ja: GitHub上でのソースコード流出や機密情報漏洩を検出するセキュリティ監視ツール。
 status: incubating
 repo:

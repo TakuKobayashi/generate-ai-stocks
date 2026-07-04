@@ -1,6 +1,6 @@
 name: doc-scanner-unified
 slug: doc-scanner-unified
-description: Unified CLI and web-based document scanning project that converts images into text for OCR workflows, document digitization, and automation.
+description:
 description_ja: 画像から文字起こしを行うOCR対応のCLI / Web統合ドキュメントスキャンプロジェクト。文書電子化や自動化用途を想定。
 status: incubating
 repo:

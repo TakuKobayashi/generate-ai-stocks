@@ -1,6 +1,6 @@
 name: ai-chat-auto-set-key
 slug: ai-chat-auto-set-key
-description: This is a system that automatically retrieves the Markdown table described in theMarkME of the GitHub repository, stores it in Cloud re KV, and provides a ChatGPT-like chat UI that can be used as a context。
+description:
 description_ja: GitHubリポジトリのREADMEに記載されたMarkdownテーブルを毎日自動取得してCloudflare KVに保存し、そのデータをコンテキストとして使えるChatGPTライクなチャットUIを提供するシステムです。
 translation_locked: false
 status: incubating

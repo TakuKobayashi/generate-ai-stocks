@@ -1,6 +1,6 @@
 name: ar-recorder
 slug: ar-recorder
-description: This is a monorepos。y of AR screen recording and shared library compatible with ARCore/ARKit。
+description:
 description_ja: ARCore/ARKit 対応の AR 画面記録・共有ライブラリのモノリポジトリです。
 translation_locked: false
 status: incubating

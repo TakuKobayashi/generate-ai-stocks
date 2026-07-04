@@ -1,6 +1,6 @@
 name: recstudio
 slug: recstudio
-description: Browser-based screen recording web application that records and saves video files entirely client-side without backend infrastructure.
+description:
 description_ja: バックエンド不要でブラウザ上のみで画面録画と動画保存を実現するWebアプリケーション。
 status: incubating
 repo:

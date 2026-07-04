@@ -1,6 +1,6 @@
 name: daily-report-cli
 slug: daily-report-cli
-description: CLI tool for automatically generating engineer daily reports, designed for workflow automation, GitHub Actions, and operational reporting pipelines.
+description:
 description_ja: エンジニア向け日報を自動生成するCLIツール。GitHub Actionsや業務自動化パイプラインでの活用を想定。
 status: incubating
 repo:
