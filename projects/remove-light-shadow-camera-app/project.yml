@@ -1,0 +1,15 @@
+name: remove-light-shadow-camera-app
+slug: remove-light-shadow-camera-app
+description: Android camera app replicating Pixel phone features, including image processing and potentially location data integration.
+description_ja: Pixelスマートフォンのカメラ機能を模倣したAndroidアプリで、画像処理や位置情報データの統合などが含まれる可能性があります。
+translation_locked: false
+status: incubating
+repo: ''
+tags:
+  - android
+  - camera
+  - pixel
+  - opencv
+  - kotlin
+  - location
+  - image-processing
