@@ -31,3 +31,6 @@
 [submodule "projects/phantomcat-landing"]
 	path = projects/phantomcat-landing
 	url = git@github.com:TakuKobayashi/phantomcat-landing.git
+[submodule "projects/ai-chat-auto-set-key"]
+	path = projects/ai-chat-auto-set-key
+	url = git@github.com:TakuKobayashi/ai-chat-auto-set-key.git
