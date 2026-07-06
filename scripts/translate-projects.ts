@@ -23,10 +23,22 @@ const DEFAULT_OLLAMA_MODEL = 'qwen3:4b';
 
 function buildPrompt(text: string) {
   return [
-    'Translate the following Japanese project description into natural, concise English for a GitHub README project table.',
-    'Return only JSON with this exact shape: {"translation":"..."}',
-    'Do not add explanations, markdown, quotes around the whole response, or extra fields.',
-    'Preserve product names, repository names, technical terms, and numbers.',
+    'You are translating a short project description for a GitHub README that catalogs software projects built with the help of generative AI.',
+    'Translate the Japanese description into natural, concise English suitable for a portfolio/project table entry (roughly one sentence, no more than ~40 words).',
+    '',
+    'Rules:',
+    '- Keep proper nouns, product/repo names, and technology names as-is (e.g. Cloudflare Workers, Next.js, Unity, Kotlin, Swift).',
+    '- Keep numbers, versions, and technical terms unchanged.',
+    '- Do not add information that is not in the source text.',
+    '- Do not include your reasoning, notes, or any text other than the JSON object below.',
+    '- Output must be a single-line JSON object, with no markdown code fences and no text before or after it.',
+    '',
+    'Output format (exact shape, no extra fields):',
+    '{"translation": "<English translation here>"}',
+    '',
+    'Example:',
+    '日本語: 位置情報を使ったAR宝探しアプリ。Unityとクラウド連携で作成。',
+    '{"translation": "A location-based AR treasure hunt app built with Unity and cloud integration."}',
     '',
     `Japanese: ${text}`,
   ].join('\n');
@@ -70,10 +82,14 @@ async function translateText(text: string, options: Required<TranslateProjectsOp
       prompt: buildPrompt(text),
       stream: false,
       format: 'json',
+      // Local Ollama instance — no need to cap generation length.
+      // -1 tells Ollama to generate until it hits a natural stop
+      // (or the model's context limit), rather than being cut off early.
+      think: false,
       options: {
         temperature: 0.1,
         top_p: 0.9,
-        num_predict: 160,
+        num_predict: -1,
       },
     }),
   });
@@ -86,6 +102,7 @@ async function translateText(text: string, options: Required<TranslateProjectsOp
 
   let data: {
     response?: string;
+    thinking?: string;
   };
 
   try {
@@ -94,8 +111,10 @@ async function translateText(text: string, options: Required<TranslateProjectsOp
     throw new Error(`Invalid JSON: ${raw.slice(0, 200)}`);
   }
 
-  if (!data.response) {
-    throw new Error('Missing response');
+  if (!data.response || !data.response.trim()) {
+    throw new Error(
+      `Missing response${data.thinking ? ` (model produced only thinking output: ${data.thinking.slice(0, 200)})` : ''}`,
+    );
   }
 
   return parseTranslation(data.response);
