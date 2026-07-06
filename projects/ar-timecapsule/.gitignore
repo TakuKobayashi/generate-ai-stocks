@@ -1,0 +1,12 @@
+node_modules/
+.wrangler/
+dist/
+out/
+.next/
+*.local
+.env
+*.log
+.DS_Store
+packages/unity/Library/
+packages/unity/Temp/
+packages/unity/Logs/

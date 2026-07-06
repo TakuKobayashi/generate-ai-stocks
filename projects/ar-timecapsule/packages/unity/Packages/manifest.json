@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "com.unity.xr.arfoundation": "6.0.3",
+    "com.unity.xr.arcore": "6.0.3",
+    "com.unity.xr.arkit": "6.0.3",
+    "com.unity.inputsystem": "1.8.2",
+    "com.unity.nuget.newtonsoft-json": "3.2.1",
+    "com.github-glitchenzo.nugetforunity": "4.1.1"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "ar-timecapsule-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2024-10-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "../web/out",
+    "binding": "ASSETS"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ar-timecapsule-db",
+      "database_id": "YOUR_D1_DATABASE_ID"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "R2",
+      "bucket_name": "ar-timecapsule-audio"
+    }
+  ],
+  "vars": {
+    "ENVIRONMENT": "production",
+    "JWT_ACCESS_EXPIRES_IN": "900",
+    "JWT_REFRESH_EXPIRES_IN": "2592000",
+    "SIGNED_URL_EXPIRES_IN": "3600",
+    "MAX_AUDIO_FILE_SIZE": "52428800",
+    "RATE_LIMIT_REQUESTS": "100",
+    "RATE_LIMIT_WINDOW": "60",
+    "MAX_CAPSULES_PER_USER_PER_DAY": "20",
+    "NEARBY_SEARCH_MAX_RADIUS_KM": "50",
+    "COUPON_REDEEM_RADIUS_M": "100"
+  }
+}
