@@ -1,6 +1,6 @@
 name: ar-editor-preview
 slug: ar-editor-preview
-description:
+description: A multi-platform development environment that sends real-time AR data from ARCore/ARKit to Unity Editor via LiveKit and Protocol Buffers for AR previews in Unity.
 description_ja: ARCore/ARKitの実機ARデータをLiveKitとProtocol BuffersでUnity Editorへ送信し、Unity上でARプレビューを行うためのマルチプラットフォーム開発環境。
 translation_locked: false
 status: incubating

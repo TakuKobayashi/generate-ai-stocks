@@ -1,9 +1,9 @@
 name: recstudio
 slug: recstudio
-description:
+description: A browser-only web app that records and saves video without a backend.
 description_ja: バックエンド不要でブラウザ上のみで画面録画と動画保存を実現するWebアプリケーション。
 status: incubating
-repo:
+repo: null
 tags:
   - browser
   - recording

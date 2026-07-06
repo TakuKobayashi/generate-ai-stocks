@@ -1,9 +1,9 @@
 name: nomikai
 slug: nomikai
-description:
+description: A social app/web service for quickly inviting, recruiting, and notifying people for impromptu gatherings or casual meetups.
 description_ja: 急な飲み会やカジュアルな集まりに人を誘う・募集する・通知するためのソーシャルアプリ / Webサービス。
 status: incubating
-repo:
+repo: null
 tags:
   - social
   - event

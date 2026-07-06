@@ -1,9 +1,9 @@
 name: stamp-rally
 slug: stamp-rally
-description:
+description: A service for creating, sharing, and participating in stamping events, designed for events, tourism, and regional revitalization.
 description_ja: スタンプラリーを作成・共有・参加できるサービス。イベント、観光、地域活性化用途を想定。
 status: incubating
-repo:
+repo: null
 tags:
   - event
   - tourism

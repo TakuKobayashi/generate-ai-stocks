@@ -112,9 +112,7 @@ async function translateText(text: string, options: Required<TranslateProjectsOp
   }
 
   if (!data.response || !data.response.trim()) {
-    throw new Error(
-      `Missing response${data.thinking ? ` (model produced only thinking output: ${data.thinking.slice(0, 200)})` : ''}`,
-    );
+    throw new Error(`Missing response${data.thinking ? ` (model produced only thinking output: ${data.thinking.slice(0, 200)})` : ''}`);
   }
 
   return parseTranslation(data.response);
