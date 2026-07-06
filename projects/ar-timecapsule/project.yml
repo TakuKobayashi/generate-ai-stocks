@@ -1,0 +1,16 @@
+name: ar-timecapsule
+slug: ar-timecapsule
+description: Monorepo for an AR time capsule platform combining location-based services, augmented reality experiences, and coupon distribution.
+description_ja: 位置情報、ARタイムカプセル、クーポン機能を組み合わせたプラットフォームのモノレポです。
+translation_locked: false
+status: incubating
+repo: ''
+tags:
+  - ar
+  - location
+  - coupon
+  - monorepo
+  - typescript
+  - nextjs
+  - unity
+  - cloudflare
