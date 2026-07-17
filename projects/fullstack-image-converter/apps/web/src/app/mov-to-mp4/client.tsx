@@ -16,6 +16,7 @@ export default function MovToMp4Client() {
         acceptedFormats={['.mov', '.MOV']}
         outputFormat="mp4"
         badge="Video Converter"
+        crossLinkHref="/video-converter"
         title="<em>MOV to MP4</em> Converter"
         subtitle="Convert QuickTime MOV files to MP4 in your browser using WebAssembly — no upload, no server costs."
         prose={

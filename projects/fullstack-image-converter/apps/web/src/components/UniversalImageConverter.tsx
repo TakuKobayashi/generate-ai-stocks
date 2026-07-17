@@ -1,33 +1,26 @@
 'use client';
 /**
- * BatchConverter — core UI component shared by all tool pages.
- * Handles: drag-drop, file queue, per-job progress, ZIP download.
- * All conversion happens in the browser via the injected engine.
+ * UniversalImageConverter — one page, any image format in, any format out.
+ *
+ * Unlike BatchConverter (which is locked to a single input→output route
+ * for SEO landing pages), this component:
+ *  - accepts any supported image format in a single drop zone
+ *  - detects each file's format from its extension
+ *  - lets the user pick ONE target format from a dropdown
+ *  - converts every file in the batch to that one target format
  */
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import JSZip from 'jszip';
 import {
   ConversionJob, ConversionFile, OutputFormat, InputFormat,
-  generateId, guessFormat,
+  generateId, guessFormat, IMAGE_OUTPUT_FORMATS, IMAGE_INPUT_EXTENSIONS,
+  canConvert,
 } from '@convertmate/shared';
 import { ConversionQueue } from '@convertmate/core';
-import type { ConversionEngine, ConversionOptions } from '@convertmate/shared';
+import { BrowserImageEngine } from '@convertmate/image';
 import s from '@/styles/converter.module.css';
 
-export interface BatchConverterProps {
-  engine: ConversionEngine;
-  acceptedFormats: string[];    // e.g. ['.webp', '.heic']
-  outputFormat: OutputFormat;
-  options?: ConversionOptions;
-  title: string;
-  subtitle: string;
-  badge: string;
-  /** SEO prose rendered below the tool */
-  prose?: React.ReactNode;
-  /** Link to the universal converter for people with mixed-format batches */
-  crossLinkHref?: string;
-  crossLinkLabel?: string;
-}
+const engine = new BrowserImageEngine();
 
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -35,19 +28,9 @@ function formatBytes(bytes: number): string {
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
 
-function fileIcon(name: string): string {
-  const ext = name.split('.').pop()?.toLowerCase();
-  if (['jpg','jpeg','png','webp','avif','heic','gif'].includes(ext ?? '')) return '🖼️';
-  if (['mp4','mov'].includes(ext ?? '')) return '🎬';
-  if (ext === 'pdf') return '📄';
-  return '📁';
-}
-
-export default function BatchConverter({
-  engine, acceptedFormats, outputFormat, options = {},
-  title, subtitle, badge, prose, crossLinkHref, crossLinkLabel,
-}: BatchConverterProps) {
+export default function UniversalImageConverter() {
   const [jobs, setJobs] = useState<ConversionJob[]>([]);
+  const [targetFormat, setTargetFormat] = useState<OutputFormat>('jpg');
   const [running, setRunning] = useState(false);
   const [concurrency, setConcurrency] = useState(3);
   const [quality, setQuality] = useState(92);
@@ -59,24 +42,35 @@ export default function BatchConverter({
     setJobs(prev => prev.map(j => j.id === id ? { ...j, ...patch } : j));
   }, []);
 
+  // Detect input format per file, tag the job with the currently-selected
+  // target format. If the user later changes the dropdown, pending jobs'
+  // outputFormat is updated too (see the effect below).
   const addFiles = useCallback((fileList: FileList | File[]) => {
     const files = Array.from(fileList);
     const valid = files.filter(f => {
-      const ext = '.' + (f.name.split('.').pop()?.toLowerCase() ?? '');
-      return acceptedFormats.includes(ext);
+      const ext = '.' + (f.name.split('.').pop() ?? '');
+      return IMAGE_INPUT_EXTENSIONS.some(e => e.toLowerCase() === ext.toLowerCase());
     });
     if (valid.length === 0) return;
 
-    const newJobs: ConversionJob[] = valid.map(file => ({
-      id: generateId(),
-      file: { id: generateId(), name: file.name, size: file.size, source: file } as ConversionFile,
-      inputFormat: (guessFormat(file.name) ?? 'jpg') as InputFormat,
-      outputFormat,
-      status: 'pending',
-      progress: 0,
-    }));
-    setJobs(prev => [...prev, ...newJobs]);
-  }, [acceptedFormats, outputFormat]);
+    setJobs(prev => {
+      const newJobs: ConversionJob[] = valid.map(file => ({
+        id: generateId(),
+        file: { id: generateId(), name: file.name, size: file.size, source: file } as ConversionFile,
+        inputFormat: (guessFormat(file.name) ?? 'jpg') as InputFormat,
+        outputFormat: targetFormat,
+        status: 'pending',
+        progress: 0,
+      }));
+      return [...prev, ...newJobs];
+    });
+  }, [targetFormat]);
+
+  // Keep pending jobs' outputFormat in sync with the dropdown
+  const handleTargetFormatChange = useCallback((fmt: OutputFormat) => {
+    setTargetFormat(fmt);
+    setJobs(prev => prev.map(j => j.status === 'pending' ? { ...j, outputFormat: fmt } : j));
+  }, []);
 
   const onDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -84,17 +78,17 @@ export default function BatchConverter({
     addFiles(e.dataTransfer.files);
   }, [addFiles]);
 
+  // Warn (not block) when some pending files can't reach the chosen target
+  const incompatibleCount = useMemo(() => {
+    return jobs.filter(j => j.status === 'pending' && !canConvert(j.inputFormat, targetFormat)).length;
+  }, [jobs, targetFormat]);
+
   const startConversion = useCallback(async () => {
     const pending = jobs.filter(j => j.status === 'pending');
     if (pending.length === 0) return;
     setRunning(true);
 
-    const mergedOptions: ConversionOptions = {
-      ...options,
-      image: { quality, keepExif: true, ...options.image },
-    };
-
-    const queue = new ConversionQueue(engine, concurrency, mergedOptions);
+    const queue = new ConversionQueue(engine, concurrency, { image: { quality, keepExif: true } });
     queueRef.current = queue;
     queue.addMany(pending);
 
@@ -102,13 +96,13 @@ export default function BatchConverter({
       if (!job) return;
       if (type === 'job:start') updateJob(job.id, { status: 'processing', progress: 0 });
       if (type === 'job:done')  updateJob(job.id, { status: 'done', progress: 100, resultUrl: job.resultUrl });
-      if (type === 'job:error') updateJob(job.id, { status: 'error', error: job.error });
+      if (type === 'job:error') updateJob(job.id, { status: 'error', error: job.error, progress: 0 });
     });
 
     await queue.run();
     unsub();
     setRunning(false);
-  }, [jobs, engine, concurrency, quality, options, updateJob]);
+  }, [jobs, concurrency, quality, updateJob]);
 
   const downloadAll = useCallback(async () => {
     const done = jobs.filter(j => j.status === 'done' && j.resultUrl);
@@ -116,7 +110,7 @@ export default function BatchConverter({
     if (done.length === 1) {
       const a = document.createElement('a');
       a.href = done[0].resultUrl!;
-      a.download = done[0].file.name.replace(/\.[^.]+$/, `.${outputFormat}`);
+      a.download = done[0].file.name.replace(/\.[^.]+$/, `.${done[0].outputFormat}`);
       a.click();
       return;
     }
@@ -124,34 +118,35 @@ export default function BatchConverter({
     await Promise.all(done.map(async job => {
       const res = await fetch(job.resultUrl!);
       const buf = await res.arrayBuffer();
-      const name = job.file.name.replace(/\.[^.]+$/, `.${outputFormat}`);
+      const name = job.file.name.replace(/\.[^.]+$/, `.${job.outputFormat}`);
       zip.file(name, buf);
     }));
     const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 6 } });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `convertmate-${outputFormat}-${Date.now()}.zip`;
+    a.download = `convertmate-images-${Date.now()}.zip`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 10000);
-  }, [jobs, outputFormat]);
+  }, [jobs]);
 
   const clearAll = () => {
     if (running && queueRef.current) queueRef.current.abort();
-    // Revoke object URLs
     jobs.forEach(j => { if (j.resultUrl?.startsWith('blob:')) URL.revokeObjectURL(j.resultUrl); });
     setJobs([]);
     setRunning(false);
   };
 
-  // Cleanup on unmount
+  const removeJob = (id: string) => setJobs(prev => prev.filter(j => j.id !== id));
+
   useEffect(() => {
     return () => { jobs.forEach(j => { if (j.resultUrl?.startsWith('blob:')) URL.revokeObjectURL(j.resultUrl); }); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const pendingCount   = jobs.filter(j => j.status === 'pending').length;
-  const doneCount      = jobs.filter(j => j.status === 'done').length;
-  const errorCount     = jobs.filter(j => j.status === 'error').length;
+  const pendingCount    = jobs.filter(j => j.status === 'pending').length;
+  const doneCount       = jobs.filter(j => j.status === 'done').length;
+  const errorCount      = jobs.filter(j => j.status === 'error').length;
   const processingCount = jobs.filter(j => j.status === 'processing').length;
 
   return (
@@ -159,21 +154,17 @@ export default function BatchConverter({
       {/* Hero */}
       <section className={s.hero}>
         <div className="container">
-          <span className={s.badge}>{badge}</span>
-          <h1 className={s.title} dangerouslySetInnerHTML={{ __html: title }} />
-          <p className={s.subtitle}>{subtitle}</p>
-          {crossLinkHref && (
-            <p style={{ marginTop: 12 }}>
-              <a href={crossLinkHref} style={{ fontSize: '0.85rem', color: 'var(--indigo-3)' }}>
-                {crossLinkLabel ?? 'Have a mix of formats? Try the universal converter →'}
-              </a>
-            </p>
-          )}
+          <span className={s.badge}>Image Converter</span>
+          <h1 className={s.title}>
+            <em>Universal Image</em> Converter
+          </h1>
+          <p className={s.subtitle}>
+            Drop any mix of JPG, PNG, WebP, HEIC, AVIF or GIF files — pick one output format, convert them all at once.
+          </p>
         </div>
       </section>
 
       <div className="container">
-        {/* Ad slot top */}
         <div className={s.adSlot} aria-hidden="true">Advertisement</div>
 
         {/* Drop zone */}
@@ -186,24 +177,49 @@ export default function BatchConverter({
           role="button"
           tabIndex={0}
           onKeyDown={e => e.key === 'Enter' && inputRef.current?.click()}
-          aria-label="Drop files here or click to browse"
+          aria-label="Drop image files here or click to browse"
         >
           <span className={s.dropIcon}>📂</span>
-          <p className={s.dropTitle}>Drop files here</p>
-          <p className={s.dropSub}>
-            Accepts {acceptedFormats.join(', ')} · Multiple files · Entire folders
-          </p>
+          <p className={s.dropTitle}>Drop images here</p>
+          <p className={s.dropSub}>JPG · PNG · WebP · HEIC · AVIF · GIF — any mix, any number of files</p>
           <span className={s.browseBtn}>Browse Files</span>
           <input
             ref={inputRef}
             type="file"
             multiple
-            accept={acceptedFormats.join(',')}
-            className={s['sr-only']}
+            accept={IMAGE_INPUT_EXTENSIONS.join(',')}
             style={{ display: 'none' }}
             onChange={e => e.target.files && addFiles(e.target.files)}
           />
         </div>
+
+        {/* Output format selector — the core of this page */}
+        <div className={s.formatBar}>
+          <span className={s.formatBarLabel}>Convert everything to</span>
+          <span className={s.formatArrowIcon}>→</span>
+          <select
+            className={s.formatSelect}
+            value={targetFormat}
+            onChange={e => handleTargetFormatChange(e.target.value as OutputFormat)}
+            disabled={running}
+          >
+            {IMAGE_OUTPUT_FORMATS.map(fmt => (
+              <option key={fmt} value={fmt}>{fmt.toUpperCase()}</option>
+            ))}
+          </select>
+
+          {jobs.length > 0 && (
+            <span style={{ marginLeft: 'auto', fontSize: '0.8rem', color: 'var(--muted)' }}>
+              {jobs.length} file{jobs.length !== 1 ? 's' : ''} queued
+            </span>
+          )}
+        </div>
+
+        {incompatibleCount > 0 && (
+          <p className={s.mixedHint}>
+            ⚠ {incompatibleCount} file{incompatibleCount !== 1 ? 's' : ''} can&apos;t convert to {targetFormat.toUpperCase()} and will be skipped — pick a different format or remove them.
+          </p>
+        )}
 
         {/* Controls */}
         {jobs.length > 0 && (
@@ -248,25 +264,13 @@ export default function BatchConverter({
         {/* Summary */}
         {jobs.length > 0 && (
           <div className={s.summary}>
-            <div>
-              <div className={s.summaryNum}>{jobs.length}</div>
-              <div className={s.summaryLabel}>Total</div>
-            </div>
-            <div>
-              <div className={s.summaryNum} style={{ color: '#22c55e' }}>{doneCount}</div>
-              <div className={s.summaryLabel}>Done</div>
-            </div>
+            <div><div className={s.summaryNum}>{jobs.length}</div><div className={s.summaryLabel}>Total</div></div>
+            <div><div className={s.summaryNum} style={{ color: '#22c55e' }}>{doneCount}</div><div className={s.summaryLabel}>Done</div></div>
             {processingCount > 0 && (
-              <div>
-                <div className={s.summaryNum} style={{ color: 'var(--indigo-3)' }}>{processingCount}</div>
-                <div className={s.summaryLabel}>Processing</div>
-              </div>
+              <div><div className={s.summaryNum} style={{ color: 'var(--indigo-3)' }}>{processingCount}</div><div className={s.summaryLabel}>Processing</div></div>
             )}
             {errorCount > 0 && (
-              <div>
-                <div className={s.summaryNum} style={{ color: 'var(--coral)' }}>{errorCount}</div>
-                <div className={s.summaryLabel}>Errors</div>
-              </div>
+              <div><div className={s.summaryNum} style={{ color: 'var(--coral)' }}>{errorCount}</div><div className={s.summaryLabel}>Errors</div></div>
             )}
           </div>
         )}
@@ -277,8 +281,11 @@ export default function BatchConverter({
             {jobs.map(job => (
               <div key={job.id}>
                 <div className={s.fileRow}>
-                  <span className={s.fileIcon}>{fileIcon(job.file.name)}</span>
+                  <span className={s.fileIcon}>🖼️</span>
                   <span className={s.fileName}>{job.file.name}</span>
+                  <span className={s.detectedBadge}>{job.inputFormat}</span>
+                  <span style={{ color: 'var(--muted)', fontSize: '0.75rem' }}>→</span>
+                  <span className={s.detectedBadge}>{job.outputFormat}</span>
                   <span className={s.fileSize}>{formatBytes(job.file.size)}</span>
 
                   <div className={s.progressWrap}>
@@ -288,7 +295,11 @@ export default function BatchConverter({
                     />
                   </div>
 
-                  <span className={s[`status${job.status.charAt(0).toUpperCase() + job.status.slice(1)}` as keyof typeof s]}>
+                  <span className={
+                    job.status === 'pending' ? s.statusPending :
+                    job.status === 'processing' ? s.statusProcessing :
+                    job.status === 'done' ? s.statusDone : s.statusError
+                  }>
                     {job.status === 'pending' && '–'}
                     {job.status === 'processing' && <><span className={s.spinner} /> {job.progress}%</>}
                     {job.status === 'done' && '✔'}
@@ -298,11 +309,21 @@ export default function BatchConverter({
                   {job.status === 'done' && job.resultUrl && (
                     <a
                       href={job.resultUrl}
-                      download={job.file.name.replace(/\.[^.]+$/, `.${outputFormat}`)}
+                      download={job.file.name.replace(/\.[^.]+$/, `.${job.outputFormat}`)}
                       className={s.dlLink}
                     >
                       Save
                     </a>
+                  )}
+
+                  {job.status === 'pending' && (
+                    <button
+                      onClick={() => removeJob(job.id)}
+                      style={{ background: 'none', color: 'var(--muted)', fontSize: '0.9rem', padding: '2px 8px' }}
+                      aria-label={`Remove ${job.file.name}`}
+                    >
+                      ✕
+                    </button>
                   )}
                 </div>
                 {job.status === 'error' && job.error && (
@@ -313,13 +334,25 @@ export default function BatchConverter({
           </div>
         )}
 
-        {/* Ad slot bottom */}
         {jobs.length > 0 && (
           <div className={s.adSlot} style={{ marginTop: 32 }} aria-hidden="true">Advertisement</div>
         )}
 
-        {/* SEO prose */}
-        {prose && <div className={s.prose}>{prose}</div>}
+        <div className={s.prose}>
+          <h2>One page, every image format</h2>
+          <p>
+            Most converters make you pick a specific tool for WebP→JPG, another for HEIC→PNG, and so on.
+            This page detects each file&apos;s format automatically and lets you pick a single destination
+            format from the dropdown — convert a mixed folder of JPGs, PNGs, HEICs and WebPs to WebP in one batch.
+          </p>
+          <ul>
+            <li>Auto-detects input format from each file&apos;s extension</li>
+            <li>One dropdown controls the output format for the whole batch</li>
+            <li>Mixed-format folders are fully supported</li>
+            <li>100% browser-side — nothing is uploaded</li>
+            <li>Download individually or as a single ZIP</li>
+          </ul>
+        </div>
       </div>
     </div>
   );

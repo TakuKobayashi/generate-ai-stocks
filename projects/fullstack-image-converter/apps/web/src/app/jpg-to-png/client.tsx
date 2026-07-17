@@ -15,6 +15,7 @@ export default function ToolClient() {
         acceptedFormats={['.jpg','.jpeg']}
         outputFormat="png"
         badge="Image Converter"
+        crossLinkHref="/image-converter"
         title="<em>JPG to PNG</em> Converter"
         subtitle="Convert JPEG photos to lossless PNG. Entire folders, nothing uploaded."
       />

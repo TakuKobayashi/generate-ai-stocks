@@ -15,6 +15,7 @@ export default function ToolClient() {
         acceptedFormats={['.mp4','.MP4']}
         outputFormat="gif"
         badge="Video Converter"
+        crossLinkHref="/video-converter"
         title="<em>MP4 to GIF</em> Converter"
         subtitle="Create optimised animated GIFs from MP4 video clips using FFmpeg WebAssembly."
       />

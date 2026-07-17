@@ -15,6 +15,7 @@ export default function ToolClient() {
         acceptedFormats={['.png']}
         outputFormat="jpg"
         badge="Image Converter"
+        crossLinkHref="/image-converter"
         title="<em>PNG to JPG</em> Converter"
         subtitle="Compress PNG files to smaller JPEG format. Batch convert entire folders at once."
       />

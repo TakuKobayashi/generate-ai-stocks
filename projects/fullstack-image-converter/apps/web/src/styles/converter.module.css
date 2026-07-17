@@ -297,3 +297,77 @@
   .summary { flex-wrap: wrap; gap: 12px; }
   .progressWrap { display: none; }
 }
+
+/* ─── Universal converter — output format selector ───────────────── */
+.formatBar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  padding: 20px;
+  background: var(--navy-2);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+.formatBarLabel {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--cream);
+  white-space: nowrap;
+}
+.formatSelect {
+  background: var(--navy-3);
+  color: var(--white);
+  border: 1px solid var(--indigo);
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font-display);
+  min-width: 140px;
+  cursor: pointer;
+}
+.formatSelect:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.formatArrowIcon {
+  font-size: 1.2rem;
+  color: var(--indigo-3);
+}
+
+.detectedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background: var(--navy-3);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Error detail line under a job row */
+.errorDetail {
+  font-size: 0.75rem;
+  color: var(--coral);
+  margin-top: 4px;
+  padding-left: 32px;
+  line-height: 1.4;
+}
+
+/* Mixed-format hint */
+.mixedHint {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+@media (max-width: 640px) {
+  .formatBar { flex-direction: column; align-items: stretch; gap: 10px; }
+  .formatSelect { width: 100%; }
+}

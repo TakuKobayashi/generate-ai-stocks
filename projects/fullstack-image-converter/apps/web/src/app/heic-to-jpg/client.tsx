@@ -16,6 +16,7 @@ export default function HeicToJpgClient() {
         acceptedFormats={['.heic', '.HEIC']}
         outputFormat="jpg"
         badge="iPhone Photo Converter"
+        crossLinkHref="/image-converter"
         title="<em>HEIC to JPG</em> Converter"
         subtitle="Convert batches of iPhone HEIC photos to universally compatible JPG — right in your browser, nothing uploaded."
         prose={

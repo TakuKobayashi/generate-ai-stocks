@@ -15,6 +15,7 @@ export default function ToolClient() {
         acceptedFormats={['.avif']}
         outputFormat="jpg"
         badge="Image Converter"
+        crossLinkHref="/image-converter"
         title="<em>AVIF to JPG</em> Converter"
         subtitle="Convert modern AVIF images to widely-supported JPEG in bulk."
       />

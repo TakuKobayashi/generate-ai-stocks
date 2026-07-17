@@ -9,6 +9,11 @@ export const metadata: Metadata = {
   description: 'Convert hundreds of images, videos, and documents at once. WebP, HEIC, AVIF, MOV, MP4, PDF. All processing in your browser.',
 };
 
+const FEATURED_TOOLS = [
+  { href: '/image-converter', icon: '🖼️', title: 'Image Converter', desc: 'Any format in, any format out. Auto-detects each file, pick one output, convert the whole batch.' },
+  { href: '/video-converter', icon: '🎬', title: 'Video Converter', desc: 'MOV, MP4, GIF — mix formats freely, pick one target, convert everything at once.' },
+];
+
 const TOOLS = [
   { href: '/webp-to-jpg', icon: '🖼️', title: 'WebP → JPG',   desc: 'Bulk convert WebP images to JPEG with quality control.' },
   { href: '/webp-to-png', icon: '🖼️', title: 'WebP → PNG',   desc: 'Lossless conversion from WebP to transparent PNG.' },
@@ -51,7 +56,7 @@ export default function HomePage() {
               Everything runs in your browser — fast, private, and free.
             </p>
             <div className={s.ctaGroup}>
-              <Link href="/webp-to-jpg" className={s.ctaPrimary}>Start Converting</Link>
+              <Link href="/image-converter" className={s.ctaPrimary}>Start Converting</Link>
               <Link href="#tools" className={s.ctaSecondary}>Browse all tools →</Link>
             </div>
             <div className={s.boltRow}>
@@ -66,11 +71,34 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Featured universal converters */}
+        <section className={s.toolsSection} style={{ paddingBottom: 0 }}>
+          <div className="container">
+            <p className={s.sectionEyebrow}>Start Here</p>
+            <h2 className={s.sectionTitle}>Any format in, one format out</h2>
+            <div className={s.grid}>
+              {FEATURED_TOOLS.map((tool, i) => (
+                <Link
+                  key={tool.href}
+                  href={tool.href}
+                  className={s.toolCard}
+                  style={{ animationDelay: `${i * 40}ms`, borderColor: 'rgba(110,64,201,0.4)' }}
+                >
+                  <div className={s.toolCardIcon}>{tool.icon}</div>
+                  <div className={s.toolCardTitle}>{tool.title}</div>
+                  <div className={s.toolCardDesc}>{tool.desc}</div>
+                  <span className={s.toolCardArrow}>Open tool →</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Tools grid */}
         <section className={s.toolsSection} id="tools">
           <div className="container">
-            <p className={s.sectionEyebrow}>Conversion Tools</p>
-            <h2 className={s.sectionTitle}>Pick your conversion</h2>
+            <p className={s.sectionEyebrow}>Specific Conversions</p>
+            <h2 className={s.sectionTitle}>Or pick an exact route</h2>
             <div className={s.grid}>
               {TOOLS.map((tool, i) => (
                 <Link

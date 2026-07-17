@@ -71,6 +71,13 @@ export class ConversionQueue {
     this.emit('job:start', job);
     try {
       const result = await this.engine.convert(job, this.options);
+      // Respect the engine's own status — some engines (e.g. BrowserVideoEngine)
+      // catch internally and return status: 'error' instead of throwing.
+      // Overwriting to 'done' here previously masked every such failure.
+      if (result.status === 'error') {
+        this.emit('job:error', result);
+        return result;
+      }
       result.status = 'done';
       result.progress = 100;
       this.emit('job:done', result);

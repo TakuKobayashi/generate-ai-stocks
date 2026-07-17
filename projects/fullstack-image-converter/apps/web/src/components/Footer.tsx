@@ -2,6 +2,8 @@ import Link from 'next/link';
 import s from '@/styles/footer.module.css';
 
 const TOOLS = [
+  { href: '/image-converter', label: 'Universal Image Converter' },
+  { href: '/video-converter', label: 'Universal Video Converter' },
   { href: '/webp-to-jpg', label: 'WebP to JPG' },
   { href: '/webp-to-png', label: 'WebP to PNG' },
   { href: '/heic-to-jpg', label: 'HEIC to JPG' },

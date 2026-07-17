@@ -99,20 +99,38 @@ export function guessFormat(filename: string): InputFormat | null {
 }
 
 // ─── Conversion route map ────────────────────────────────────────────
+// Image formats convertible via Canvas/ImageDecoder — treated as fully
+// interchangeable (any → any, excluding same-format) for the universal
+// image converter. Individual SEO landing pages still only advertise
+// their specific route, but the underlying capability is symmetric.
+const CANVAS_IMAGE_FORMATS: ImageFormat[] = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+// Formats the engine can *decode* but browsers generally can't *encode*
+// back out via Canvas — these are one-directional inputs only.
+const DECODE_ONLY_IMAGE_FORMATS: ImageFormat[] = ['heic', 'avif'];
+
+function buildImageRoutes(): Array<{ from: InputFormat; to: OutputFormat; type: ConversionType }> {
+  const routes: Array<{ from: InputFormat; to: OutputFormat; type: ConversionType }> = [];
+  for (const from of CANVAS_IMAGE_FORMATS) {
+    for (const to of CANVAS_IMAGE_FORMATS) {
+      if (from === to) continue;
+      routes.push({ from, to, type: 'image' });
+    }
+  }
+  for (const from of DECODE_ONLY_IMAGE_FORMATS) {
+    for (const to of CANVAS_IMAGE_FORMATS) {
+      routes.push({ from, to, type: 'image' });
+    }
+  }
+  return routes;
+}
+
 export const SUPPORTED_CONVERSIONS: Array<{ from: InputFormat; to: OutputFormat; type: ConversionType }> = [
-  // Image → Image
-  { from: 'webp', to: 'jpg', type: 'image' },
-  { from: 'webp', to: 'png', type: 'image' },
-  { from: 'png', to: 'jpg', type: 'image' },
-  { from: 'jpg', to: 'png', type: 'image' },
-  { from: 'jpeg', to: 'png', type: 'image' },
-  { from: 'heic', to: 'jpg', type: 'image' },
-  { from: 'heic', to: 'png', type: 'image' },
-  { from: 'avif', to: 'jpg', type: 'image' },
-  { from: 'avif', to: 'png', type: 'image' },
+  // Image ↔ Image (all pairwise combinations, see buildImageRoutes)
+  ...buildImageRoutes(),
   // Video
   { from: 'mov', to: 'mp4', type: 'video' },
   { from: 'mp4', to: 'mov', type: 'video' },
+  { from: 'mov', to: 'gif', type: 'video' },
   { from: 'mp4', to: 'gif', type: 'video' },
   // Document
   { from: 'jpg', to: 'pdf', type: 'document' },
@@ -124,3 +142,6 @@ export const SUPPORTED_CONVERSIONS: Array<{ from: InputFormat; to: OutputFormat;
 export function canConvert(inputFormat: InputFormat, outputFormat: OutputFormat): boolean {
   return SUPPORTED_CONVERSIONS.some(c => c.from === inputFormat && c.to === outputFormat);
 }
+
+export const IMAGE_OUTPUT_FORMATS: ImageFormat[] = ['jpg', 'png', 'webp', 'gif'];
+export const IMAGE_INPUT_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.heic', '.HEIC', '.avif', '.gif'];

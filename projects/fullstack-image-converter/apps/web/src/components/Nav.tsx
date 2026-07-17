@@ -5,9 +5,8 @@ import s from '@/styles/nav.module.css';
 
 const LINKS = [
   { href: '/', label: 'Home' },
-  { href: '/webp-to-jpg', label: 'WebP→JPG' },
-  { href: '/heic-to-jpg', label: 'HEIC→JPG' },
-  { href: '/mov-to-mp4', label: 'MOV→MP4' },
+  { href: '/image-converter', label: 'Image Converter' },
+  { href: '/video-converter', label: 'Video Converter' },
   { href: '/export-exif', label: 'EXIF' },
 ];
 

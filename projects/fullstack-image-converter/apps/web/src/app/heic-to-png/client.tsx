@@ -15,6 +15,7 @@ export default function ToolClient() {
         acceptedFormats={['.heic','.HEIC']}
         outputFormat="png"
         badge="iPhone Converter"
+        crossLinkHref="/image-converter"
         title="<em>HEIC to PNG</em> Converter"
         subtitle="Convert iPhone HEIC photos to PNG with transparency support."
       />

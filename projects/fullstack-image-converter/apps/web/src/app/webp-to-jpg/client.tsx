@@ -16,6 +16,7 @@ export default function WebpToJpgClient() {
         acceptedFormats={['.webp']}
         outputFormat="jpg"
         badge="Image Converter"
+        crossLinkHref="/image-converter"
         title="<em>WebP to JPG</em> Converter"
         subtitle="Drag in any number of WebP files — convert them all to JPG in seconds, directly in your browser."
         prose={

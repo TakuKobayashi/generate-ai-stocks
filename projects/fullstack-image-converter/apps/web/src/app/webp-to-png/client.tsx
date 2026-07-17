@@ -15,6 +15,7 @@ export default function ToolClient() {
         acceptedFormats={['.webp']}
         outputFormat="png"
         badge="Image Converter"
+        crossLinkHref="/image-converter"
         title="<em>WebP to PNG</em> Converter"
         subtitle="Convert WebP images to lossless PNG in bulk — perfect for images that need transparency."
       />
