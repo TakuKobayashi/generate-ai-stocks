@@ -34,3 +34,6 @@
 [submodule "projects/ai-chat-auto-set-key"]
 	path = projects/ai-chat-auto-set-key
 	url = git@github.com:TakuKobayashi/ai-chat-auto-set-key.git
+[submodule "projects/fullstack-media-converter"]
+	path = projects/fullstack-media-converter
+	url = git@github.com:TakuKobayashi/fullstack-media-converter.git
