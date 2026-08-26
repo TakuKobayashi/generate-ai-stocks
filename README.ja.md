@@ -85,8 +85,7 @@ CLI / GitHub Actions / 自動化基盤
 | [daily-report-cli](./projects/daily-report-cli/)                             | エンジニア向け日報を自動生成するCLIツール。GitHub Actionsや業務自動化パイプラインでの活用を想定。                                                                                   | incubating |
 | [doc-scanner-unified](./projects/doc-scanner-unified/)                       | 画像から文字起こしを行うOCR対応のCLI / Web統合ドキュメントスキャンプロジェクト。文書電子化や自動化用途を想定。                                                                      | incubating |
 | [email-auto-reply](./projects/email-auto-reply/)                             | メール返信文を自動生成するツールプロジェクト。返信下書きや業務効率化、自動応答基盤として活用可能。                                                                                  | incubating |
-| [fullstack-image-converter](./projects/fullstack-image-converter/)           | ConvertMateは、アップロードなしで画像、動画、ドキュメントをバッチ変換できるブラウザベースのプラットフォームです。                                                                   | incubating |
-| [fullstack-media-converter](./projects/fullstack-media-converter/)           |                                                                                                                                                                                     | incubating |
+| [fullstack-media-converter](./projects/fullstack-media-converter/)           | Fullstack Media Converterは、アップロードなしで画像、動画、ドキュメントをバッチ変換できるブラウザベースのプラットフォームです。                                                     | incubating |
 | [github-leak-detector](./projects/github-leak-detector/)                     | GitHub上でのソースコード流出や機密情報漏洩を検出するセキュリティ監視ツール。                                                                                                        | incubating |
 | [heart-linker-app](./projects/heart-linker-app/)                             | アカウント登録なしで利用できる、QRコード、Nearby（Androidのみ）、NFCによる連絡先交換をサポートするクロスプラットフォームの名刺帳アプリです。                                        | incubating |
 | [kayaba-broadway](./projects/kayaba-broadway/)                               | 仮想空間の 3D マップを歩き回りながらデジタルコンテンツを購入できるオンラインマーケット。Cloudflare Workers、Hono、Angular、PixiJS、LiveKit、PartyKit を組み合わせた構成。           | incubating |
@@ -106,6 +105,7 @@ CLI / GitHub Actions / 自動化基盤
 | [stamp-rally](./projects/stamp-rally/)                                       | スタンプラリーを作成・共有・参加できるサービス。イベント、観光、地域活性化用途を想定。                                                                                              | incubating |
 | [tappun-app-studio](./projects/tappun-app-studio/)                           | Next.js、TypeScript、Framer Motion を使用して構築された、モバイルアプリを紹介するゲーム風のポートフォリオウェブサイトです。                                                         | incubating |
 | [tappunpages](./projects/tappunpages/)                                       | Next.jsとTypeScriptで構築された、個人のプロジェクトやスキルを紹介するポートフォリオサイト。Cloudflare Workersを利用してパフォーマンスを最適化し、グローバルな展開に対応しています。 | incubating |
+| [web-recorder](./projects/web-recorder/)                                     |                                                                                                                                                                                     | incubating |
 
 ---
 
