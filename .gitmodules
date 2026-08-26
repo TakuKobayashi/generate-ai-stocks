@@ -37,3 +37,6 @@
 [submodule "projects/fullstack-media-converter"]
 	path = projects/fullstack-media-converter
 	url = git@github.com:TakuKobayashi/fullstack-media-converter.git
+[submodule "projects/web-recorder"]
+	path = projects/web-recorder
+	url = git@github.com:TakuKobayashi/WebRecorder.git
