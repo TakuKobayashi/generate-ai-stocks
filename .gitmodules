@@ -40,3 +40,6 @@
 [submodule "projects/web-recorder"]
 	path = projects/web-recorder
 	url = git@github.com:TakuKobayashi/WebRecorder.git
+[submodule "projects/generate-backup-working-tool-logs"]
+	path = projects/generate-backup-working-tool-logs
+	url = git@github.com:TakuKobayashi/generate-backup-working-tool-logs.git
