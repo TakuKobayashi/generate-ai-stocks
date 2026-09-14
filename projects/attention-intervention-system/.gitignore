@@ -1,0 +1,27 @@
+# Android Studio / IntelliJ IDEA
+.idea/
+*.iml
+
+# Gradle
+.gradle/
+.gradle-user-home/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local Android SDK configuration
+local.properties
+
+# Signing credentials and generated packages
+*.jks
+*.keystore
+*.apk
+*.aab
+
+# Native and OS-generated files
+.cxx/
+.externalNativeBuild/
+.DS_Store
+
+# Logs and temporary files
+*.log
+*.tmp

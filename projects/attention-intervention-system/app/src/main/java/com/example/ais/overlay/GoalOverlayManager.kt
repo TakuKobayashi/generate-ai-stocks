@@ -69,6 +69,7 @@ class GoalOverlayManager(private val context: Context) {
     private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     private val mainHandler = Handler(Looper.getMainLooper())
     private var overlayView: ComposeView? = null
+    private var overlayLifecycleOwner: SimpleLifecycleOwner? = null
     private var isDismissing = false
 
     /**
@@ -176,8 +177,9 @@ class GoalOverlayManager(private val context: Context) {
             }
         }
 
-        overlayView = view
         windowManager.addView(view, params)
+        overlayView = view
+        overlayLifecycleOwner = lifecycleOwner
     }
 
     fun dismiss() {
@@ -187,6 +189,8 @@ class GoalOverlayManager(private val context: Context) {
             try {
                 overlayView?.let { windowManager.removeView(it) }
             } catch (_: Exception) {}
+            overlayLifecycleOwner?.destroy()
+            overlayLifecycleOwner = null
             overlayView = null
             isDismissing = false
         }

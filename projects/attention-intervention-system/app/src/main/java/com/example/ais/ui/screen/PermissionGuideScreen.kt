@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.example.ais.domain.InterventionMode
 import com.example.ais.ui.theme.AISColors
 
@@ -61,7 +62,11 @@ fun PermissionGuideScreen(
 
     var notifGranted by remember {
         mutableStateOf(
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) false else true
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == android.content.pm.PackageManager.PERMISSION_GRANTED
         )
     }
     var alarmGranted by remember {

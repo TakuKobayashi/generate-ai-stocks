@@ -1,7 +1,6 @@
 package com.example.ais
 
 import android.os.Bundle
-import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -15,6 +14,7 @@ import androidx.core.view.WindowCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.example.ais.data.entity.TriggerType
 import com.example.ais.data.prefs.isOnboardingDone
 import com.example.ais.data.prefs.observeMode
@@ -94,7 +94,7 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         // Normal/Hard モードのアプリ起動ログ
-        kotlinx.coroutines.MainScope().launch {
+        lifecycleScope.launch {
             if (viewModel.canInterveneNow()) {
                 viewModel.recordIntervention(TriggerType.APP_LAUNCH)
             }

@@ -12,6 +12,7 @@ import android.content.IntentFilter
 import android.os.IBinder
 import android.provider.Settings
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.example.ais.MainActivity
 import com.example.ais.R
 import com.example.ais.data.dao.GoalDao
@@ -135,7 +136,12 @@ class InterventionForegroundService : Service() {
             }
         }
         val filter = IntentFilter(Intent.ACTION_SCREEN_ON)
-        registerReceiver(receiver, filter)
+        ContextCompat.registerReceiver(
+            this,
+            receiver,
+            filter,
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
         screenOnReceiver = receiver
     }
 

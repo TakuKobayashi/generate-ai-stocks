@@ -74,8 +74,10 @@ class GoalNotificationManager @Inject constructor(
             .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            .setOngoing(false)
+            // 「トイレに貼った紙」のように、ユーザーが目標を変更するまで常駐させる。
+            .setOngoing(true)
             .setAutoCancel(false)
+            .setOnlyAlertOnce(true)
             .setLocalOnly(true)
             .setContentIntent(tapIntent)
             .build()

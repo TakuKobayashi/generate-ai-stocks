@@ -1,7 +1,7 @@
 name: attention-intervention-system
 slug: attention-intervention-system
-description: Android application utilizing Compose, Hilt, and Room for data persistence, likely focused on user interaction or a specific task.
-description_ja: Compose、Hilt、Room を使用した Android アプリケーションで、ユーザーインタラクションや特定のタスクに焦点を当てている可能性があります。
+description: An Android app that keeps daily goals visible on the lock screen and reinforces them when the screen turns on.
+description_ja: 毎日の目標をロック画面に貼り続け、画面を点けるたびに思い出せるようにするAndroidアプリです。
 translation_locked: false
 status: incubating
 repo: ''
@@ -11,6 +11,6 @@ tags:
   - hilt
   - room
   - kotlin
-  - data
-  - development
-  - ktx
+  - goals
+  - lock-screen
+  - habits
