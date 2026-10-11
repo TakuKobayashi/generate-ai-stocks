@@ -1,0 +1,27 @@
+From: Trip.com <booking@trip.example>
+To: taku@example.com
+Subject: =?UTF-8?B?44CQ5LqI57SE56K66KqN44CR44Ob44OG44Or44Gu44GU5LqI57SE44GM56K65a6a44GX44G+44GX44Gf?=
+Date: Tue, 06 Oct 2026 10:02:44 +0900
+Message-ID: <sample-tripcom-002@trip.example>
+MIME-Version: 1.0
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<html><head><style>.x{color:red}</style></head><body>
+<p>※これは動作確認用の架空のメールです (example data)</p>
+<h2>ホテルのご予約が確定しました</h2>
+<p>小林 拓 様、Trip.com をご利用いただきありがとうございます。</p>
+<table>
+<tr><td>予約番号</td><td>1128899001234</td></tr>
+<tr><td>ホテル名</td><td>Hotel Am Stephansplatz</td></tr>
+<tr><td>住所</td><td>Stephansplatz 9, 1010 Wien, Austria</td></tr>
+<tr><td>チェックイン</td><td>2026年11月21日(土) 15:00以降</td></tr>
+<tr><td>チェックアウト</td><td>2026年11月24日(火) 11:00まで</td></tr>
+<tr><td>客室</td><td>ダブルルーム 1室 / 大人2名</td></tr>
+</table>
+<p>※チェックイン・チェックアウト時間はすべて現地時間です。</p>
+<p>ホテル連絡先：+43 1 534050</p>
+<p><a href="https://trip.example/order/1128899001234">予約詳細を見る</a></p>
+<p>このメールは送信専用です。配信停止は<a href="https://trip.example/unsub">こちら</a></p>
+<p>&copy; 2026 Trip.com (example)</p>
+</body></html>

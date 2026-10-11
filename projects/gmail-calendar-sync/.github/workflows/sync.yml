@@ -1,0 +1,139 @@
+# Gmail の予約・スケジュールメールを Google カレンダーへ同期する定期ジョブ
+# GitHub ホストランナー (ubuntu-latest, CPU のみ) 上で Ollama + ローカル 7B/8B モデルを動かす。
+name: gmail-calendar-sync
+
+on:
+  schedule:
+    # cron は UTC。"17 */2 * * *" = 2 時間ごとの 17 分 (JST では 1:17, 3:17, ...)。
+    # 毎時 0 分は GitHub 全体で混雑し遅延・スキップされやすいので半端な分にしている。
+    - cron: "17 */2 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "DRY RUN (Gmail ラベル付け・カレンダー書き込みをしない)"
+        type: boolean
+        default: true
+      max_messages:
+        description: "処理する最大メール数"
+        type: string
+        default: "10"
+
+# 同時に 2 本走ると重複登録の恐れがあるため直列化 (実行中のジョブはキャンセルしない)
+concurrency:
+  group: gmail-calendar-sync
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  # ---- リポジトリの Variables (Settings > Secrets and variables > Actions > Variables) で上書き可能 ----
+  MODEL: ${{ vars.MODEL || 'qwen2.5:7b-instruct' }}
+  CALENDAR_ID: ${{ vars.CALENDAR_ID || 'primary' }}
+  REVIEW_CALENDAR_ID: ${{ vars.REVIEW_CALENDAR_ID }}
+  GMAIL_QUERY: ${{ vars.GMAIL_QUERY }}
+  DEFAULT_TIMEZONE: ${{ vars.DEFAULT_TIMEZONE || 'Asia/Tokyo' }}
+  LODGING_MODE: ${{ vars.LODGING_MODE || 'span' }}
+  CANCEL_MODE: ${{ vars.CANCEL_MODE || 'mark' }}
+  NUM_CTX: ${{ vars.NUM_CTX || '8192' }}
+  SELF_CHECK: ${{ vars.SELF_CHECK || 'auto' }}
+  REDACT_LOGS: ${{ vars.REDACT_LOGS || 'false' }}
+  MAX_MESSAGES: ${{ inputs.max_messages || vars.MAX_MESSAGES || '10' }}
+  # schedule 実行時は inputs が空 → 本番 (false)。手動実行時はチェックボックスに従う。
+  DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
+  # ---- Ollama ----
+  OLLAMA_HOST: http://127.0.0.1:11434
+  OLLAMA_MODELS: /home/runner/.ollama/models
+  OLLAMA_NUM_PARALLEL: "1"         # 並列推論しない (RAM 節約・1 リクエストを最速に)
+  OLLAMA_MAX_LOADED_MODELS: "1"
+  OLLAMA_KEEP_ALIVE: "30m"
+  OLLAMA_FLASH_ATTENTION: "1"      # KV キャッシュ量子化の前提
+  OLLAMA_KV_CACHE_TYPE: "q8_0"     # KV キャッシュを半分に (num_ctx 8192 でも RAM に余裕を持たせる)
+  # ---- Google (Secrets) ----
+  GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+  GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+  GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: npm ci
+        run: npm ci --no-audit --no-fund
+
+      # ---- 前段チェック: 対象メールが 0 件なら Ollama のインストール・モデル取得を丸ごと省略 (Actions 分数の節約) ----
+      - name: 対象メールの件数を確認
+        id: precheck
+        run: npx tsx src/main.ts --count-only
+
+      - name: Ollama をインストール
+        if: steps.precheck.outputs.has_mail == 'true'
+        run: |
+          # インストールスクリプトは zstd を必要とする (ubuntu-latest には通常入っている)
+          command -v zstd >/dev/null || sudo apt-get install -y zstd
+          curl -fsSL https://ollama.com/install.sh | sh
+          # スクリプトが systemd サービスを起動するので止める (自前で runner ユーザーとして起動し、キャッシュ済みモデルを使う)
+          sudo systemctl stop ollama 2>/dev/null || true
+          sudo systemctl disable ollama 2>/dev/null || true
+          ollama --version
+
+      - name: モデルのキャッシュを復元
+        if: steps.precheck.outputs.has_mail == 'true'
+        id: model-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: /home/runner/.ollama/models
+          key: ollama-${{ runner.os }}-${{ env.MODEL }}-v1
+
+      - name: ollama serve を起動
+        if: steps.precheck.outputs.has_mail == 'true'
+        run: |
+          mkdir -p "$OLLAMA_MODELS"
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -fsS "$OLLAMA_HOST/api/version" >/dev/null 2>&1; then
+              echo "ollama is ready"; exit 0
+            fi
+            sleep 1
+          done
+          echo "ollama did not start"; cat /tmp/ollama.log; exit 1
+
+      - name: モデルを取得 (ollama pull)
+        if: steps.precheck.outputs.has_mail == 'true'
+        run: |
+          ollama pull "$MODEL"
+          ollama list
+
+      - name: モデルをキャッシュに保存
+        if: steps.precheck.outputs.has_mail == 'true' && steps.model-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: /home/runner/.ollama/models
+          key: ollama-${{ runner.os }}-${{ env.MODEL }}-v1
+
+      - name: ウォームアップ (モデルをメモリに載せる)
+        if: steps.precheck.outputs.has_mail == 'true'
+        run: |
+          curl -fsS "$OLLAMA_HOST/api/generate" \
+            -d "{\"model\":\"$MODEL\",\"prompt\":\"ok\",\"stream\":false,\"options\":{\"num_predict\":1,\"num_ctx\":$NUM_CTX}}" >/dev/null
+          free -m
+
+      - name: 同期を実行
+        if: steps.precheck.outputs.has_mail == 'true'
+        run: npx tsx src/main.ts
+
+      - name: 対象メールなし
+        if: steps.precheck.outputs.has_mail != 'true'
+        run: echo "### 📭 対象メールはありませんでした" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Ollama のログ (失敗時)
+        if: failure()
+        run: tail -n 200 /tmp/ollama.log || true

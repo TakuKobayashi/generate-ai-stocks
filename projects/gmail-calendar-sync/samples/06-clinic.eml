@@ -1,0 +1,23 @@
+From: =?UTF-8?B?44GV44GP44KJ5YaF56eR44Kv44Oq44OL44OD44Kv?= <no-reply@clinic.example>
+To: taku@example.com
+Subject: =?UTF-8?B?44CQ44GU5LqI57SE5a6M5LqG44CR6Ki65a+f44Gu44GU5LqI57SE?=
+Date: Sat, 10 Oct 2026 09:00:00 +0900
+Message-ID: <sample-clinic-006@clinic.example>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+※これは動作確認用の架空のメールです (example data)
+
+小林 拓 様
+
+以下の内容でご予約を承りました。
+
+予約日時：令和8年10月20日(火) 午前9時30分
+診療科：内科（定期検診）
+予約番号：A-20261020-07
+
+当日は保険証をお持ちください。
+さくら内科クリニック
+横浜市港北区新横浜2-0-0
+TEL 045-000-0000

@@ -1,0 +1,18 @@
+From: Trip.com <booking@trip.example>
+To: taku@example.com
+Subject: =?UTF-8?B?44CQ5LqI57SE5aSJ5pu044CR44GU5LqI57SE5YaF5a6544GM5aSJ5pu044GV44KM44G+44GX44Gf?=
+Date: Sun, 11 Oct 2026 11:20:00 +0900
+Message-ID: <sample-tripcom-008@trip.example>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+※これは動作確認用の架空のメールです (example data)
+
+ご予約内容の変更が完了しました。
+
+予約番号：1128899001234
+ホテル名：Hotel Am Stephansplatz
+変更後のチェックイン：2026年11月22日(日) 15:00以降
+変更後のチェックアウト：2026年11月24日(火) 11:00まで
+※時間はすべて現地時間です。
